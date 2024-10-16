@@ -3,10 +3,10 @@
 
 int main(int argc, char **argv)
 {
-	char	input[MAX_INPUT_SIZE];
-	char	*line;
+	char	*input;
 	int		len;
-	char	*args;
+	char	*args[] = {NULL, NULL}; // Array for execve arguments
+
 	pid_t	pid;
 
 	if (argc != 1)
@@ -16,30 +16,33 @@ int main(int argc, char **argv)
 	}
 	while (1)
 	{
-		printf("\033[1;36mminishell\033[95m$ \033[0m");
-		line = get_next_line(0);
-		len = ft_strlen(line);
-		// if (line)
+		input = readline("\033[1;36mnatalia's shell\033[95m$ \033[0m");
+		// input = readline("\033[1;36mminishell\033[95m$ \033[0m");
+		len = ft_strlen(input);
+		if (len > 0 && input[len - 1] == '\n')
+			input[ft_strlen(input) - 1] = '\0';
+		// if (input)
 		// 	add_to_history(); ---------------- implement
-		line[ft_strlen(line) - 1] = '\0';
-		if (ft_strncmp(line, "exit", len) == 0)
+		if (ft_strncmp(input, "exit", len) == 0)
 		{
-			free (line);
+			free (input);
 			break;
 		}
-		if (ft_strncmp(line, "ls", len) == 0)
+		if (ft_strncmp(input, "ls", len) == 0)
 		{
 			pid = fork();
 			if (pid == 0)
 			{
-				args = ft_strdup("/bin/ls, NULL");
-				execve("/bin/ls", &args, NULL);
+				args[0] = ft_strdup("/bin/ls");
+				execve("/bin/ls", args, NULL);
+				perror("execve");
+				exit(1);
 			}
 			else if (pid > 0)
                 wait(NULL);
 			else
                 perror("fork failed");
-			free (line);
+			free (input);
 		}
 	}
 	return (0);

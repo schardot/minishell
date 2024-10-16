@@ -3,8 +3,7 @@ CC = clang
 FLAGS = -Wall -Wextra -Werror
 LIBFT_DIR = include/libft
 LIBFT = $(LIBFT_DIR)/libft.a
-
-all = minishell
+NAME = minishell
 
 SRC = src/main.c \
 	include/libft/get_next_line/get_next_line.c \
@@ -12,13 +11,25 @@ SRC = src/main.c \
 
 OBJ = $(SRC:.c=.o)
 
-minishell: $(LIBFT) $(OBJ)
-	$(CC) $(FLAGS) -o minishell $(OBJ) $(LIBFT)
+READLINE_DIR = $(shell brew --prefix readline)
+READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+
+INCLUDES =-Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
+
+all: $(NAME)
+
+$(NAME): $(LIBFT) $(OBJ)
+	@$(CC) $(FLAGS) $(LIBFT) $(OBJ) $(READLINE_LIB) -o $(NAME)
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 
 clean:
 	rm -f $(OBJ)
+	make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	rm -f minishell
+	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
