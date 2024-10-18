@@ -1,5 +1,4 @@
 #include "../include/minishell.h"
-#include "../include/libft/get_next_line/get_next_line.h"
 
 int main(int argc, char **argv, char **envp)
 {
@@ -14,8 +13,8 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		input = getinput();
-		tokens = lexer(input);
-		parser(tokens);
+		if (input)
+			parser(input);
 	}
 	return (0);
 }
@@ -25,7 +24,9 @@ char *get_input(void)
 	char *input;
 
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
-	if (input && *input)
+	if (input == NULL) // Handle Ctrl+D (EOF)
+		printf("\nExiting shell...\n");
+	if (*input)
 		add_history(input);
 	return (input);
 }
