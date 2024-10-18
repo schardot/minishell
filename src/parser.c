@@ -1,60 +1,93 @@
 #include "../include/minishell.h"
+#include "../include/libft/libft.h"
 
-void    parser(char **tokens)
+void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 {
-    /* Overview of parser
-Input Parameters:
+	char	**cmmnds;
+	char	**tokens;
+	int		i;
 
-char **tokens: An array of strings (tokens) that represent the input command split by whitespace and other delimiters.
-int token_count: (Optional) The total number of tokens to help manage iterations if necessary.
-Purpose:
-
-Convert the flat list of tokens into a structured format (e.g., an array of simplecommand structs).
-Handle special cases such as pipes (|), input/output redirections (<, >, >>, <<).
-Manage command grouping and ensure that each command is correctly associated with its arguments.
-Expected Flow:
-
-Initialization: Start by initializing necessary structures, such as an array of simplecommand pointers and counters for the number of commands and arguments.
-Iterate through Tokens: Loop through the token array:
-Identify Commands: When encountering a token that represents a command, create a new simplecommand struct and store the command name.
-Store Arguments: For subsequent tokens that are not commands or operators, treat them as arguments for the last added command.
-Handle Pipes: When encountering a pipe (|), finalize the current command and prepare to start a new command.
-Handle Redirections: Identify tokens that represent redirection operators and link them to the appropriate commands.
-Finalization: After processing all tokens, ensure any remaining commands are finalized and stored.
-Return Value:
-
-The function may return a dynamically allocated array of simplecommand pointers and the count of commands. Alternatively, it can modify pointers passed in as parameters for the commands and counts.
-Error Handling:
-
-Handle any errors such as memory allocation failures, unmatched quotes, or incorrect syntax gracefully. */
+	i = 0;
+	cmmnds = ft_split(input, '|');
+	while (cmmnds[i])
+	{
+		tokens = ft_split(cmmnds[i], ' ');
+		check_exec_command(tokens);
+		free (tokens);
+	}
+	//free (cmmnds)? not sure
 }
 
-//This doesnt work for the long run, im just keeping it here so i can remember how execve works
-int parse_input(char *input, int len)
+//lets say we passed ls -l | wc -l. before passing to this function, we have to separate "ls, -l" and "wc, -l".
+void    check_exec_command(char **command)
 {
-    char *args[] = {NULL, NULL};
-    int pid;
+	int pid;
+	int status;
 
-    if (ft_strncmp(input, "exit", len) == 0)
-    {
-        free(input);
-        return (1);
-    }
-    if (ft_strncmp(input, "ls", len) == 0)
-    {
-        pid = fork();
-        if (pid == 0)
-        {
-            args[0] = ft_strdup("/bin/ls");
-            execve("/bin/ls", args, NULL);
-            perror("execve");
-            exit(1);
-        }
-        else if (pid > 0)
-            wait(NULL);
-        else
-            perror("fork failed");
-        free(input);
-        return (0);
-    }
+	pid = fork();
+	if (pid == 0)
+	{
+		if (is_builtin(command[0]))
+		{
+			// execute_builtin() it but we have to write those functions yet
+			exit (0);
+		}
+		if (is_executable(command[0]))
+		{
+			execve(command[0], command, NULL);
+			perror("execve");
+			exit(1);
+		}
+		else
+		{
+			printf("%s: command not found", command[0]);
+			exit(127); // exit with command not found status
+		}
+	}
+	else if (pid < 0)
+		perror("fork");
+	else
+		waitpid(pid, &status, 0);
+	ft_free_matrix(command);
+}
+
+int is_builtin(char *token)
+{
+	int len;
+
+	len = ft_strlen(token);
+	if (!ft_strncmp(token, "cd", len) || !ft_strncmp(token, "pwd", len) || !ft_strncmp(token, "echo", len) || ft_strncmp(token, "exit", len))
+		return (1); // it's a built-in
+	return(0); // not a built-in
+}
+
+int is_executable(char *cmd)
+{
+	char    *path_env;
+	char    **paths;
+	char    full_path[1024];
+	int     i;
+
+	i = 0;
+	path_env = getenv("PATH");
+	if (path_env == NULL)
+		return 0; // PATH not set, command can't be found
+	paths = ft_split(path_env, ':');
+	if (paths == NULL)
+		return 0; // Failed to split PATH, exit early
+	while (paths[i])
+	{
+		full_path[0] = '\0';
+		ft_strlcat(full_path, paths[i], sizeof(full_path));
+		ft_strlcat(full_path, "/", sizeof(full_path));
+		ft_strlcat(full_path, cmd, sizeof(full_path));
+		if (access(full_path, X_OK) == 0)
+		{
+			ft_free_matrix(paths);
+			return (1); // Command found in $PATH and is executable
+		}
+		i++;
+	}
+	ft_free_matrix(paths);
+	return (0); // Command not found in $PATH
 }
