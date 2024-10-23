@@ -1,16 +1,16 @@
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
+#include "../include/parser.h"
 
 void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 {
-	char	**cmmnds;
+	char	**tokens;
 	t_scmd	*scmd;
+	t_token	*lst;
 
-	if (ft_strchr(input, '|'))
-		cmmnds = ft_split(input, '|');
-
-	cmmnds = ft_split(input, ' ');
-
+	tokens = ft_split(input, ' ');
+	lst = token_list(tokens);
+	with the token list, i create a simple command list;
 
 
 
@@ -103,13 +103,4 @@ int is_executable(char *cmd)
 	}
 	ft_free_matrix(paths);
 	return (0); // Command not found in $PATH
-}
-
-t_scmd *init_scmd(char **cmd)
-{
-	t_scmd	node;
-
-	node.tokens = cmd;
-	node.next = NULL;
-	return (&node);
 }
