@@ -12,7 +12,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	while (1)
 	{
-		input = getinput();
+		input = get_input();
 		if (input)
 			parser(input);
 	}

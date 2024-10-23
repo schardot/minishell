@@ -12,6 +12,23 @@
 ### For other commands:
 For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), you'll use the `execve()` function to execute them. This is how standard shells (like bash or zsh) execute external commands.
 */
+void    execute_builtin(char **cmd, int len)
+{
+    if (!ft_strncmp(cmd[0], "cd", len))
+        cd(cmd[1]);
+    // else if (!ft_strncmp(cmd, "echo", len))
+    //     echo();
+    else if (!ft_strncmp(cmd[0], "pwd", len))
+        pwd();
+    // else if (!ft_strncmp(cmd, "export", len))
+    //     export();
+    // else if (!ft_strncmp(cmd, "unset", len))
+    //     unset();
+    // else if (!ft_strncmp(cmd, "env", len))
+    //     env();
+    // else if (!ft_strncmp(cmd, "exit", len))
+    //     exit();
+}
 
 void    echo(void)
 {
@@ -73,7 +90,7 @@ void env(void)
    - Prints all the current environment variables.*/
 }
 
-void exit(void)
+void mexit(void)
 {
     /* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
    **exit** (with no options):
@@ -81,5 +98,12 @@ void exit(void)
 
    Example:
    - `exit` simply terminates the shell.
-   - You could also support an optional exit status (e.g., `exit 42`).*/
+   - You could also support an optional exit status (e.g., `exit 42`).
+
+   Expected Behavior:
+exit: Exits with status 0.
+exit 42: Exits with status 42.
+exit abc: Prints an error exit: abc: numeric argument required and exits with status 255.
+exit 1 2: Prints an error exit: too many arguments and does not exit.
+*/
 }

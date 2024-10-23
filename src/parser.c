@@ -4,9 +4,17 @@
 void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 {
 	char	**cmmnds;
-	char	**tokens;
-	int		i;
+	t_scmd	*scmd;
 
+	if (ft_strchr(input, '|'))
+		cmmnds = ft_split(input, '|');
+
+	cmmnds = ft_split(input, ' ');
+
+
+
+
+	/* ----------- all of this below assumes the command has a pipe, which is not necessarily the case. -------------
 	i = 0;
 	cmmnds = ft_split(input, '|');
 	while (cmmnds[i])
@@ -15,6 +23,9 @@ void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 		check_exec_command(tokens);
 		free (tokens);
 	}
+
+	*/
+
 	//free (cmmnds)? not sure
 }
 
@@ -23,13 +34,15 @@ void    check_exec_command(char **command)
 {
 	int pid;
 	int status;
+	//t_scmd	*cmd; dont know if its necessary but so im commenting it for now
 
 	pid = fork();
 	if (pid == 0)
 	{
 		if (is_builtin(command[0]))
 		{
-			// execute_builtin() it but we have to write those functions yet
+			//cmd = init_scmd(command);     same thing as above
+			execute_builtin(ft_split(command[0], ' '), ft_strlen(command[0])); //not all commands have been implemented yet!
 			exit (0);
 		}
 		if (is_executable(command[0]))
@@ -90,4 +103,13 @@ int is_executable(char *cmd)
 	}
 	ft_free_matrix(paths);
 	return (0); // Command not found in $PATH
+}
+
+t_scmd *init_scmd(char **cmd)
+{
+	t_scmd	node;
+
+	node.tokens = cmd;
+	node.next = NULL;
+	return (&node);
 }

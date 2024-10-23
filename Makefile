@@ -1,25 +1,25 @@
 CC = clang
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -g -O0 -Wall -Wextra -Werror
 LIBFT_DIR = include/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 NAME = minishell
 
 SRC = src/main.c \
-	include/libft/get_next_line/get_next_line.c \
-	include/libft/get_next_line/get_next_line_utils.c
+	src/builtins.c \
+	src/parser.c
 
 OBJ = $(SRC:.c=.o)
 
 READLINE_DIR = $(shell brew --prefix readline)
 READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
 
-INCLUDES =-Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
+INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(CC) $(FLAGS) $(LIBFT) $(OBJ) $(READLINE_LIB) -o $(NAME)
+	$(CC) $(FLAGS) $(INCLUDES) $(LIBFT) $(OBJ) $(READLINE_LIB) -o $(NAME)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
