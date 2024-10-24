@@ -9,6 +9,7 @@ t_token	*token_list(char **tokens)
 
 	i = 0;
 	head = tokenlist_new(tokens[i]);
+	i ++;
 	while (tokens[i])
 	{
 		new = tokenlist_new(tokens[i]);
