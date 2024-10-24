@@ -3,7 +3,7 @@ RM = rm -f
 CFLAGS = -Wall -Wextra -Werror
 
 MX_DIR = matrix
-MATRIX = $(MX_DIR)/ft_free_matrix.c $(MX_DIR)/ft_matrixdup.c $(MX_DIR)/ft_split.c $(MX_DIR)/ft_2darr_append.c $(MX_DIR)/ft_str2dlen.c
+MATRIX = $(MX_DIR)/ft_free_matrix.c $(MX_DIR)/ft_matrixdup.c $(MX_DIR)/ft_split.c $(MX_DIR)/ft_append_to_matrix.c $(MX_DIR)/ft_str2dlen.c
 
 CH_DIR = char_checks
 CHAR_CH = $(CH_DIR)/ft_isalpha.c $(CH_DIR)/ft_isdigit.c $(CH_DIR)/ft_isalnum.c $(CH_DIR)/ft_isascii.c $(CH_DIR)/ft_isprint.c $(CH_DIR)/ft_toupper.c $(CH_DIR)/ft_tolower.c \
@@ -14,7 +14,8 @@ STRING = $(S_DIR)/ft_strlen.c $(S_DIR)/ft_strlcpy.c $(S_DIR)/ft_strlcat.c $(S_DI
 	$(S_DIR)/ft_strdup.c $(S_DIR)/ft_substr.c $(S_DIR)/ft_strjoin.c $(S_DIR)/ft_strtrim.c $(S_DIR)/ft_strmapi.c $(S_DIR)/ft_striteri.c
 
 MEM_DIR = memory
-MEM = $(MEM_DIR)/ft_memset.c $(MEM_DIR)/ft_bzero.c $(MEM_DIR)/ft_memcpy.c $(MEM_DIR)/ft_memmove.c $(MEM_DIR)/ft_memchr.c $(MEM_DIR)/ft_calloc.c $(MEM_DIR)/ft_realloc.c
+MEM = $(MEM_DIR)/ft_memset.c $(MEM_DIR)/ft_bzero.c $(MEM_DIR)/ft_memcpy.c $(MEM_DIR)/ft_memmove.c $(MEM_DIR)/ft_memchr.c $(MEM_DIR)/ft_calloc.c $(MEM_DIR)/ft_realloc.c \
+	$(MEM_DIR)/ft_memcmp.c
 
 CV_DIR = conversion
 CONV = $(CV_DIR)/ft_atoi.c $(CV_DIR)/ft_itoa.c

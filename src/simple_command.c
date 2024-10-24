@@ -27,7 +27,7 @@ t_scmd *simple_command(t_token *lst)
 			next_command = simple_command(lst->next);
 			node->next = next_command;
 			if (next_command)
-				lst = NULL;
+				lst->next = NULL;
 			else
 				break ;
 		}

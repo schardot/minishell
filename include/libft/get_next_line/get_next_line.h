@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <marvin@42.fr>           +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/24 11:56:31 by nataliaschard     #+#    #+#             */
-/*   Updated: 2024/06/24 11:56:36 by nataliaschard    ###   ########.fr       */
+/*   Created: 2024/06/24 11:56:31 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/10/24 18:37:05 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # endif
 
 char	*get_next_line(int fd);
-char	*ft_realloc(char *ptr, size_t size);
+char	*ft_rrealloc(char *ptr, size_t size);
 char	*getmyline(char *line, char *buffer, int fd, int *linelen);
 char	*append_buffer(char *buffer, char *line, int *linelen);
 

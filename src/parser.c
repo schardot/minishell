@@ -56,7 +56,7 @@ int is_builtin(char *token)
 	int len;
 
 	len = ft_strlen(token);
-	if (!ft_strncmp(token, "cd", len) || !ft_strncmp(token, "pwd", len) || !ft_strncmp(token, "echo", len) || ft_strncmp(token, "exit", len))
+	if (!ft_strncmp(token, "cd", len) || !ft_strncmp(token, "pwd", len) || !ft_strncmp(token, "echo", len) || !ft_strncmp(token, "exit", len))
 		return (1); // it's a built-in
 	return(0); // not a built-in
 }

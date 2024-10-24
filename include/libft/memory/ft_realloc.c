@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:48:41 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/24 12:48:43 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/10/24 18:41:12 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	*ft_realloc(void *ptr, int old_size, int new_size)
 	if (!new_ptr)
 		return (NULL);
 	if (old_size < new_size)
-		memcpy(new_ptr, ptr, old_size);
+		ft_memcpy(new_ptr, ptr, old_size);
 	else
-		memcpy(new_ptr, ptr, new_size);
+		ft_memcpy(new_ptr, ptr, new_size);
 	free(ptr);
 	return (new_ptr);
 }

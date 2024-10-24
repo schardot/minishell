@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <marvin@42.fr>           +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/24 11:58:36 by nataliaschard     #+#    #+#             */
-/*   Updated: 2024/06/24 11:58:38 by nataliaschard    ###   ########.fr       */
+/*   Created: 2024/06/24 11:58:36 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/10/24 18:37:15 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*getmyline(char *line, char *buffer, int fd, int *linelen)
 	while (b > 0)
 	{
 		(buffer)[b] = '\0';
-		line = ft_realloc(line, (*linelen) + BUFFER_SIZE + 1);
+		line = ft_rrealloc(line, (*linelen) + BUFFER_SIZE + 1);
 		line = append_buffer(buffer, line, linelen);
 		if (line && line[*linelen - 1] == '\n')
 			return (line);

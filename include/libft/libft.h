@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 19:23:45 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/24 12:40:49 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/10/24 18:41:49 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void		ft_striteri(char *s, void (*f)(unsigned int, char *));
 /* ------------------------------------------------------------------------- */
 /*                           Memory Manipulation                             */
 /* ------------------------------------------------------------------------- */
+void		*ft_memset(void *b, int c, size_t len);
 void		*ft_memset(void *b, int c, size_t len);
 void		*ft_memcpy(void *dest, const void *src, size_t n);
 void		*ft_memmove(void *dst, const void *src, size_t len);
