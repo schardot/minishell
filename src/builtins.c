@@ -1,4 +1,5 @@
 #include "../include/minishell.h"
+#include "../include/parser.h"
 
 /*• Your shell must implement the following builtins:
 ◦ echo with option -n
@@ -12,25 +13,9 @@
 ### For other commands:
 For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), you'll use the `execve()` function to execute them. This is how standard shells (like bash or zsh) execute external commands.
 */
-void    execute_builtin(char **cmd, int len)
-{
-    if (!ft_strncmp(cmd[0], "cd", len))
-        cd(cmd[1]);
-    // else if (!ft_strncmp(cmd, "echo", len))
-    //     echo();
-    else if (!ft_strncmp(cmd[0], "pwd", len))
-        pwd();
-    // else if (!ft_strncmp(cmd, "export", len))
-    //     export();
-    // else if (!ft_strncmp(cmd, "unset", len))
-    //     unset();
-    // else if (!ft_strncmp(cmd, "env", len))
-    //     env();
-    // else if (!ft_strncmp(cmd, "exit", len))
-    //     exit();
-}
 
-void    echo(void)
+
+void builtinecho(t_tools *t, t_scmd *node)
 {
     /* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
     1. **echo** (with the `-n` option):
@@ -47,7 +32,7 @@ void    echo(void)
     //Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
 }
 
-void    cd(const char *path)
+int    builtincd(t_tools *t, t_scmd *node)
 {
     if (chdir(path) != 0)
         printf("Error: %s\n", strerror(errno));
@@ -57,7 +42,7 @@ void    cd(const char *path)
    - You don't need to handle complex options like `cd -` to switch back to the previous directory. Just handle `cd` with an absolute or relative path.*/
 }
 
-void    pwd(void)
+int builtinpwd(t_tools *t, t_scmd *node)
 {
     char    buffer[PATH_MAX];
 
@@ -67,7 +52,7 @@ void    pwd(void)
         perror("getcwd() error");
 }
 
-void export(void)
+int builtinexport(t_tools *t, t_scmd *node)
 {
     /* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
     **export** (with no options):
@@ -75,7 +60,7 @@ void export(void)
    - Example: `export VAR=value` sets `VAR` in the environment.*/
 }
 
-void unset(void)
+int builtinunset(t_tools *t, t_scmd *node)
 {
     /* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
    **unset** (with no options):
@@ -83,14 +68,14 @@ void unset(void)
    - Example: `unset VAR` removes `VAR` from the environment.*/
 }
 
-void env(void)
+int builtinenv(t_tools *t, t_scmd *node)
 {
     /* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
   **env** (with no options or arguments):
    - Prints all the current environment variables.*/
 }
 
-void mexit(void)
+int builtinexit(t_tools *t, t_scmd *node)
 {
     /* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
    **exit** (with no options):

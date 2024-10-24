@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-t_token *token_list(char **tokens)
+t_token	*token_list(char **tokens)
 {
 	int i;
 	t_token *head;
@@ -15,13 +15,12 @@ t_token *token_list(char **tokens)
 		tklist_addback(&head, new);
 		i++;
 	}
-	ft_free_matrix(tokens);
 	return (head);
 }
 
-t_token *tokenlist_new(char *token)
+t_token	*tokenlist_new(char *token)
 {
-	t_token *node;
+	t_token	*node;
 
 	node = (t_token *)malloc(sizeof(t_token));
 	if (node == NULL)
@@ -40,8 +39,8 @@ t_token *tokenlist_new(char *token)
 
 void    tokenlist_addback(t_token **lst, t_token *new)
 {
-	t_token *aux;
-	t_token *prev;
+	t_token	*aux;
+	t_token	*prev;
 
 	if (!new)
 		return;

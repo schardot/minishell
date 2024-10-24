@@ -10,26 +10,9 @@ void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 
 	tokens = ft_split(input, ' ');
 	lst = token_list(tokens);
-	with the token list, i create a simple command list;
-
-
-
-	/* ----------- all of this below assumes the command has a pipe, which is not necessarily the case. -------------
-	i = 0;
-	cmmnds = ft_split(input, '|');
-	while (cmmnds[i])
-	{
-		tokens = ft_split(cmmnds[i], ' ');
-		check_exec_command(tokens);
-		free (tokens);
-	}
-
-	*/
-
-	//free (cmmnds)? not sure
+	scmd = simple_command(lst);
 }
 
-//lets say we passed ls -l | wc -l. before passing to this function, we have to separate "ls, -l" and "wc, -l".
 void    check_exec_command(char **command)
 {
 	int pid;
