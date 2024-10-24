@@ -3,7 +3,7 @@
 
 t_scmd *simple_command(t_token *lst)
 {
-	t_scmd  *node;
+	t_scmd *node;
 	t_scmd *next_command = NULL;
 
 	node = scmd_new();
@@ -19,41 +19,47 @@ t_scmd *simple_command(t_token *lst)
 		}
 		else if (lst->type == REDIRECT_APPEND || lst->type == REDIRECT_OUTPUT || lst->type == REDIRECT_INPUT)
 		{
-			node->num_redirections++;      // is this important to keep track?
-			handle_redirection(node, lst);
+			// Call handle_redirection and check for errors
+			if (handle_redirection(node) < 0)
+			{
+				fprintf(stderr, "Error handling redirection for command: %s\n", node->args[0]);
+				// Free any allocated resources if necessary
+				free(node->args);
+				free(node);
+				return (NULL); // Return NULL on error
+			}
+			else if (lst->type == PIPE)
+			{
+				next_command = simple_command(lst->next);
+				node->next = next_command;
+				if (next_command)
+					lst->next = NULL;
+				else
+					break;
+			}
+			lst = lst->next;
 		}
-		else if (lst->type == PIPE)
-		{
-			next_command = simple_command(lst->next);
-			node->next = next_command;
-			if (next_command)
-				lst->next = NULL;
-			else
-				break ;
-		}
-		lst = lst->next;
-	}
-	return (node);
-}
-
-void	handle_redirection(t_scmd *node, t_token *lst)
-{
-	if (lst->type == REDIRECT_APPEND)
-	{
-		node->redirect_token = ">>";
-		node->redirect_append_file = lst->next->value;
-	}
-	else if (lst->type == REDIRECT_OUTPUT)
-	{
-		node->redirect_token = ">";
-		node->redirect_output_file = lst->next->value;
-	}
-	else if (lst->type == REDIRECT_INPUT)
-	{
-		node->redirect_token = "<";
-		node->redirect_input_file = lst->next->value;
+		return (node);
 	}
 }
+// void	handle_redirection(t_scmd *node, t_token *lst)
+// {
+// 	if (lst->type == REDIRECT_APPEND)
+// 	{
+// 		node->redirect_token = ">>";
+// 		node->redirect_append_file = lst->next->value;
+// 	}
+// 	else if (lst->type == REDIRECT_OUTPUT)
+// 	{
+// 		node->redirect_token = ">";
+// 		node->redirect_output_file = lst->next->value;
+// 	}
+// 	else if (lst->type == REDIRECT_INPUT)
+// 	{
+// 		node->redirect_token = "<";
+// 		node->redirect_input_file = lst->next->value;
+// 	}
+// }
 
 t_scmd *scmd_new(void)
 {

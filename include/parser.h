@@ -1,6 +1,18 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+# define INPUT_REDIRECT  1   // Redirect input: <
+# define OUTPUT_REDIRECT 2   // Redirect output: >
+# define APPEND_REDIRECT 3   // Append output: >>
+# define HEREDOC_REDIRECT 4  // Heredoc: <<
+
+// Struct to manage file descriptors during redirection
+typedef struct	s_redirection
+{
+	int	input_fd;
+	int	output_fd;
+}	t_redirection;
+
 typedef struct s_tools // chatgpt suggested
 {
 	char **envp;	 // Environment variables
@@ -59,7 +71,7 @@ void	assign_token_type(t_token *node);
 /* ------------------------------------------------------------------------- */
 t_scmd	*scmd_new(void);
 t_scmd	*simple_command(t_token *lst);
-void	handle_redirection(t_scmd *node, t_token *lst);
+// void	handle_redirection(t_scmd *node, t_token *lst);
 int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 
 /* ------------------------------------------------------------------------- */
@@ -81,5 +93,7 @@ void	check_exec_command(char **command);
 int		is_builtin(char *token);
 int		is_executable(char *cmd);
 
+
+int handle_redirection(t_scmd *node);
 
 #endif
