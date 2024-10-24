@@ -1,6 +1,28 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+typedef struct s_tools // chatgpt suggested
+{
+	char **envp;	 // Environment variables
+	char *cwd;		 // Current working directory
+	int exit_status; // Last command exit status
+	char **history;	 // Command history
+	int pipefd[2];	 // Pipe file descriptors
+					 // Add any additional utility functions or states as needed
+} t_tools;
+
+typedef enum
+{
+	COMMAND,
+	ARGUMENT,
+	PIPE,
+	REDIRECT_OUTPUT,
+	REDIRECT_INPUT,
+	REDIRECT_APPEND,
+	HEREDOC,
+	NNEWLINE
+} e_token_type;
+
 typedef struct s_scmd // chatgpt suggested
 {
 	char **args;                                 // Argumentos do comando
@@ -24,33 +46,13 @@ typedef struct s_token
 	struct s_token *next; // Pointer to the next token in the list
 } t_token;
 
-typedef enum
-{
-	COMMAND,
-	ARGUMENT,
-	PIPE,
-	REDIRECT_OUTPUT,
-	REDIRECT_INPUT,
-	REDIRECT_APPEND,
-	HEREDOC,
-	NEWLINE,
-} e_token_type;
-
-typedef struct s_tools // chatgpt suggested
-{
-	char **envp;     // Environment variables
-	char *cwd;       // Current working directory
-	int exit_status; // Last command exit status
-	char **history;  // Command history
-	int pipefd[2];   // Pipe file descriptors
-					 // Add any additional utility functions or states as needed
-} t_tools;
-
 /* ------------------------------------------------------------------------- */
 /*                           Token List Functions         		             */
 /* ------------------------------------------------------------------------- */
-t_token	*tklist_new(char *token);
-void	tklist_addback(t_token **lst, t_token *new);
+t_token	*tokenlist_new(char *token);
+void	tokenlist_addback(t_token **lst, t_token *new);
+t_token	*token_list(char **tokens);
+void	assign_token_type(t_token *node);
 
 /* ------------------------------------------------------------------------- */
 /*                           Simple Command Functions                        */
@@ -58,17 +60,18 @@ void	tklist_addback(t_token **lst, t_token *new);
 t_scmd	*scmd_new(void);
 t_scmd	*simple_command(t_token *lst);
 void	handle_redirection(t_scmd *node, t_token *lst);
+int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 
 /* ------------------------------------------------------------------------- */
 /*                           Built In Functions                              */
 /* ------------------------------------------------------------------------- */
-int	builtincd(t_tools *t, t_scmd *node);
-int	builtinecho(t_tools *t, t_scmd *node);
-int	builtinpwd(t_tools *t, t_scmd *node);
-int	builtinexport(t_tools *t, t_scmd *node);
-int	builtinunset(t_tools *t, t_scmd *node);
-int	builtinenv(t_tools *t, t_scmd *node);
-int	builtinexit(t_tools *t, t_scmd *node);
+int		builtincd(t_tools *t, t_scmd *node);
+int		builtinecho(t_tools *t, t_scmd *node);
+int		builtinpwd(t_tools *t, t_scmd *node);
+int		builtinexport(t_tools *t, t_scmd *node);
+int		builtinunset(t_tools *t, t_scmd *node);
+int		builtinenv(t_tools *t, t_scmd *node);
+int		builtinexit(t_tools *t, t_scmd *node);
 
 /* ------------------------------------------------------------------------- */
 /*                           Parser Functions                                */

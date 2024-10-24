@@ -1,9 +1,0 @@
-[submodule "libftpp"]
-	path = libftpp
-	url = git@github.com:schardot/libftpp.git
-[submodule "include/include/libft"]
-	path = include/include/libft
-	url = git@github.com:schardot/libftpp.git
-[submodule "include/libft"]
-	path = include/libft
-	url = git@github.com:schardot/libftpp.git

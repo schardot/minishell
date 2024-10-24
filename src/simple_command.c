@@ -4,8 +4,9 @@
 t_scmd *simple_command(t_token *lst)
 {
 	t_scmd  *node;
+	t_scmd *next_command = NULL;
 
-	node = scmd_new;
+	node = scmd_new();
 	while (lst)
 	{
 		if (lst->type == ARGUMENT)
@@ -20,6 +21,15 @@ t_scmd *simple_command(t_token *lst)
 		{
 			node->num_redirections++;      // is this important to keep track?
 			handle_redirection(node, lst);
+		}
+		else if (lst->type == PIPE)
+		{
+			next_command = simple_command(lst->next);
+			node->next = next_command;
+			if (next_command)
+				lst = NULL;
+			else
+				break ;
 		}
 		lst = lst->next;
 	}
@@ -85,4 +95,5 @@ int	(*get_builtin_function(char *command))(t_tools *, t_scmd *)
 		return (&builtinenv);
 	else if (!ft_strncmp(command, "exit", len))
 		return (&builtinexit);
+	return (NULL);
 }

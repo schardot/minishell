@@ -3,16 +3,16 @@
 
 t_token	*token_list(char **tokens)
 {
-	int i;
-	t_token *head;
-	t_token *new;
+	int		i;
+	t_token	*head;
+	t_token	*new;
 
 	i = 0;
-	head = tklist_new(tokens[i]);
+	head = tokenlist_new(tokens[i]);
 	while (tokens[i])
 	{
-		new = tklist_new(tokens[i]);
-		tklist_addback(&head, new);
+		new = tokenlist_new(tokens[i]);
+		tokenlist_addback(&head, new);
 		i++;
 	}
 	return (head);
@@ -37,7 +37,7 @@ t_token	*tokenlist_new(char *token)
 	return (node);
 }
 
-void    tokenlist_addback(t_token **lst, t_token *new)
+void	tokenlist_addback(t_token **lst, t_token *new)
 {
 	t_token	*aux;
 	t_token	*prev;
@@ -49,7 +49,7 @@ void    tokenlist_addback(t_token **lst, t_token *new)
 		*lst = new;
 		return ;
 	}
-	aux = lst;
+	aux = *lst;
 	while (aux->next)
 	{
 		prev = aux;
@@ -59,9 +59,9 @@ void    tokenlist_addback(t_token **lst, t_token *new)
 	aux->prev = prev;
 }
 
-void    assign_token_type(t_token *node)
+void	assign_token_type(t_token *node)
 {
-	int len;
+	int	len;
 
 	if (!node || !node->value)
 		return;

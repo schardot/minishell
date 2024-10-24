@@ -9,43 +9,47 @@ void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 	t_token	*lst;
 
 	tokens = ft_split(input, ' ');
+	if (!tokens)
+		return ;
 	lst = token_list(tokens);
+	if (!lst)
+		return ;
 	scmd = simple_command(lst);
 }
 
-void    check_exec_command(char **command)
-{
-	int pid;
-	int status;
-	//t_scmd	*cmd; dont know if its necessary but so im commenting it for now
+// void    check_exec_command(char **command)
+// {
+// 	int pid;
+// 	int status;
+// 	//t_scmd	*cmd; dont know if its necessary but so im commenting it for now
 
-	pid = fork();
-	if (pid == 0)
-	{
-		if (is_builtin(command[0]))
-		{
-			//cmd = init_scmd(command);     same thing as above
-			execute_builtin(ft_split(command[0], ' '), ft_strlen(command[0])); //not all commands have been implemented yet!
-			exit (0);
-		}
-		if (is_executable(command[0]))
-		{
-			execve(command[0], command, NULL);
-			perror("execve");
-			exit(1);
-		}
-		else
-		{
-			printf("%s: command not found", command[0]);
-			exit(127); // exit with command not found status
-		}
-	}
-	else if (pid < 0)
-		perror("fork");
-	else
-		waitpid(pid, &status, 0);
-	ft_free_matrix(command);
-}
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		if (is_builtin(command[0]))
+// 		{
+// 			//cmd = init_scmd(command);     same thing as above
+// 			 //not all commands have been implemented yet!
+// 			exit (0);
+// 		}
+// 		if (is_executable(command[0]))
+// 		{
+// 			execve(command[0], command, NULL);
+// 			perror("execve");
+// 			exit(1);
+// 		}
+// 		else
+// 		{
+// 			printf("%s: command not found", command[0]);
+// 			exit(127); // exit with command not found status
+// 		}
+// 	}
+// 	else if (pid < 0)
+// 		perror("fork");
+// 	else
+// 		waitpid(pid, &status, 0);
+// 	ft_free_matrix(command);
+// }
 
 int is_builtin(char *token)
 {
