@@ -27,6 +27,8 @@ Copiar código
 int fd[2];
 pipe(fd);  // Create a pipe
 
+hey new change
+
 if (fork() == 0) {  // First command
     dup2(fd[1], STDOUT_FILENO);  // Redirect stdout to the pipe
     close(fd[0]);  // Close unused read end
