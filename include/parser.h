@@ -19,24 +19,24 @@ typedef enum
 	REDIRECT_OUTPUT,
 	REDIRECT_INPUT,
 	REDIRECT_APPEND,
-	HEREDOC,
-	NNEWLINE
+	HEREDOC
 } e_token_type;
 
-typedef struct s_scmd // chatgpt suggested
+typedef struct s_scmd
 {
-	char **args;                                 // Argumentos do comando
-	int (*builtin)(t_tools *, struct s_scmd *); // Ponteiro para função de built-in
-	char	*exec_path;
-	int num_redirections;                       // Número de redirecionamentos
-	char *hd_file_name;                         // Nome do arquivo para heredoc, se houver
-	char *redirect_token;                       // Token de redirecionamento, ex: ">"
-	char *redirect_input_file;                  // Input redirection file name (<)
-	char *redirect_output_file;                 // Output redirection file name (>)
-	char *redirect_append_file;                 // Append redirection file name (>>)
-	char *redirect_file_name;                   // Nome do arquivo de redirecionamento
-	struct s_scmd *next;                        // Próximo comando
-	struct s_scmd *prev;                        // Comando anterior
+	char			**args;
+	int 			(*builtin)(t_tools *, struct s_scmd *);
+	char			*exec_path;
+	char			quote_token;
+	int				num_redirections;
+	char			*hd_file_name;
+	char			*redirect_token;
+	char			*redirect_input_file;
+	char			*redirect_output_file;
+	char			*redirect_append_file;
+	char			*redirect_file_name;
+	struct s_scmd	*next;
+	struct s_scmd	*prev;
 } t_scmd;
 
 typedef struct s_token
@@ -60,7 +60,6 @@ void	assign_token_type(t_token *node);
 /* ------------------------------------------------------------------------- */
 t_scmd	*scmd_new(void);
 t_scmd	*simple_command(t_token *lst);
-//void	handle_redirection(t_scmd *node, t_token *lst);
 int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 
 /* ------------------------------------------------------------------------- */
@@ -69,7 +68,7 @@ int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
 int		check_quotes(char *arg);
-char	*trim_quotes(char *arg);
+char	*trim_quotes(char *arg, t_scmd *scmd);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
