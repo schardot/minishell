@@ -1,4 +1,4 @@
-#include "../include/redirecting.h"
+#include "../include/redirection.h"
 #include "../include/parser.h"
 // Handles input redirection: "<"
 int handle_input_redirection(t_scmd *node)
