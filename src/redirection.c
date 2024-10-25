@@ -1,25 +1,45 @@
 #include "../include/redirection.h"
 #include "../include/parser.h"
-// Handles input redirection: "<"
-int handle_input_redirection(t_scmd *node)
-{
-	int fd;
 
-	fd = open(node->redirect_input_file, O_RDONLY);
+void	set_redirection(t_scmd *node, t_token *lst)
+{
+	if (lst->type == REDIRECT_APPEND)
+	{
+		node->redirect_token = ">>";
+		node->redirect_append_file = lst->next->value;
+	}
+	else if (lst->type == REDIRECT_OUTPUT)
+	{
+		node->redirect_token = ">";
+		node->redirect_output_file = lst->next->value;
+	}
+	else if (lst->type == REDIRECT_INPUT)
+	{
+		node->redirect_token = "<";
+		node->redirect_input_file = lst->next->value;
+	}
+}
+
+// Handles input redirection: "<"
+int handle_input_redirection(t_scmd *node) {
+	printf("Handling input redirection from file: %s\n", node->redirect_input_file);
+	int fd = open(node->redirect_input_file, O_RDONLY);
 	if (fd < 0)
 	{
 		perror("Failed to open input file");
-		return (-1);
+		return -1;
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
-		perror("Error stdin");
-		close (fd);
-		return (-1);
+		perror("Error in dup2 for stdin");
+		close(fd);
+		return -1;
 	}
 	close(fd);
-	return (0);
+	return 0;
 }
+
+
 
 // Handles output redirection: ">"
 int handle_output_redirection(t_scmd *node)
@@ -62,7 +82,6 @@ int handle_append_redirection(t_scmd *node)
 		return(-1);
 	}
 	close(fd);
-	ft_putstr_fd("oi", fd);
 	return (0);
 }
 

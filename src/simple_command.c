@@ -20,9 +20,7 @@ t_scmd *simple_command(t_token *lst)
 		}
 		else if (lst->type == REDIRECT_APPEND || lst->type == REDIRECT_OUTPUT || lst->type == REDIRECT_INPUT)
 		{
-
-			node->redirect_token = lst->value;
-			node->redirect_append_file = lst->next->value;
+			set_redirection(node, lst);
 			if (handle_redirection(node) < 0)
 			{
 				fprintf(stderr, "Error handling redirection for command: %s\n", node->args[0]);

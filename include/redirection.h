@@ -25,4 +25,7 @@ int setup_output_redirection(char *file_name, int append);
 int setup_heredoc(char *delimiter); // Optional, for heredoc implementation
 void restore_stdio(int saved_stdin, int saved_stdout);
 
+
+void	set_redirection(t_scmd *node, t_token *lst);
+
 #endif
