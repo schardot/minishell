@@ -17,20 +17,22 @@ For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), y
 
 int builtinecho(t_tools *t, t_scmd *node)
 {
+	if (!ft_strncmp(node->args[1], "-n", ft_strlen(node->args[1])))
+		printf("%s", node->args[2]);
+	else
+		printf("%s\n", node->args[1]);
 	/* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	1. **echo** (with the `-n` option):
-   - Prints the provided text and, by default, adds a newline at the end. The `-n` option suppresses that newline.
-
-   Examples:
-   - `echo hello world` → prints "hello world\n"
-   - `echo -n hello world` → prints "hello world" (no newline)
+	- Prints the provided text and, by default, adds a newline at the end. The `-n` option suppresses that newline.
+	Examples:
+	- `echo hello world` → prints "hello world\n"
+	- `echo -n hello world` → prints "hello world" (no newline)
 	*/
 
 	// - - - - - - - - - - - - - - - - THIS BELOW IS FROM THE SUBJECT: - - - - - - - - - - - - - - - - - - - - -
-	//• Handle ’ (single quote)which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-	//• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-	//Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
-	(void)node;
+	// • Handle ’ (single quote)which should prevent the shell from interpreting the metacharacters in the quoted sequence.
+	// • Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
+	// Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
 	(void)t;
 	return (0);
 }
