@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
+#include "../include/redirection.h"
 
 t_scmd *simple_command(t_token *lst)
 {
@@ -19,7 +20,6 @@ t_scmd *simple_command(t_token *lst)
 		}
 		else if (lst->type == REDIRECT_APPEND || lst->type == REDIRECT_OUTPUT || lst->type == REDIRECT_INPUT)
 		{
-			// Call handle_redirection and check for errors
 			if (handle_redirection(node) < 0)
 			{
 				fprintf(stderr, "Error handling redirection for command: %s\n", node->args[0]);
@@ -39,8 +39,8 @@ t_scmd *simple_command(t_token *lst)
 			}
 			lst = lst->next;
 		}
-		return (node);
 	}
+	return (node);
 }
 // void	handle_redirection(t_scmd *node, t_token *lst)
 // {
