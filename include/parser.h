@@ -68,6 +68,8 @@ int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 /* ------------------------------------------------------------------------- */
 int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
+int		check_quotes(char *arg);
+char	*trim_quotes(char *arg);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
