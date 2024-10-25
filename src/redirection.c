@@ -1,5 +1,6 @@
 #include "../include/redirection.h"
 #include "../include/parser.h"
+
 // Handles input redirection: "<"
 int handle_input_redirection(t_scmd *node)
 {
@@ -64,6 +65,7 @@ int handle_append_redirection(t_scmd *node)
 	return (0);
 }
 
+
 int handle_redirection(t_scmd *node)
 {
 	if (ft_strncmp(node->redirect_token, ">", 2) == 0)
@@ -72,6 +74,5 @@ int handle_redirection(t_scmd *node)
 		return (handle_append_redirection(node));
 	else if (ft_strncmp(node->redirect_token, "<", 2) == 0)
 		return(handle_input_redirection(node));
-
 	return (0);
 }
