@@ -1,5 +1,9 @@
-#include "../include/redirecting.h"
-#include "../include/parser.h"
+#include "../include/redirection.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>  // For perror()
+
+
 // Handles input redirection: "<"
 int handle_input_redirection(t_scmd *node)
 {
