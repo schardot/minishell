@@ -43,24 +43,6 @@ t_scmd *simple_command(t_token *lst)
 	}
 	return (node);
 }
-// void	handle_redirection(t_scmd *node, t_token *lst)
-// {
-// 	if (lst->type == REDIRECT_APPEND)
-// 	{
-// 		node->redirect_token = ">>";
-// 		node->redirect_append_file = lst->next->value;
-// 	}
-// 	else if (lst->type == REDIRECT_OUTPUT)
-// 	{
-// 		node->redirect_token = ">";
-// 		node->redirect_output_file = lst->next->value;
-// 	}
-// 	else if (lst->type == REDIRECT_INPUT)
-// 	{
-// 		node->redirect_token = "<";
-// 		node->redirect_input_file = lst->next->value;
-// 	}
-// }
 
 t_scmd *scmd_new(void)
 {
