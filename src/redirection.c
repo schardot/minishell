@@ -1,4 +1,4 @@
-#include "../include/redirecting.h"
+#include "../include/redirection.h"
 #include "../include/parser.h"
 // Handles input redirection: "<"
 int handle_input_redirection(t_scmd *node)
@@ -39,6 +39,7 @@ int handle_output_redirection(t_scmd *node)
 		close(fd);
 		return (-1);
 	}
+	printf("%s", node->args[1]);
 	close(fd);
 	return (0);
 }
@@ -61,6 +62,7 @@ int handle_append_redirection(t_scmd *node)
 		return(-1);
 	}
 	close(fd);
+	ft_putstr_fd("oi", fd);
 	return (0);
 }
 
