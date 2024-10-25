@@ -9,38 +9,20 @@ SRC = src/main.c \
 	src/builtins.c \
 	src/parser.c \
 	src/tokens.c \
-	src/simple_command.c \
-	src/redirection.c
+	src/simple_command.c
 
-OBJ = $(SRC:.c=.o)
 
-#READLINE_DIR = $(shell brew --prefix readline)
-# READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+READLINE_DIR = $(shell brew --prefix readline)
+READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
 
-# INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
-
-READLINE_DIR = $(shell brew --prefix readline 2>/dev/null)
-READLINE_LIB = -lreadline -lhistory
-INCLUDES = -Iincludes -I$(LIBFT_DIR) -I/usr/include/readline # for linux is working in this way
-
-#this is only because you are using MAC and for Linux again it is diff.
-ifdef READLINE_DIR
-  READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
-  INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
-else
-  READLINE_LIB = -lreadline -lhistory
-  INCLUDES = -Iincludes -I$(LIBFT_DIR) -I/usr/include/readline
-endif
-
+INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(LIBFT)
 	@echo "compile"
-	$(CC) $(FLAGS) $(INCLUDES) $(SRC) $(READLINE_LIB) $(LIBFT) -o $(NAME)
+	$(CC) $(FLAGS) $(INCLUDES) $(LIBFT) $(SRC) $(READLINE_LIB) -o $(NAME)
 
-%.o: %.c
-	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
