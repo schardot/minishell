@@ -2,7 +2,7 @@
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
 
-void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
+void	parser(char *input, t_tools *t) //im just trying to deal with "ls -a | wc -l"
 {
 	char	**tokens;
 	t_scmd	*scmd;
@@ -15,41 +15,41 @@ void	parser(char *input) //im just trying to deal with "ls -a | wc -l"
 	if (!lst)
 		return ;
 	scmd = simple_command(lst);
+	check_exec_command(t, scmd);
 }
 
-// void    check_exec_command(char **command)
-// {
-// 	int pid;
-// 	int status;
-// 	//t_scmd	*cmd; dont know if its necessary but so im commenting it for now
+int	check_exec_command(t_tools *t, t_scmd *scmd)
+{
+	int pid;
+	int status;
 
-// 	pid = fork();
-// 	if (pid == 0)
-// 	{
-// 		if (is_builtin(command[0]))
-// 		{
-// 			//cmd = init_scmd(command);     same thing as above
-// 			 //not all commands have been implemented yet!
-// 			exit (0);
-// 		}
-// 		if (is_executable(command[0]))
-// 		{
-// 			execve(command[0], command, NULL);
-// 			perror("execve");
-// 			exit(1);
-// 		}
-// 		else
-// 		{
-// 			printf("%s: command not found", command[0]);
-// 			exit(127); // exit with command not found status
-// 		}
-// 	}
-// 	else if (pid < 0)
-// 		perror("fork");
-// 	else
-// 		waitpid(pid, &status, 0);
-// 	ft_free_matrix(command);
-// }
+	pid = fork();
+	if (pid == 0)
+	{
+		if (is_builtin(scmd->args[0]))
+		{
+			scmd->builtin(t, scmd);
+			exit (0);
+		}
+		else if (is_executable(scmd->args[0]))
+		{
+			execve(scmd->args[0], scmd->args, NULL);
+			perror("execve");
+			exit(1);
+		}
+		else
+		{
+			printf("%s: command not found", scmd->args[0]);
+			exit(127); // exit with command not found status
+		}
+	}
+	else if (pid < 0)
+		perror("fork");
+	else
+		waitpid(pid, &status, 0);
+	ft_free_matrix(scmd->args);
+	return (0);
+}
 
 int is_builtin(char *token)
 {
