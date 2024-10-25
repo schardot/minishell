@@ -53,6 +53,7 @@ t_scmd *scmd_new(void)
 		return (NULL);
 	node->args = NULL;
 	node->builtin = NULL;
+	node->exec_path = NULL;
 	node->num_redirections = 0;
 	node->hd_file_name = NULL;
 	node->redirect_token = NULL;

@@ -27,6 +27,7 @@ typedef struct s_scmd // chatgpt suggested
 {
 	char **args;                                 // Argumentos do comando
 	int (*builtin)(t_tools *, struct s_scmd *); // Ponteiro para função de built-in
+	char	*exec_path;
 	int num_redirections;                       // Número de redirecionamentos
 	char *hd_file_name;                         // Nome do arquivo para heredoc, se houver
 	char *redirect_token;                       // Token de redirecionamento, ex: ">"
@@ -79,6 +80,6 @@ int		builtinexit(t_tools *t, t_scmd *node);
 void	parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
-int		is_executable(char *cmd);
+char	*is_executable(char *cmd);
 
 #endif
