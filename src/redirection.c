@@ -1,4 +1,5 @@
 #include "../include/redirection.h"
+#include "../include/parser.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>  // For perror()

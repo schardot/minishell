@@ -81,5 +81,4 @@ void	check_exec_command(char **command);
 int		is_builtin(char *token);
 int		is_executable(char *cmd);
 
-
 #endif
