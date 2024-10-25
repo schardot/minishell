@@ -24,6 +24,7 @@ READLINE_LIB = -lreadline -lhistory
 INCLUDES = -Iincludes -I$(LIBFT_DIR) -I/usr/include/readline # for linux is working in this way
 
 #this is only because you are using MAC and for Linux again it is diff.
+#This one it is not that much important
 ifdef READLINE_DIR
   READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
   INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
