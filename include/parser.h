@@ -59,7 +59,7 @@ void	assign_token_type(t_token *node);
 /* ------------------------------------------------------------------------- */
 t_scmd	*scmd_new(void);
 t_scmd	*simple_command(t_token *lst);
-// void	handle_redirection(t_scmd *node, t_token *lst);
+void	handle_redirection(t_scmd *node, t_token *lst);
 int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 
 /* ------------------------------------------------------------------------- */
