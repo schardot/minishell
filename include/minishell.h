@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include "parser.h"
 # include <stdio.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
@@ -13,5 +14,6 @@
 #define MAX_INPUT_SIZE 1024
 
 char    *get_input(void);
+t_tools *init_t_tools(char **envp);
 
 #endif

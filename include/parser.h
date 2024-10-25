@@ -4,10 +4,10 @@
 typedef struct s_tools // chatgpt suggested
 {
 	char **envp;	 // Environment variables
-	char *cwd;		 // Current working directory
-	int exit_status; // Last command exit status
-	char **history;	 // Command history
-	int pipefd[2];	 // Pipe file descriptors
+	//char *cwd;		 // Current working directory
+	//int exit_status; // Last command exit status
+	//char **history;	 // Command history
+	//int pipefd[2];	 // Pipe file descriptors
 					 // Add any additional utility functions or states as needed
 } t_tools;
 
@@ -76,8 +76,8 @@ int		builtinexit(t_tools *t, t_scmd *node);
 /* ------------------------------------------------------------------------- */
 /*                           Parser Functions                                */
 /* ------------------------------------------------------------------------- */
-void	parser(char *input);
-void	check_exec_command(char **command);
+void	parser(char *input, t_tools *t);
+int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 int		is_executable(char *cmd);
 

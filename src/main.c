@@ -4,7 +4,9 @@
 int main(int argc, char **argv, char **envp)
 {
 	char	*input;
-	(void)envp;
+	t_tools *t;
+
+	t = init_t_tools(envp);
 	(void)argv;
 	(void)argc;
 	if (argc != 1)
@@ -16,7 +18,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		input = get_input();
 		if (input)
-			parser(input);
+			parser(input, t);
 	}
 	return (0);
 }
@@ -31,4 +33,16 @@ char *get_input(void)
 	if (input)
 		add_history(input);
 	return (input);
+}
+
+t_tools	*init_t_tools(char **envp)
+{
+	t_tools *node;
+
+	node = malloc(sizeof(t_tools));
+	if (!node)
+		return (NULL);
+	node->envp = envp;
+	//maybe this struct is going to have more stuff, if not i will destroy it
+	return (node);
 }
