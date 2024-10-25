@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
+#include "../include/redirection.h"
 
 t_scmd *simple_command(t_token *lst)
 {
@@ -52,7 +53,27 @@ void	handle_redirection(t_scmd *node, t_token *lst)
 	{
 		node->redirect_token = "<";
 		node->redirect_input_file = lst->next->value;
+			if (handle_redirection(node) < 0)
+			{
+				fprintf(stderr, "Error handling redirection for command: %s\n", node->args[0]);
+				// Free any allocated resources if necessary
+				free(node->args);
+				free(node);
+				return (NULL); // Return NULL on error
+			}
+			else if (lst->type == PIPE)
+			{
+				next_command = simple_command(lst->next);
+				node->next = next_command;
+				if (next_command)
+					lst->next = NULL;
+				else
+					break;
+			}
+			lst = lst->next;
+		}
 	}
+	return (node);
 }
 
 t_scmd *scmd_new(void)
