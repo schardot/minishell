@@ -9,8 +9,8 @@ SRC = src/main.c \
 	src/builtins.c \
 	src/parser.c \
 	src/tokens.c \
+	src/redirection.c \
 	src/simple_command.c
-
 
 READLINE_DIR = $(shell brew --prefix readline)
 READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib

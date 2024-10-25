@@ -15,11 +15,14 @@ t_scmd *simple_command(t_token *lst)
 		else if (lst->type == COMMAND)
 		{
 			node->args = ft_append_to_array(node->args, lst->value, ft_str2dlen(node->args));
-			if (is_builtin(lst->value))
-				node->builtin = get_builtin_function(lst->value);
+			if (is_builtin(node->args[0]))
+				node->builtin = get_builtin_function(node->args[0]);
 		}
 		else if (lst->type == REDIRECT_APPEND || lst->type == REDIRECT_OUTPUT || lst->type == REDIRECT_INPUT)
 		{
+
+			node->redirect_token = lst->value;
+			node->redirect_append_file = lst->next->value;
 			if (handle_redirection(node) < 0)
 			{
 				fprintf(stderr, "Error handling redirection for command: %s\n", node->args[0]);
@@ -37,8 +40,8 @@ t_scmd *simple_command(t_token *lst)
 				else
 					break;
 			}
-			lst = lst->next;
 		}
+		lst = lst->next;
 	}
 	return (node);
 }
