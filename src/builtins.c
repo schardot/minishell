@@ -15,26 +15,79 @@ For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), y
 */
 
 
-int builtinecho(t_tools *t, t_scmd *node)
+int builtinecho(t_tools *t, t_scmd *scmd)
 {
-	if (!ft_strncmp(node->args[1], "-n", ft_strlen(node->args[1])))
-		printf("%s", node->args[2]);
-	else
-		printf("%s\n", node->args[1]);
-	/* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	1. **echo** (with the `-n` option):
-	- Prints the provided text and, by default, adds a newline at the end. The `-n` option suppresses that newline.
-	Examples:
-	- `echo hello world` → prints "hello world\n"
-	- `echo -n hello world` → prints "hello world" (no newline)
-	*/
+	int		i;
+	char	*arg;
 
-	// - - - - - - - - - - - - - - - - THIS BELOW IS FROM THE SUBJECT: - - - - - - - - - - - - - - - - - - - - -
-	// • Handle ’ (single quote)which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-	// • Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-	// Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
-	(void)t;
+	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
+		i = 2;
+	else
+		i = 1;
+	arg = ft_strdup(scmd->args[i]);
+	if (!arg)
+		return (-1);
+	if (!check_quotes(arg))
+		arg = trim_quotes(arg, scmd);
+	else
+		return (1);
+	if (arg[0] == '$' && scmd->quote_token != '\'')
+	{
+		arg ++;
+		arg = getenv(arg);
+		if (arg == NULL)
+			return (-1);
+	}
+	printf("%s", arg);
+	if (i == 1)
+		printf("\n");
+	//free (arg);
 	return (0);
+}
+
+int	check_quotes(char *arg)
+{
+	bool	dq;
+	bool	sq;
+	int		i;
+
+	i = 0;
+	dq = false;
+	sq = false;
+	while (arg[i])
+	{
+		if (arg[i] == '"' && !sq)
+			dq = !dq;
+		if (arg[i] == '\'' && !dq)
+			sq = !sq;
+		i++;
+	}
+	if (dq || sq)
+	{
+		ft_putstr_fd("Error: Unclosed quotes in input.\n", 2);
+		free(arg);
+		return (-1);
+	}
+	return (0);
+}
+
+char	*trim_quotes(char *arg, t_scmd *scmd)
+{
+	int	i;
+	int	z;
+
+	z = ft_strlen(arg) - 1;
+	i = 0;
+	if ((arg[i] == '\'' && arg[z] == '\'') || (arg[i] == '\"' && arg[z] == '\"'))
+	{
+		if (arg[i] == '\'' && arg[z] == '\'')
+			scmd->quote_token = '\'';
+		else
+			scmd->quote_token = '\"';
+		arg[z] = '\0';
+		arg ++;
+	}
+	return (arg);
 }
 
 int	builtincd(t_tools *t, t_scmd *node)
