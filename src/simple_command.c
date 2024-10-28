@@ -52,6 +52,7 @@ t_scmd *scmd_new(void)
 	if (!node)
 		return (NULL);
 	node->args = NULL;
+	node->next = 0;
 	node->builtin = NULL;
 	node->exec_path = NULL;
 	node->num_redirections = 0;

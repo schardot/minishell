@@ -17,77 +17,57 @@ For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), y
 
 int builtinecho(t_tools *t, t_scmd *scmd)
 {
-	int		i;
+	int		flag;
+	char	*output;
 	char	*arg;
+	char	*temp;
+	int		i;
 
+	if (!scmd->args[1])
+		printf("\n");
 	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
-		i = 2;
+		flag = 1;
 	else
-		i = 1;
-	arg = ft_strdup(scmd->args[i]);
-	if (!arg)
-		return (-1);
-	if (!check_quotes(arg))
-		arg = trim_quotes(arg, scmd);
-	else
-		return (1);
-	if (arg[0] == '$' && scmd->quote_token != '\'')
+		flag = 0;
+	i = flag + 1;
+	arg = ft_strdup("");
+	while (scmd->args[i])
 	{
-		arg ++;
-		arg = getenv(arg);
-		if (arg == NULL)
+		output = format_arg(scmd, scmd->args[i]);
+		if (!output)
+		{
+			//free(arg);
 			return (-1);
+		}
+		temp = str_join(arg, output);
+		//free (arg);
+		arg = temp;
+		temp = str_join(arg, " ");
+        //free(arg);
+        arg = temp;
+		i ++;
 	}
 	printf("%s", arg);
-	if (i == 1)
+	if (flag == 0)
 		printf("\n");
-	//free (arg);
+	//free(arg);
 	return (0);
 }
 
-int	check_quotes(char *arg)
+char	*str_join(char *first, char *second)
 {
-	bool	dq;
-	bool	sq;
-	int		i;
+	char	*new;
+	int		lenf;
+	int		lens;
 
-	i = 0;
-	dq = false;
-	sq = false;
-	while (arg[i])
-	{
-		if (arg[i] == '"' && !sq)
-			dq = !dq;
-		if (arg[i] == '\'' && !dq)
-			sq = !sq;
-		i++;
-	}
-	if (dq || sq)
-	{
-		ft_putstr_fd("Error: Unclosed quotes in input.\n", 2);
-		free(arg);
-		return (-1);
-	}
-	return (0);
-}
-
-char	*trim_quotes(char *arg, t_scmd *scmd)
-{
-	int	i;
-	int	z;
-
-	z = ft_strlen(arg) - 1;
-	i = 0;
-	if ((arg[i] == '\'' && arg[z] == '\'') || (arg[i] == '\"' && arg[z] == '\"'))
-	{
-		if (arg[i] == '\'' && arg[z] == '\'')
-			scmd->quote_token = '\'';
-		else
-			scmd->quote_token = '\"';
-		arg[z] = '\0';
-		arg ++;
-	}
-	return (arg);
+	lens = ft_strlen(second);
+	lenf = ft_strlen(first);
+	new = malloc(lens + lenf + 1);
+	if (!new)
+		return (NULL);
+	ft_strlcpy(new, first, lenf + 1);
+	ft_strlcat(new, second, lens + lenf + 1);
+	return (new);
 }
 
 int	builtincd(t_tools *t, t_scmd *node)

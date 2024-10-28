@@ -20,11 +20,13 @@ typedef enum
 	REDIRECT_INPUT,
 	REDIRECT_APPEND,
 	HEREDOC
-} e_token_type;
+} e_token_type;*value;       // Actual string value of the token
+	struct s_to
 
 typedef struct s_scmd
 {
 	char			**args;
+	int				num_args;
 	int 			(*builtin)(t_tools *, struct s_scmd *);
 	char			*exec_path;
 	char			quote_token;
@@ -69,6 +71,8 @@ int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
 int		check_quotes(char *arg);
 char	*trim_quotes(char *arg, t_scmd *scmd);
+char	*format_arg(t_scmd *scmd, char *arg);
+char	*str_join(char *first, char *second);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
