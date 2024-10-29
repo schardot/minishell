@@ -43,7 +43,15 @@ int handle_input_redirection(t_scmd *node) {
 	return 0;
 }
 
-
+void restore_stdout(t_scmd *node)
+{
+	// Restore the original STDOUT from old_fd
+	if (dup2(node->old_fd, STDOUT_FILENO) < 0)
+	{
+		perror("Failed to restore STDOUT");
+	}
+	close(node->old_fd);
+}
 
 // Handles output redirection: ">"
 int handle_output_redirection(t_scmd *node)

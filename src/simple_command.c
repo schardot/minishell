@@ -40,6 +40,7 @@ t_scmd *simple_command(t_token *lst)
 					break;
 			}
 		lst = lst->next;
+		
 	}
 	return (node);
 }
