@@ -78,6 +78,8 @@ t_scmd *scmd_new(void)
 	node->redirect_output_file = NULL;
 	node->redirect_append_file = NULL;
 	node->redirect_file_name = NULL;
+	node->old_fd = 0;
+	node->new_fd = 0;
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);

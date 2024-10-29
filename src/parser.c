@@ -117,6 +117,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 			printf("%s: command not found", scmd->args[0]);
 			exit(127); // exit with command not found status
 		}
+		scmd->old_fd = dup(STDOUT_FILENO);
 	}
 	else if (pid < 0)
 		perror("fork");

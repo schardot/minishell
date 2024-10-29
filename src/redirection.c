@@ -71,21 +71,22 @@ int handle_output_redirection(t_scmd *node)
 // Handles append redirection: ">>"
 int handle_append_redirection(t_scmd *node)
 {
-	int fd;
+	//int fd;
 
-	fd = open(node->redirect_append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd < 0)
+	node->old_fd = dup(STDOUT_FILENO);
+	node->new_fd = open(node->redirect_append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (node->new_fd < 0)
 	{
 		perror("Failed to open append file");
 		return (-1);
 	}
-	if (dup2(fd, STDOUT_FILENO) < 0)
+	if (dup2(node->new_fd, STDOUT_FILENO) < 0)
 	{
 		perror("Error stdout");
-		close(fd);
+		close(node->new_fd);
 		return(-1);
 	}
-	close(fd);
+	close(node->new_fd);
 	return (0);
 }
 
