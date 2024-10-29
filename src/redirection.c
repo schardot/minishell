@@ -7,16 +7,20 @@ void	set_redirection(t_scmd *node, t_token *lst)
 	{
 		node->redirect_token = ">>";
 		node->redirect_append_file = lst->next->value;
+		node->num_redirections++;
 	}
 	else if (lst->type == REDIRECT_OUTPUT)
 	{
 		node->redirect_token = ">";
 		node->redirect_output_file = lst->next->value;
+		node->num_redirections++;
+
 	}
 	else if (lst->type == REDIRECT_INPUT)
 	{
 		node->redirect_token = "<";
 		node->redirect_input_file = lst->next->value;
+		node->num_redirections++;
 	}
 }
 
@@ -39,7 +43,15 @@ int handle_input_redirection(t_scmd *node) {
 	return 0;
 }
 
-
+void restore_stdout(t_scmd *node)
+{
+	// Restore the original STDOUT from old_fd
+	if (dup2(node->old_fd, STDOUT_FILENO) < 0)
+	{
+		perror("Failed to restore STDOUT");
+	}
+	close(node->old_fd);
+}
 
 // Handles output redirection: ">"
 int handle_output_redirection(t_scmd *node)
@@ -67,21 +79,22 @@ int handle_output_redirection(t_scmd *node)
 // Handles append redirection: ">>"
 int handle_append_redirection(t_scmd *node)
 {
-	int fd;
-
-	fd = open(node->redirect_append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd < 0)
+	//int fd;
+	node->old_fd = dup(STDOUT_FILENO);
+	node->new_fd = open(node->redirect_append_file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (node->new_fd < 0)
 	{
 		perror("Failed to open append file");
 		return (-1);
 	}
-	if (dup2(fd, STDOUT_FILENO) < 0)
+	if (dup2(node->new_fd, STDOUT_FILENO) < 0)
 	{
 		perror("Error stdout");
-		close(fd);
+		close(node->new_fd);
+		close(node->old_fd);
 		return(-1);
 	}
-	close(fd);
+	close(node->new_fd);
 	return (0);
 }
 

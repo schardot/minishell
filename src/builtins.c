@@ -17,78 +17,49 @@ For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), y
 
 int builtinecho(t_tools *t, t_scmd *scmd)
 {
-	int		i;
+	int		flag;
+	char	*output;
 	char	*arg;
-
-	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
-		i = 2;
-	else
-		i = 1;
-	arg = ft_strdup(scmd->args[i]);
-	if (!arg)
-		return (-1);
-	if (!check_quotes(arg))
-		arg = trim_quotes(arg, scmd);
-	else
-		return (1);
-	if (arg[0] == '$' && scmd->quote_token != '\'')
-	{
-		arg ++;
-		arg = getenv(arg);
-		if (arg == NULL)
-			return (-1);
-	}
-	printf("%s", arg);
-	if (i == 1)
-		printf("\n");
-	//free (arg);
-	return (0);
-}
-
-int	check_quotes(char *arg)
-{
-	bool	dq;
-	bool	sq;
+	char	*temp;
 	int		i;
 
-	i = 0;
-	dq = false;
-	sq = false;
-	while (arg[i])
+	if (!scmd->args[1])
+		printf("\n");
+	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
+		flag = 1;
+	else
+		flag = 0;
+	i = flag + 1;
+	arg = ft_strdup("");
+	while (scmd->args[i])
 	{
-		if (arg[i] == '"' && !sq)
-			dq = !dq;
-		if (arg[i] == '\'' && !dq)
-			sq = !sq;
-		i++;
+		output = format_arg(scmd, scmd->args[i]);
+		if (!output)
+		{
+			//free(arg);
+			return (-1);
+		}
+		temp = ft_strjoin(arg, output);
+		//free (arg);
+		arg = temp;
+		temp = ft_strjoin(arg, " ");
+        //free(arg);
+        arg = temp;
+		i ++;
 	}
-	if (dq || sq)
+	ft_putstr_fd(arg, STDOUT_FILENO);
+	if (scmd->num_redirections > 0)
 	{
-		ft_putstr_fd("Error: Unclosed quotes in input.\n", 2);
-		free(arg);
-		return (-1);
+		handle_redirection(scmd);
+		restore_stdout(scmd);
 	}
+	//printf("%s", arg);
+	if (flag == 0)
+		printf("\n");
+	//free(arg);
 	return (0);
 }
 
-char	*trim_quotes(char *arg, t_scmd *scmd)
-{
-	int	i;
-	int	z;
-
-	z = ft_strlen(arg) - 1;
-	i = 0;
-	if ((arg[i] == '\'' && arg[z] == '\'') || (arg[i] == '\"' && arg[z] == '\"'))
-	{
-		if (arg[i] == '\'' && arg[z] == '\'')
-			scmd->quote_token = '\'';
-		else
-			scmd->quote_token = '\"';
-		arg[z] = '\0';
-		arg ++;
-	}
-	return (arg);
-}
 
 int	builtincd(t_tools *t, t_scmd *node)
 {

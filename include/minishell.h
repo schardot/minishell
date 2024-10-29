@@ -5,6 +5,7 @@
 # include "parser.h"
 # include <stdio.h>
 # include <sys/wait.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <limits.h>
@@ -15,5 +16,7 @@
 
 char    *get_input(void);
 t_tools *init_t_tools(char **envp);
+void	handle_signal(int sig);
+void	setup_signal_handling(void);
 
 #endif
