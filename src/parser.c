@@ -10,7 +10,6 @@ void	parser(char *input, t_tools *t)
 	t_token	*lst;
 
 	check_quotes(input);
-	
 	tokens = ft_split(input, ' ');
 	if (!tokens)
 		return ;
@@ -18,14 +17,7 @@ void	parser(char *input, t_tools *t)
 	if (!lst)
 		return ;
 	scmd = simple_command(lst);
-	if (scmd->redirect_append_file) {
-        if (handle_append_redirection(scmd) < 0) {
-            ft_free_matrix(tokens);
-            return; // Exit if redirection fails
-        }
-	}
 	check_exec_command(t, scmd);
-	// handle_redirection(scmd);
 }
 
 char	*format_arg(t_scmd *scmd, char *arg)
@@ -96,11 +88,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (scmd->redirect_append_file)
-		{
-            if (handle_append_redirection(scmd) < 0)
-                exit(1); // Exit if redirection fails
-        }
+		handle_redirection(scmd);
 		if (is_builtin(scmd->args[0]))
 		{
 			scmd->builtin(t, scmd);
