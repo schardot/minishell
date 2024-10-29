@@ -7,16 +7,20 @@ void	set_redirection(t_scmd *node, t_token *lst)
 	{
 		node->redirect_token = ">>";
 		node->redirect_append_file = lst->next->value;
+		node->num_redirections++;
 	}
 	else if (lst->type == REDIRECT_OUTPUT)
 	{
 		node->redirect_token = ">";
 		node->redirect_output_file = lst->next->value;
+		node->num_redirections++;
+
 	}
 	else if (lst->type == REDIRECT_INPUT)
 	{
 		node->redirect_token = "<";
 		node->redirect_input_file = lst->next->value;
+		node->num_redirections++;
 	}
 }
 

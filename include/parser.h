@@ -4,6 +4,8 @@
 typedef struct s_tools // chatgpt suggested
 {
 	char **envp;	 // Environment variables
+	int	stdin_backup;
+	int	stdout_backup;
 	//char *cwd;		 // Current working directory
 	//int exit_status; // Last command exit status
 	//char **history;	 // Command history
@@ -20,13 +22,19 @@ typedef enum
 	REDIRECT_INPUT,
 	REDIRECT_APPEND,
 	HEREDOC
-} e_token_type;*value;       // Actual string value of the token
-	struct s_to
+} e_token_type;
+
+typedef struct s_token
+{
+	e_token_type type; // Type of token
+	char *value;       // Actual string value of the token
+	struct s_token *prev;
+	struct s_token *next; // Pointer to the next token in the list
+} t_token;
 
 typedef struct s_scmd
 {
 	char			**args;
-	int				num_args;
 	int 			(*builtin)(t_tools *, struct s_scmd *);
 	char			*exec_path;
 	char			quote_token;
@@ -41,13 +49,7 @@ typedef struct s_scmd
 	struct s_scmd	*prev;
 } t_scmd;
 
-typedef struct s_token
-{
-	e_token_type type; // Type of token
-	char *value;       // Actual string value of the token
-	struct s_token *prev;
-	struct s_token *next; // Pointer to the next token in the list
-} t_token;
+
 
 /* ------------------------------------------------------------------------- */
 /*                           Token List Functions         		             */
@@ -71,8 +73,6 @@ int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
 int		check_quotes(char *arg);
 char	*trim_quotes(char *arg, t_scmd *scmd);
-char	*format_arg(t_scmd *scmd, char *arg);
-char	*str_join(char *first, char *second);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
@@ -86,5 +86,12 @@ void	parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd);
+char	*format_arg(t_scmd *scmd, char *arg);
+
+
+
+
+int handle_redirection(t_scmd *node);
+char	**ft_append_to_arr(char **arr, char *str, int len);
 
 #endif

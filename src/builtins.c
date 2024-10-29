@@ -39,36 +39,24 @@ int builtinecho(t_tools *t, t_scmd *scmd)
 			//free(arg);
 			return (-1);
 		}
-		temp = str_join(arg, output);
+		temp = ft_strjoin(arg, output);
 		//free (arg);
 		arg = temp;
-		temp = str_join(arg, " ");
+		temp = ft_strjoin(arg, " ");
         //free(arg);
         arg = temp;
 		i ++;
 	}
-	printf("%s", arg);
+	ft_putstr_fd(arg, STDOUT_FILENO);
+	if (scmd->num_redirections > 0)
+		handle_redirection(scmd);
+	//printf("%s", arg);
 	if (flag == 0)
 		printf("\n");
 	//free(arg);
 	return (0);
 }
 
-char	*str_join(char *first, char *second)
-{
-	char	*new;
-	int		lenf;
-	int		lens;
-
-	lens = ft_strlen(second);
-	lenf = ft_strlen(first);
-	new = malloc(lens + lenf + 1);
-	if (!new)
-		return (NULL);
-	ft_strlcpy(new, first, lenf + 1);
-	ft_strlcat(new, second, lens + lenf + 1);
-	return (new);
-}
 
 int	builtincd(t_tools *t, t_scmd *node)
 {
