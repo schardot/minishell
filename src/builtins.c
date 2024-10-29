@@ -49,7 +49,10 @@ int builtinecho(t_tools *t, t_scmd *scmd)
 	}
 	ft_putstr_fd(arg, STDOUT_FILENO);
 	if (scmd->num_redirections > 0)
+	{
 		handle_redirection(scmd);
+		restore_stdout(scmd);
+	}
 	//printf("%s", arg);
 	if (flag == 0)
 		printf("\n");

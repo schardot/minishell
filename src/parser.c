@@ -1,6 +1,7 @@
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
+#include "../include/redirection.h"
 
 void	parser(char *input, t_tools *t)
 {
@@ -95,10 +96,10 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		 if (scmd->redirect_append_file) {
-            if (handle_append_redirection(scmd) < 0) {
+		if (scmd->redirect_append_file)
+		{
+            if (handle_append_redirection(scmd) < 0)
                 exit(1); // Exit if redirection fails
-            }
         }
 		if (is_builtin(scmd->args[0]))
 		{
@@ -114,7 +115,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		}
 		else
 		{
-			printf("%s: command not found", scmd->args[0]);
+			printf("minishell: command not found: %s\n", scmd->args[0]);
 			exit(127); // exit with command not found status
 		}
 		scmd->old_fd = dup(STDOUT_FILENO);
@@ -141,7 +142,7 @@ char	*is_executable(char *cmd)
 {
 	char	*path_env;
 	char	**paths;
-	char    exec_full_path[1024];
+	char    *exec_full_path;
 	int     i;
 
 	i = 0;
@@ -153,8 +154,13 @@ char	*is_executable(char *cmd)
 		return (NULL); // Failed to split PATH, exit early
 	while (paths[i])
 	{
-		exec_full_path[0] = '\0';
-		ft_strlcat(exec_full_path, paths[i], sizeof(exec_full_path));
+		exec_full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
+		if (exec_full_path == NULL)
+		{
+            ft_free_matrix(paths);
+            return (NULL);
+        }
+		ft_strlcpy(exec_full_path, paths[i], sizeof(exec_full_path));
 		ft_strlcat(exec_full_path, "/", sizeof(exec_full_path));
 		ft_strlcat(exec_full_path, cmd, sizeof(exec_full_path));
 		if (access(exec_full_path, X_OK) == 0)
@@ -162,6 +168,7 @@ char	*is_executable(char *cmd)
 			ft_free_matrix(paths);
 			return (exec_full_path); // Command found in $PATH and is executable
 		}
+		free(exec_full_path);
 		i++;
 	}
 	ft_free_matrix(paths);
