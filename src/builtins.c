@@ -101,24 +101,39 @@ int	builtinexport(t_tools *t, t_scmd *node)
 	return (0);
 }
 
-int	builtinunset(t_tools *t, t_scmd *node)
+int builtinunset(t_tools *t, t_scmd *scmd)
 {
-	/* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   **unset** (with no options):
-   - Removes environment variables.
-   - Example: `unset VAR` removes `VAR` from the environment.*/
-	(void)node;
-	(void)t;
+	if (scmd->argsc == 1)
+		return (0); // $unset does nothing
+	if (check_unset_args(scmd))
+	{
+		printf("minishell: unset: \'%s\': not a valid identifier\n", scmd->args[1]);
+		return (1);
+	}
+	return (0);
+}
+
+int check_unset_args(t_scmd *scmd)
+{
+	if (!ft_isalpha(scmd->args[1][0]))
+		return (1);
+	//there are more examples of whats an invalid argument, but for now i just want to build the idea of the thing.
 	return (0);
 }
 
 int	builtinenv(t_tools *t, t_scmd *node)
 {
-	/* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  **env** (with no options or arguments):
-   - Prints all the current environment variables.*/
+	char	**aux;
+	int	i;
+
+	aux = t->envp;
+	i = 0;
+	while(aux[i])
+	{
+		printf("%s\n", aux[i]);
+		i ++;
+	}
 	(void)node;
-	(void)t;
 	return (0);
 }
 

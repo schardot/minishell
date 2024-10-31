@@ -19,10 +19,17 @@ char	**ft_append_to_array(char **arr, char *str, int len)
 	new = ft_realloc(arr, (len + 1) * sizeof(char *), \
 	(len + 2) * sizeof(char *));
 	if (!new)
+	{
+		free(str); // Free str if realloc fails and str was dynamically allocated
 		return (NULL);
+	}
 	new[len] = ft_strdup(str);
 	if (!new[len])
+	{
+		free(str);			 // Free str before returning NULL if strdup fails
+		ft_free_matrix(new); // Free the new array if strdup fails
 		return (NULL);
+	}
 	new[len + 1] = NULL;
 	free (str);
 	return (new);

@@ -15,7 +15,7 @@ STRING = $(S_DIR)/ft_strlen.c $(S_DIR)/ft_strlcpy.c $(S_DIR)/ft_strlcat.c $(S_DI
 
 MEM_DIR = memory
 MEM = $(MEM_DIR)/ft_memset.c $(MEM_DIR)/ft_bzero.c $(MEM_DIR)/ft_memcpy.c $(MEM_DIR)/ft_memmove.c $(MEM_DIR)/ft_memchr.c $(MEM_DIR)/ft_calloc.c $(MEM_DIR)/ft_realloc.c \
-	$(MEM_DIR)/ft_memcmp.c
+	$(MEM_DIR)/ft_memcmp.c $(MEM_DIR)/ft_memmem.c
 
 CV_DIR = conversion
 CONV = $(CV_DIR)/ft_atoi.c $(CV_DIR)/ft_itoa.c

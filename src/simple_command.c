@@ -11,10 +11,14 @@ t_scmd *simple_command(t_token *lst)
 	while (lst)
 	{
 		if (lst->type == ARGUMENT)
+		{
 			node->args = ft_append_to_arr(node->args, lst->value, ft_str2dlen(node->args));
+			node->argsc ++;
+		}
 		else if (lst->type == COMMAND)
 		{
 			node->args = ft_append_to_arr(node->args, lst->value, ft_str2dlen(node->args));
+			node->argsc ++;
 			if (is_builtin(node->args[0]))
 				node->builtin = get_builtin_function(node->args[0]);
 		}
@@ -61,6 +65,7 @@ t_scmd *scmd_new(void)
 	if (!node)
 		return (NULL);
 	node->args = NULL;
+	node->argsc = 0;
 	node->builtin = NULL;
 	node->exec_path = NULL;
 	node->quote_token = 0;

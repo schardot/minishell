@@ -29,5 +29,8 @@ void restore_stdio(int saved_stdin, int saved_stdout);
 void	set_redirection(t_scmd *node, t_token *lst);
 void	restore_stdout(t_scmd *node);
 int		handle_append_redirection(t_scmd *node);
+int 	handle_output_redirection(t_scmd *node);
+int		handle_input_redirection(t_scmd *node);
+void	set_redirection(t_scmd *node, t_token *lst);
 
 #endif

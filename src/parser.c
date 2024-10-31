@@ -118,12 +118,20 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 
 int is_builtin(char *token)
 {
-	int len;
+	const char *builtins[] = {"cd", "pwd", "echo", "exit", "export", "unset", "env", NULL};
 
-	len = ft_strlen(token);
-	if (!ft_strncmp(token, "cd", len) || !ft_strncmp(token, "pwd", len) || !ft_strncmp(token, "echo", len) || !ft_strncmp(token, "exit", len) || !ft_strncmp(token, "export", len) || !ft_strncmp(token, "unset", len) || !ft_strncmp(token, "env", len))
-		return (1);
-	return(0);
+	int	i;
+	int	token_len;
+
+	i = 0;
+	token_len = strlen(token);
+	while (builtins[i] != NULL)
+	{
+		if (ft_strncmp(token, builtins[i], token_len) == 0 && strlen(builtins[i]) == token_len)
+			return (1);
+		i ++;
+	}
+	return (0);
 }
 
 char *is_executable(char *cmd)

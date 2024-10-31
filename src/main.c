@@ -25,7 +25,7 @@ int main(int argc, char **argv, char **envp)
 		input = get_input();
 		if (input)
 			parser(input, t);
-		if (!input)				   // Handle EOF (Ctrl+D)
+		if (!input)
 			break;
 		free(input);
 	}
@@ -47,14 +47,16 @@ char *get_input(void)
 
 t_tools	*init_t_tools(char **envp)
 {
-	t_tools *node;
+	t_tools	*n_tools;
+	int		i;
 
-	node = malloc(sizeof(t_tools));
-	if (!node)
+	n_tools = malloc(sizeof(t_tools));
+	if (!n_tools)
 		return (NULL);
-	node->envp = envp;
-	//maybe this struct is going to have more stuff, if not i will destroy it
-	return (node);
+	n_tools->envp = ft_matrixdup(envp, ft_str2dlen(envp));
+	if (!n_tools->envp)
+		return (NULL);
+	return (n_tools);
 }
 
 void	handle_signal(int sig)
