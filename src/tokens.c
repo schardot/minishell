@@ -53,11 +53,12 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	aux = *lst;
 	while (aux->next)
 	{
-		prev = aux;
+		// prev = aux;
 		aux = aux->next;
 	}
 	aux->next = new;
-	aux->prev = prev;
+	//aux->prev = prev;
+	aux->prev = aux; // there is actually for me no change we can talk which one is better implementation
 }
 
 void	assign_token_type(t_token *node)

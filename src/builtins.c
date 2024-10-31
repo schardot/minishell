@@ -24,6 +24,7 @@ int builtinecho(t_tools *t, t_scmd *scmd)
 	char	*temp;
 	int		i;
 
+	handle_redirection(scmd);
 	if (!scmd->args[1])
 		printf("\n");
 	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
@@ -43,20 +44,22 @@ int builtinecho(t_tools *t, t_scmd *scmd)
 		temp = ft_strjoin(arg, output);
 		//free (arg);
 		arg = temp;
-		temp = ft_strjoin(arg, " ");
-        //free(arg);
-        arg = temp;
+		// i made it with if to can check if there is one more argv. If there is no more to not put extra space.
+		if (scmd->args[i + 1])
+		{
+			temp = ft_strjoin(arg, " ");
+        	//free(arg);
+			arg = temp;
+		}
 		i ++;
 	}
 	ft_putstr_fd(arg, STDOUT_FILENO);
-	if (scmd->num_redirections > 0)
-	{
-		handle_redirection(scmd);
-		restore_stdout(scmd);
-	}
+	if (!flag)
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	restore_stdout(scmd);
 	//printf("%s", arg);
-	if (flag == 0)
-		printf("\n");
+	// if (flag == 0)// -- this one is not correct because in the case of echo the flag will always be 0
+	// 	printf("\n");
 	//free(arg);
 	return (0);
 }
