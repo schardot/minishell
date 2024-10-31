@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
+#include "../include/redirection.h"
 
 /*• Your shell must implement the following builtins:
 ◦ echo with option -n
