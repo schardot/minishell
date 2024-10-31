@@ -1,16 +1,13 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-typedef struct s_tools // chatgpt suggested
+typedef struct s_tools
 {
-	char **envp;	 // Environment variables
-	int	stdin_backup;
-	int	stdout_backup;
-	//char *cwd;		 // Current working directory
-	//int exit_status; // Last command exit status
-	//char **history;	 // Command history
-	//int pipefd[2];	 // Pipe file descriptors
-					 // Add any additional utility functions or states as needed
+	char	**envp;
+	int		stdin_backup; //elmira are you using this
+	int		stdout_backup; //this also
+	// int exit_status; // Last command exit status
+	// int pipefd[2];	 // Pipe file descriptors
 } t_tools;
 
 typedef enum
@@ -26,15 +23,16 @@ typedef enum
 
 typedef struct s_token
 {
-	e_token_type type; // Type of token
-	char *value;       // Actual string value of the token
-	struct s_token *prev;
-	struct s_token *next; // Pointer to the next token in the list
+	e_token_type	type;
+	char			*value;
+	struct s_token	*prev;
+	struct s_token	*next;
 } t_token;
 
 typedef struct s_scmd
 {
 	char			**args;
+	int				argsc;
 	int 			(*builtin)(t_tools *, struct s_scmd *);
 	char			*exec_path;
 	char			quote_token;
@@ -78,6 +76,7 @@ char	*trim_quotes(char *arg, t_scmd *scmd);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
+int		check_unset_args(t_scmd *scmd);
 int		builtinenv(t_tools *t, t_scmd *node);
 int		builtinexit(t_tools *t, t_scmd *node);
 
