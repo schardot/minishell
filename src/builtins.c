@@ -111,11 +111,17 @@ int	builtinunset(t_tools *t, t_scmd *node)
 
 int	builtinenv(t_tools *t, t_scmd *node)
 {
-	/* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  **env** (with no options or arguments):
-   - Prints all the current environment variables.*/
+	char	**aux;
+	int	i;
+
+	aux = t->envp;
+	i = 0;
+	while(aux[i])
+	{
+		printf("%s\n", aux[i]);
+		i ++;
+	}
 	(void)node;
-	(void)t;
 	return (0);
 }
 
