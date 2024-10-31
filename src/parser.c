@@ -10,7 +10,6 @@ void	parser(char *input, t_tools *t)
 	t_token	*lst;
 
 	check_quotes(input);
-	
 	tokens = ft_split(input, ' ');
 	if (!tokens)
 		return ;
@@ -18,14 +17,7 @@ void	parser(char *input, t_tools *t)
 	if (!lst)
 		return ;
 	scmd = simple_command(lst);
-	if (scmd->redirect_append_file) {
-        if (handle_append_redirection(scmd) < 0) {
-            ft_free_matrix(tokens);
-            return; // Exit if redirection fails
-        }
-	}
 	check_exec_command(t, scmd);
-	// handle_redirection(scmd);
 }
 
 char	*format_arg(t_scmd *scmd, char *arg)
@@ -96,11 +88,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (scmd->redirect_append_file)
-		{
-            if (handle_append_redirection(scmd) < 0)
-                exit(1); // Exit if redirection fails
-        }
+		//handle_redirection(scmd);
 		if (is_builtin(scmd->args[0]))
 		{
 			scmd->builtin(t, scmd);
@@ -118,7 +106,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 			printf("minishell: command not found: %s\n", scmd->args[0]);
 			exit(127); // exit with command not found status
 		}
-		scmd->old_fd = dup(STDOUT_FILENO);
+		scmd->old_stdout_fd = dup(STDOUT_FILENO);
 	}
 	else if (pid < 0)
 		perror("fork");
@@ -138,14 +126,15 @@ int is_builtin(char *token)
 	return(0);
 }
 
-char	*is_executable(char *cmd)
+char *is_executable(char *cmd)
 {
-	char	*path_env;
-	char	**paths;
-	char    *exec_full_path;
-	int     i;
-
+	char *path_env;
+	char **paths;
+	char *exec_full_path;
+	int i;
 	i = 0;
+	if (access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd)); // Return a copy of cmd if it’s allready the full path
 	path_env = getenv("PATH");
 	if (path_env == NULL)
 		return (NULL); // PATH not set, command can't be found
@@ -157,12 +146,12 @@ char	*is_executable(char *cmd)
 		exec_full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (exec_full_path == NULL)
 		{
-            ft_free_matrix(paths);
-            return (NULL);
-        }
-		ft_strlcpy(exec_full_path, paths[i], sizeof(exec_full_path));
-		ft_strlcat(exec_full_path, "/", sizeof(exec_full_path));
-		ft_strlcat(exec_full_path, cmd, sizeof(exec_full_path));
+			ft_free_matrix(paths);
+			return (NULL);
+		}
+		ft_strlcpy(exec_full_path, paths[i], ft_strlen(paths[i]) + 1);
+		ft_strlcat(exec_full_path, "/", ft_strlen(paths[i]) + 2);
+		ft_strlcat(exec_full_path, cmd, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (access(exec_full_path, X_OK) == 0)
 		{
 			ft_free_matrix(paths);
@@ -171,6 +160,6 @@ char	*is_executable(char *cmd)
 		free(exec_full_path);
 		i++;
 	}
-	ft_free_matrix(paths);
-	return (NULL); // Command not found in $PATH
+		ft_free_matrix(paths);
+		return (NULL); // Command not found in $PATh
 }

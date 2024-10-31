@@ -21,14 +21,7 @@ t_scmd *simple_command(t_token *lst)
 		else if (lst->type == REDIRECT_APPEND || lst->type == REDIRECT_OUTPUT || lst->type == REDIRECT_INPUT)
 		{
 			set_redirection(node, lst);
-			// if (handle_redirection(node) < 0)
-			// {
-			// 	fprintf(stderr, "Error handling redirection for command: %s\n", node->args[0]);
-			// 	// Free any allocated resources if necessary
-			// 	free(node->args);
-			// 	free(node);
-			// 	return (NULL); // Return NULL on error
-			// }
+			lst = lst->next;
 		}
 		else if (lst->type == PIPE)
 			{
@@ -78,7 +71,8 @@ t_scmd *scmd_new(void)
 	node->redirect_output_file = NULL;
 	node->redirect_append_file = NULL;
 	node->redirect_file_name = NULL;
-	node->old_fd = 0;
+	node->old_stdout_fd = 0;
+	node->old_stdin_fd = 0;
 	node->new_fd = 0;
 	node->next = NULL;
 	node->prev = NULL;
