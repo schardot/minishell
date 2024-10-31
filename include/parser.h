@@ -45,7 +45,8 @@ typedef struct s_scmd
 	char			*redirect_output_file;
 	char			*redirect_append_file;
 	char			*redirect_file_name;
-	int				old_fd;
+	int				old_stdin_fd;
+	int				old_stdout_fd;
 	int				new_fd;
 	struct s_scmd	*next;
 	struct s_scmd	*prev;

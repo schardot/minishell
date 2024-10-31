@@ -33,7 +33,7 @@ void	set_redirection(t_scmd *node, t_token *lst)
 int handle_input_redirection(t_scmd *node) {
 	printf("Handling input redirection from file: %s\n", node->redirect_input_file);
 
-	node->old_fd = dup(STDIN_FILENO);
+	node->old_stdin_fd = dup(STDIN_FILENO);
 	node->new_fd = open(node->redirect_input_file, O_RDONLY);
 	if (node->new_fd < 0)
 	{
@@ -53,21 +53,24 @@ int handle_input_redirection(t_scmd *node) {
 void restore_stdout(t_scmd *node)
 {
 	// Restore the original STDOUT from old_fd
-	if (dup2(node->old_fd, STDOUT_FILENO) < 0)
+	if (dup2(node->old_stdout_fd, STDOUT_FILENO) < 0)
 	{
 		perror("Failed to restore STDOUT");
 	}
-	if (dup2(node->old_fd, STDIN_FILENO) < 0)
+	if (dup2(node->old_stdin_fd, STDIN_FILENO) < 0)
 	{
 		perror("Failed to restore STDIN");
 	}
-	close(node->old_fd);
+	if (node->old_stdout_fd >= 0)
+		close(node->old_stdout_fd);
+	if (node->old_stdin_fd >= 0)
+		close(node->old_stdin_fd);
 }
 
 // Handles output redirection: ">"
 int handle_output_redirection(t_scmd *node)
 {
-	node->old_fd = dup(STDOUT_FILENO);
+	node->old_stdout_fd = dup(STDOUT_FILENO);
 	node->new_fd = open(node->redirect_output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (node->new_fd < 0)
 	{
@@ -89,7 +92,7 @@ int handle_output_redirection(t_scmd *node)
 int handle_append_redirection(t_scmd *node)
 {
 	//int fd;
-	node->old_fd = dup(STDOUT_FILENO);
+	node->old_stdout_fd = dup(STDOUT_FILENO);
 	node->new_fd = open(node->redirect_append_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (node->new_fd < 0)
 	{
@@ -109,13 +112,15 @@ int handle_append_redirection(t_scmd *node)
 
 int handle_redirection(t_scmd *node)
 {
-	if (ft_strncmp(node->redirect_token, ">", 2) == 0)
-		return (handle_output_redirection(node));
-	else if (ft_strncmp(node->redirect_token, ">>", 3) == 0)
-		return (handle_append_redirection(node));
-	else if (ft_strncmp(node->redirect_token, "<", 2) == 0)
-		return(handle_input_redirection(node));
+	int result = 0;
 
-	return (0);
+	// Handle each redirection type
+	if (node->redirect_input_file && (result = handle_input_redirection(node)) != 0)
+		return result;
+	if (node->redirect_output_file && (result = handle_output_redirection(node)) != 0)
+		return result;
+	if (node->redirect_append_file && (result = handle_append_redirection(node)) != 0)
+		return result;
+	return result;
 }
 
