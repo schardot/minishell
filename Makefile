@@ -8,23 +8,21 @@ NAME = minishell
 SRC = src/main.c \
 	src/builtins.c \
 	src/parser.c \
+	src/executor.c \
 	src/tokens.c \
 	src/simple_command.c \
-	src/redirection.c
-
+	src/redirection.c \
+	src/builtins/builtin_unset.c \
+	src/builtins/builtin_echo.c \
+	src/builtins/builtin_cd.c \
+	src/builtins/builtin_env.c \
+	src/builtins/builtin_pwd.c
 OBJ = $(SRC:.c=.o)
-
-#READLINE_DIR = $(shell brew --prefix readline)
-# READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
-
-# INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
 
 READLINE_DIR = $(shell brew --prefix readline 2>/dev/null)
 READLINE_LIB = -lreadline -lhistory
-INCLUDES = -Iincludes -I$(LIBFT_DIR) -I/usr/include/readline # for linux is working in this way
+INCLUDES = -Iincludes -I$(LIBFT_DIR) -I/usr/include/readline
 
-#this is only because you are using MAC and for Linux again it is diff.
-#This one it is not that much important
 ifdef READLINE_DIR
   READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
   INCLUDES = -Iincludes -I$(LIBFT_DIR) -I$(READLINE_DIR)/include
