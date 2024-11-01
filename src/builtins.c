@@ -2,43 +2,6 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-/*• Your shell must implement the following builtins:
-◦ echo with option -n
-◦ cd with only a relative or absolute path
-◦ pwd with no options
-◦ export with no options
-◦ unset with no options
-◦ env with no options or arguments
-◦ exit with no options
-
-### For other commands:
-For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), you'll use the `execve()` function to execute them. This is how standard shells (like bash or zsh) execute external commands.
-*/
-
-int	builtincd(t_tools *t, t_scmd *node)
-{
-	(void)t;
-	if (chdir(node->args[1]) != 0)
-		printf("Error: %s\n", strerror(errno));
-	return (0);
-	/* - - - - - - - - - - - - - - - - - - - - - CHAT GPT - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	**cd** (only with relative or absolute paths):
-   - Changes the current working directory.
-   - You don't need to handle complex options like `cd -` to switch back to the previous directory. Just handle `cd` with an absolute or relative path.*/
-}
-
-int	builtinpwd(t_tools *t, t_scmd *node)
-{
-	(void)t;
-	(void)node;
-	char	buffer[PATH_MAX];
-
-	if (getcwd(buffer, sizeof(buffer)))
-		printf("%s\n", buffer);
-	else
-		perror("getcwd() error");
-	return (0);
-}
 
 int	builtinexport(t_tools *t, t_scmd *node)
 {
@@ -48,22 +11,6 @@ int	builtinexport(t_tools *t, t_scmd *node)
    - Example: `export VAR=value` sets `VAR` in the environment.*/
 	(void)node;
 	(void)t;
-	return (0);
-}
-
-int	builtinenv(t_tools *t, t_scmd *node)
-{
-	char	**aux;
-	int	i;
-
-	aux = t->envp;
-	i = 0;
-	while(aux[i])
-	{
-		printf("%s\n", aux[i]);
-		i ++;
-	}
-	(void)node;
 	return (0);
 }
 
