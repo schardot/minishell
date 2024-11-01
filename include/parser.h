@@ -1,6 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <stdbool.h>
+
 typedef struct s_tools
 {
 	char	**envp;
@@ -9,6 +11,15 @@ typedef struct s_tools
 	// int exit_status; // Last command exit status
 	// int pipefd[2];	 // Pipe file descriptors
 } t_tools;
+
+typedef struct s_parser
+{
+	bool	dq;
+	bool	sq;
+	bool	append;
+	char	**tokens;
+	char	*input;
+} t_parser;
 
 typedef enum
 {
@@ -73,7 +84,7 @@ int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
 int		check_quotes(char *arg);
-char	*trim_quotes(char *arg, t_scmd *scmd);
+char	*trim_quotes(char *arg);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);

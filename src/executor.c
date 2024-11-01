@@ -26,7 +26,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		}
 		else
 		{
-			printf("minishell: command not found: %s\n", scmd->args[0]);
+			printf("minishell: %s: command not found\n", scmd->args[0]);
 			exit(127); // exit with command not found status
 		}
 		scmd->old_stdout_fd = dup(STDOUT_FILENO);
