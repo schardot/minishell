@@ -84,7 +84,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
 	int pid;
 	int status;
-
+	int i = 0;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -92,7 +92,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		if (is_builtin(scmd->args[0]))
 		{
 			scmd->builtin(t, scmd);
-			exit (0);
+			return (0);
 		}
 		else if (is_executable(scmd->args[0]))
 		{
@@ -111,7 +111,9 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	else if (pid < 0)
 		perror("fork");
 	else
+	{
 		waitpid(pid, &status, 0);
+	}
 	ft_free_matrix(scmd->args);
 	return (0);
 }
