@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 10:50:47 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/01 11:03:32 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ int builtinunset(t_tools *t, t_scmd *scmd)
                 t->envp[i] = t->envp[i + 1];
                 i++;
             }
-            return (EXIT_SUCESS);
+            return (EXIT_SUCCESS);
         }
         i++;
     }
-    return (EXIT_SUCESS);
+    return (EXIT_SUCCESS);
 }
 
 int check_unset_args(t_scmd *scmd)
@@ -52,5 +52,5 @@ int check_unset_args(t_scmd *scmd)
     if (!ft_isalpha(scmd->args[1][0]))
         return (EXIT_FAILURE);
     // there are more examples of whats an invalid argument, but for now i just want to build the idea of the thing.
-    return (EXIT_SUCESS);
+    return (EXIT_SUCCESS);
 }

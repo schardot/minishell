@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:19 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 10:50:20 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/01 11:03:52 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ int	builtinenv(t_tools *t, t_scmd *node)
 		printf("%s\n", t->envp[i]);
 		i ++;
 	}
-	return (EXIT_SUCESS);
+	return (EXIT_SUCCESS);
 }

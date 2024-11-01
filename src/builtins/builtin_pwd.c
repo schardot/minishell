@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:26 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 10:50:27 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/01 11:04:12 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ int	builtinpwd(t_tools *t, t_scmd *node)
 		printf("%s\n", buffer);
 	else
 		perror("getcwd() error");
-	return (EXIT_SUCESS);
+	return (EXIT_SUCCESS);
 }

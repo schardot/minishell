@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 10:50:13 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/01 11:03:50 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,5 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	//  if (flag == 0)// -- this one is not correct because in the case of echo the flag will always be 0
 	//  	printf("\n");
 	// free(arg);
-	return (EXIT_SUCESS);
+	return (EXIT_SUCCESS);
 }

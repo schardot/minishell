@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 10:50:07 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/01 11:03:59 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,5 @@ int	builtincd(t_tools *t, t_scmd *node)
 {
 	if (chdir(node->args[1]) != 0)
 		printf("Error: %s\n", strerror(errno));
-	return (EXIT_SUCESS);
+	return (EXIT_SUCCESS);
 }
