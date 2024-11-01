@@ -15,56 +15,6 @@
 For any commands **not** listed as built-ins (like `ls`, `grep`, `cat`, etc.), you'll use the `execve()` function to execute them. This is how standard shells (like bash or zsh) execute external commands.
 */
 
-
-int builtinecho(t_tools *t, t_scmd *scmd)
-{
-	int		flag;
-	char	*output;
-	char	*arg;
-	char	*temp;
-	int		i;
-
-	handle_redirection(scmd);
-	if (!scmd->args[1])
-		printf("\n");
-	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
-		flag = 1;
-	else
-		flag = 0;
-	i = flag + 1;
-	arg = ft_strdup("");
-	while (scmd->args[i])
-	{
-		output = format_arg(scmd, scmd->args[i]);
-		if (!output)
-		{
-			//free(arg);
-			return (-1);
-		}
-		temp = ft_strjoin(arg, output);
-		//free (arg);
-		arg = temp;
-		// i made it with if to can check if there is one more argv. If there is no more to not put extra space.
-		if (scmd->args[i + 1])
-		{
-			temp = ft_strjoin(arg, " ");
-        	//free(arg);
-			arg = temp;
-		}
-		i ++;
-	}
-	ft_putstr_fd(arg, STDOUT_FILENO);
-	if (!flag)
-		ft_putstr_fd("\n", STDOUT_FILENO);
-	restore_stdout(scmd);
-	//printf("%s", arg);
-	// if (flag == 0)// -- this one is not correct because in the case of echo the flag will always be 0
-	// 	printf("\n");
-	//free(arg);
-	return (0);
-}
-
-
 int	builtincd(t_tools *t, t_scmd *node)
 {
 	(void)t;
@@ -98,26 +48,6 @@ int	builtinexport(t_tools *t, t_scmd *node)
    - Example: `export VAR=value` sets `VAR` in the environment.*/
 	(void)node;
 	(void)t;
-	return (0);
-}
-
-int builtinunset(t_tools *t, t_scmd *scmd)
-{
-	if (scmd->argsc == 1)
-		return (0); // $unset does nothing
-	if (check_unset_args(scmd))
-	{
-		printf("minishell: unset: \'%s\': not a valid identifier\n", scmd->args[1]);
-		return (1);
-	}
-	return (0);
-}
-
-int check_unset_args(t_scmd *scmd)
-{
-	if (!ft_isalpha(scmd->args[1][0]))
-		return (1);
-	//there are more examples of whats an invalid argument, but for now i just want to build the idea of the thing.
 	return (0);
 }
 
