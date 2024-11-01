@@ -8,12 +8,15 @@ NAME = minishell
 SRC = src/main.c \
 	src/builtins.c \
 	src/parser.c \
+	src/executor.c \
 	src/tokens.c \
 	src/simple_command.c \
 	src/redirection.c \
-	src/builtins/unset.c \
-	src/builtins/echo.c
-
+	src/builtins/builtin_unset.c \
+	src/builtins/builtin_echo.c \
+	src/builtins/builtin_cd.c \
+	src/builtins/builtin_env.c \
+	src/builtins/builtin_pwd.c
 OBJ = $(SRC:.c=.o)
 
 READLINE_DIR = $(shell brew --prefix readline 2>/dev/null)
