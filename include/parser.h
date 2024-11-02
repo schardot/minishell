@@ -17,6 +17,7 @@ typedef struct s_parser
 	bool	dq;
 	bool	sq;
 	bool	append;
+	char	quote_token;
 	char	**tokens;
 	char	*input;
 } t_parser;
@@ -46,7 +47,6 @@ typedef struct s_scmd
 	int				argsc;
 	int 			(*builtin)(t_tools *, struct s_scmd *);
 	char			*exec_path;
-	char			quote_token;
 	int				num_redirections;
 	char			*hd_file_name;
 	char			*redirect_token;
@@ -99,12 +99,18 @@ void	parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd);
-char	*format_arg(t_scmd *scmd, char *arg);
+char	*format_arg(t_parser *p, char *arg);
 
 
 
 
 int handle_redirection(t_scmd *node);
 char	**ft_append_to_arr(char **arr, char *str, int len);
+
+char *append_char(char *arg, char c);
+char **split_arguments(t_parser *p);
+t_parser *init_parser(char *input);
+int check_quote(char c, t_parser *p);
+char *check_env(t_parser *p, char *arg);
 
 #endif

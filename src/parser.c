@@ -7,6 +7,7 @@ char *append_char(char *arg, char c);
 char **split_arguments(t_parser *p);
 t_parser	*init_parser(char *input);
 int check_quote(char c, t_parser *p);
+int	initial_quote_check(char *arg);
 
 void parser(char *input, t_tools *t)
 {
@@ -15,6 +16,8 @@ void parser(char *input, t_tools *t)
 	t_token		*lst;
 	t_parser	*parser;
 
+	if (initial_quote_check(input))
+		return ;
 	parser = init_parser(input);
 	if (!parser)
 		return ;
@@ -39,6 +42,7 @@ t_parser	*init_parser(char *input)
 	new->dq = false;
 	new->sq = false;
 	new->input = ft_strdup(input);
+	new->quote_token = '\0';
 	if (!new->input)
 		return (NULL);
 	new->tokens = NULL;
@@ -60,7 +64,7 @@ char **split_arguments(t_parser *p)
 			p->append = true;
 		else if (arg && ft_isspace(p->input[i]) && (!p->sq && !p->dq))
 		{
-			arg = trim_quotes(arg);
+			arg = format_arg(p, arg);
 			p->tokens = ft_append_to_arr(p->tokens, arg, ft_str2dlen(p->tokens));
 			free(arg);
 			p->append = false;
@@ -72,7 +76,11 @@ char **split_arguments(t_parser *p)
 	}
 	arg = trim_quotes(arg);
 	if (arg)
+	{
+		arg = format_arg(p, arg);
 		p->tokens = ft_append_to_arr(p->tokens, arg, ft_str2dlen(p->tokens));
+		//free(arg);
+	}
 	return (p->tokens);
 }
 
@@ -100,30 +108,11 @@ char	*append_char(char *arg, char c)
 	return (new_arg);
 }
 
-int	check_quote(char c, t_parser *p)
+char	*format_arg(t_parser *p, char *arg)
 {
-	if (c == '\"' && !p->sq)
-	{
-		p->dq = !p->dq;
-		p->append = !p->append;
-		return (1);
-	}
-	else if (c == '\'' && !p->dq)
-	{
-		p->sq = !p->sq;
-		p->append = !p->append;
-		return (1);
-	}
-	return (0);
-}
-
-char	*format_arg(t_scmd *scmd, char *arg)
-{
-	if (!check_quotes(arg))
-			arg = trim_quotes(arg);
-	else
-		return (NULL);
-	if (arg[0] == '$' && scmd->quote_token != '\'')
+	initial_quote_check(arg);
+	arg = trim_quotes(arg);
+	if (arg[0] == '$' && p->quote_token != '\'')
 	{
 		arg ++;
 		arg = getenv(arg);
@@ -133,7 +122,7 @@ char	*format_arg(t_scmd *scmd, char *arg)
 	return (arg);
 }
 
-int	check_quotes(char *arg)
+int	initial_quote_check(char *arg)
 {
 	bool	dq;
 	bool	sq;
@@ -156,24 +145,4 @@ int	check_quotes(char *arg)
 		return (-1);
 	}
 	return (0);
-}
-char	*trim_quotes(char *arg)
-{
-	int	i;
-	int	z;
-
-	if (!arg)
-		return (NULL);
-	z = ft_strlen(arg) - 1;
-	i = 0;
-	if ((arg[i] == '\'' && arg[z] == '\'') || (arg[i] == '\"' && arg[z] == '\"'))
-	{
-		// if (arg[i] == '\'' && arg[z] == '\'')
-		// 	scmd->quote_token = '\'';
-		// else
-		// 	scmd->quote_token = '\"';
-		arg[z] = '\0';
-		arg ++;
-	}
-	return (arg);
 }
