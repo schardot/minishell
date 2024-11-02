@@ -24,10 +24,13 @@ void parser(char *input, t_tools *t)
 	parser->tokens = split_arguments(parser);
 	if (!parser->tokens)
 		return ;
+	// printf("argumento 0: %s\n", parser->tokens[0]);
+	// printf("argumento 1: %s\n", parser->tokens[1]);
 	lst = token_list(parser->tokens);
 	if (!lst)
 		return ;
 	scmd = simple_command(lst);
+	// printf("argumento: %s\n", scmd->args[0]);
 	check_exec_command(t, scmd);
 }
 
@@ -65,8 +68,8 @@ char **split_arguments(t_parser *p)
 		else if (arg && ft_isspace(p->input[i]) && (!p->sq && !p->dq))
 		{
 			arg = format_arg(p, arg);
-			p->tokens = ft_append_to_arr(p->tokens, arg, ft_str2dlen(p->tokens));
-			free(arg);
+			p->tokens = ft_append_to_array(p->tokens, arg, ft_str2dlen(p->tokens));
+			//free(arg);
 			p->append = false;
 			arg = NULL;
 		}
@@ -78,7 +81,7 @@ char **split_arguments(t_parser *p)
 	if (arg)
 	{
 		arg = format_arg(p, arg);
-		p->tokens = ft_append_to_arr(p->tokens, arg, ft_str2dlen(p->tokens));
+		p->tokens = ft_append_to_array(p->tokens, arg, ft_str2dlen(p->tokens));
 		//free(arg);
 	}
 	return (p->tokens);
@@ -101,7 +104,6 @@ char	*append_char(char *arg, char c)
 	if (arg)
 	{
 		ft_strlcpy(new_arg, arg, size);
-		free (arg);
 	}
 	new_arg[ft_strlen(new_arg)] = c;
 	new_arg[ft_strlen(new_arg) + 1] = '\0';

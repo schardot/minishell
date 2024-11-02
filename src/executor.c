@@ -11,7 +11,6 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		//handle_redirection(scmd);
 		if (is_builtin(scmd->args[0]))
 		{
 			scmd->builtin(t, scmd);
