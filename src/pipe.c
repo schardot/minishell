@@ -13,6 +13,10 @@ int create_pipe_if_needed(t_tools *t, int has_next)
             return -1;
         }
     }
+    else
+    {
+        printf("minishell: syntax error near unexpected token '|'\n");
+    }
     return 0;
 }
 
