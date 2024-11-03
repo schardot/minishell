@@ -12,6 +12,7 @@ SRC = src/main.c \
 	src/tokens.c \
 	src/simple_command.c \
 	src/redirection.c \
+	src/pipe.c \
 	src/builtins/builtin_unset.c \
 	src/builtins/builtin_echo.c \
 	src/builtins/builtin_cd.c \
