@@ -13,20 +13,20 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-		if (create_pipe_if_needed(t, has_next) == -1)
-			return -1;
+		if (create_pipe_if_needed(t, has_next, scmd) == -1)
+			return (EXIT_FAILURE);
 		pid = fork();
 		if (pid == 0)
 			execute_child_process(t, scmd, prev_fd, has_next);
 		else if (pid < 0)
 		{
 			perror("fork");
-			return -1;
+			return (EXIT_FAILURE);
 		}
 		finalize_parent_process(&prev_fd, t, has_next);
 		scmd = scmd->next;
 	}
-	return 0;
+	return (EXIT_SUCCESS);
 }
 
 int	is_builtin(char *token)

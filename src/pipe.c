@@ -3,9 +3,9 @@
 #include "../include/redirection.h"
 
 // Create a pipe if the current command has a next command
-int create_pipe_if_needed(t_tools *t, int has_next)
+int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 {
-    if (has_next)
+    if (has_next != 0)
     {
         if (pipe(t->pipefd) == -1)
         {
@@ -13,9 +13,10 @@ int create_pipe_if_needed(t_tools *t, int has_next)
             return -1;
         }
     }
-    else
+    if (!scmd->args || !scmd->args[0])
     {
         printf("minishell: syntax error near unexpected token '|'\n");
+        return (EXIT_FAILURE);
     }
     return 0;
 }
