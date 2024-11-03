@@ -3,41 +3,30 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-int	check_exec_command(t_tools *t, t_scmd *scmd)
+int check_exec_command(t_tools *t, t_scmd *scmd)
 {
+	int prev_fd;
+	int has_next;
 	int pid;
-	int status;
-	int i = 0;
-	pid = fork();
-	if (pid == 0)
+
+	prev_fd= -1;
+	while (scmd)
 	{
-		if (is_builtin(scmd->args[0]))
+		has_next = scmd->next != NULL;
+		if (create_pipe_if_needed(t, has_next) == -1)
+			return -1;
+		pid = fork();
+		if (pid == 0)
+			execute_child_process(t, scmd, prev_fd, has_next);
+		else if (pid < 0)
 		{
-			scmd->builtin(t, scmd);
-			return (EXIT_SUCCESS);
+			perror("fork");
+			return -1;
 		}
-		else if (is_executable(scmd->args[0]))
-		{
-			scmd->exec_path = is_executable(scmd->args[0]); //write it better later
-			execve(scmd->exec_path, scmd->args, t->envp);
-			perror("execve");
-			exit(1);
-		}
-		else
-		{
-			printf("minishell: %s: command not found\n", scmd->args[0]);
-			exit(127); // exit with command not found status
-		}
-		scmd->old_stdout_fd = dup(STDOUT_FILENO);
+		finalize_parent_process(&prev_fd, t, has_next);
+		scmd = scmd->next;
 	}
-	else if (pid < 0)
-		perror("fork");
-	else
-	{
-		waitpid(pid, &status, 0);
-	}
-	ft_free_matrix(scmd->args);
-	return (EXIT_SUCCESS);
+	return 0;
 }
 
 int	is_builtin(char *token)

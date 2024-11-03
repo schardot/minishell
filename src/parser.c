@@ -15,6 +15,7 @@ void parser(char *input, t_tools *t)
 	t_scmd		*scmd;
 	t_token		*lst;
 	t_parser	*parser;
+	char		**commands;
 
 	if (initial_quote_check(input))
 		return ;
