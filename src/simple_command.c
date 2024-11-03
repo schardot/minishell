@@ -12,12 +12,12 @@ t_scmd *simple_command(t_token *lst)
 	{
 		if (lst->type == ARGUMENT)
 		{
-			node->args = ft_append_to_arr(node->args, lst->value, ft_str2dlen(node->args));
+			node->args = ft_append_to_array(node->args, lst->value, ft_str2dlen(node->args));
 			node->argsc ++;
 		}
 		else if (lst->type == COMMAND)
 		{
-			node->args = ft_append_to_arr(node->args, lst->value, ft_str2dlen(node->args));
+			node->args = ft_append_to_array(node->args, lst->value, ft_str2dlen(node->args));
 			node->argsc ++;
 			if (is_builtin(node->args[0]))
 				node->builtin = get_builtin_function(node->args[0]);
@@ -41,21 +41,21 @@ t_scmd *simple_command(t_token *lst)
 	return (node);
 }
 
-char	**ft_append_to_arr(char **arr, char *str, int len)
-{
-	char	**new;
+// char	**ft_append_to_arr(char **arr, char *str, int len)
+// {
+// 	char	**new;
 
-	new = ft_realloc(arr, (len + 1) * sizeof(char *), \
-	(len + 2) * sizeof(char *));
-	if (!new)
-		return (NULL);
-	new[len] = ft_strdup(str);
-	if (!new[len])
-		return (NULL);
-	new[len + 1] = NULL;
-	//free (str);
-	return (new);
-}
+// 	new = ft_realloc(arr, (len + 1) * sizeof(char *), \
+// 	(len + 2) * sizeof(char *));
+// 	if (!new)
+// 		return (NULL);
+// 	new[len] = ft_strdup(str);
+// 	if (!new[len])
+// 		return (NULL);
+// 	new[len + 1] = NULL;
+// 	//free (str);
+// 	return (new);
+// }
 
 t_scmd *scmd_new(void)
 {
@@ -68,7 +68,6 @@ t_scmd *scmd_new(void)
 	node->argsc = 0;
 	node->builtin = NULL;
 	node->exec_path = NULL;
-	node->quote_token = 0;
 	node->num_redirections = 0;
 	node->hd_file_name = NULL;
 	node->redirect_token = NULL;
