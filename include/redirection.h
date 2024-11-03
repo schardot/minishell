@@ -16,7 +16,7 @@ typedef struct s_redirection
 int handle_redirection(t_scmd *node); // Uses t_scmd struct
 
 // Function prototypes for pipe handling
-int create_pipe_if_needed(t_tools *t, int has_next);
+int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd);
 void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next);
 void close_unused_pipes(int *prev_fd, t_tools *t, int has_next);
 void setup_pipe_for_child(int prev_fd, t_tools *t, int has_next);
