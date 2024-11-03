@@ -105,8 +105,8 @@ char	*append_char(char *arg, char c)
 	{
 		ft_strlcpy(new_arg, arg, size);
 	}
-	new_arg[ft_strlen(new_arg)] = c;
-	new_arg[ft_strlen(new_arg) + 1] = '\0';
+	new_arg[size - 2] = c;
+	new_arg[size - 1] = '\0';
 	return (new_arg);
 }
 
