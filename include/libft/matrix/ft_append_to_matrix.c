@@ -12,7 +12,7 @@
 
 #include "../libft.h"
 
-char	**ft_append_to_array(char **arr, char *str, int len)
+char	**ft_arrcat(char **arr, char *str, int len)
 {
 	char	**new;
 

@@ -2,85 +2,59 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_scmd *simple_command(t_token *lst)
+t_scmd	*simple_command(t_token *t)
 {
-	t_scmd *node;
-	t_scmd *next_command = NULL;
+	t_scmd	*s;
+	t_scmd	*next_command;
 
-	node = scmd_new();
-	while (lst)
+	s = scmd_new();
+	while (t)
 	{
-		if (lst->type == ARGUMENT)
+		if (t->type == ARGUMENT || t->type == COMMAND)
 		{
-			node->args = ft_append_to_array(node->args, lst->value, ft_str2dlen(node->args));
-			node->argsc ++;
+			s->args = ft_arrcat(s->args, t->value, ft_str2dlen(s->args));
+			s->argsc ++;
+			if (t->type == COMMAND && is_builtin(s->args[0]))
+				s->builtin = get_builtin_function(s->args[0]);
 		}
-		else if (lst->type == COMMAND)
+		else if (t->type == PIPE)
 		{
-			node->args = ft_append_to_array(node->args, lst->value, ft_str2dlen(node->args));
-			node->argsc ++;
-			if (is_builtin(node->args[0]))
-				node->builtin = get_builtin_function(node->args[0]);
+			next_command = simple_command(t->next);
+			s->next = next_command;
+			if (next_command)
+				t->next = NULL;
 		}
-		else if (lst->type == REDIRECT_APPEND || lst->type == REDIRECT_OUTPUT || lst->type == REDIRECT_INPUT)
-		{
-			set_redirection(node, lst);
-			lst = lst->next;
-		}
-		else if (lst->type == PIPE)
-			{
-				next_command = simple_command(lst->next);
-				node->next = next_command;
-				if (next_command)
-					lst->next = NULL;
-				else
-					break;
-			}
-		lst = lst->next;
+		else //i had to do it like this, line was too big
+			set_redirection(s, t);
+		t = t->next;
 	}
-	return (node);
+	return (s);
 }
 
-// char	**ft_append_to_arr(char **arr, char *str, int len)
-// {
-// 	char	**new;
-
-// 	new = ft_realloc(arr, (len + 1) * sizeof(char *), \
-// 	(len + 2) * sizeof(char *));
-// 	if (!new)
-// 		return (NULL);
-// 	new[len] = ft_strdup(str);
-// 	if (!new[len])
-// 		return (NULL);
-// 	new[len + 1] = NULL;
-// 	//free (str);
-// 	return (new);
-// }
-
-t_scmd *scmd_new(void)
+t_scmd	*scmd_new(void)
 {
-	t_scmd *node;
+	t_scmd	*scmd;
 
-	node = malloc(sizeof(t_scmd));
-	if (!node)
+	scmd = malloc(sizeof(t_scmd));
+	if (!scmd)
 		return (NULL);
-	node->args = NULL;
-	node->argsc = 0;
-	node->builtin = NULL;
-	node->exec_path = NULL;
-	node->num_redirections = 0;
-	node->hd_file_name = NULL;
-	node->redirect_token = NULL;
-	node->redirect_input_file = NULL;
-	node->redirect_output_file = NULL;
-	node->redirect_append_file = NULL;
-	node->redirect_file_name = NULL;
-	node->old_stdout_fd = 0;
-	node->old_stdin_fd = 0;
-	node->new_fd = 0;
-	node->next = NULL;
-	node->prev = NULL;
-	return (node);
+	scmd->args = NULL;
+	scmd->argsc = 0;
+	scmd->builtin = NULL;
+	scmd->exec_path = NULL;
+	scmd->num_redirections = 0;
+	scmd->hd_file_name = NULL;
+	scmd->redirect_token = NULL;
+	scmd->R_INPUT_file = NULL;
+	scmd->R_OUTPUT_file = NULL;
+	scmd->R_APPEND_file = NULL;
+	scmd->redirect_file_name = NULL;
+	scmd->old_stdout_fd = 0;
+	scmd->old_stdin_fd = 0;
+	scmd->new_fd = 0;
+	scmd->next = NULL;
+	scmd->prev = NULL;
+	return (scmd);
 }
 
 int	(*get_builtin_function(char *command))(t_tools *, t_scmd *)

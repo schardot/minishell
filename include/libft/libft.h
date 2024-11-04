@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 19:23:45 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/31 12:48:13 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 14:29:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,6 @@ t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void		ft_free_matrix(char **matrix);
 char		**ft_matrixdup(char **matrix, int height);
 size_t		ft_str2dlen(char **array);
-char		**ft_append_to_array(char **matrix, char *str, int size);
+char		**ft_arrcat(char **matrix, char *str, int size);
 
 #endif

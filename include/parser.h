@@ -27,9 +27,9 @@ typedef enum
 	COMMAND,
 	ARGUMENT,
 	PIPE,
-	REDIRECT_OUTPUT,
-	REDIRECT_INPUT,
-	REDIRECT_APPEND,
+	R_OUTPUT,
+	R_INPUT,
+	R_APPEND,
 	HEREDOC
 } e_token_type;
 
@@ -50,9 +50,9 @@ typedef struct s_scmd
 	int				num_redirections;
 	char			*hd_file_name;
 	char			*redirect_token;
-	char			*redirect_input_file;
-	char			*redirect_output_file;
-	char			*redirect_append_file;
+	char			*R_INPUT_file;
+	char			*R_OUTPUT_file;
+	char			*R_APPEND_file;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
 	int				old_stdout_fd;
