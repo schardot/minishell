@@ -27,9 +27,9 @@ typedef enum
 	COMMAND,
 	ARGUMENT,
 	PIPE,
-	REDIRECT_OUTPUT,
-	REDIRECT_INPUT,
-	REDIRECT_APPEND,
+	R_OUTPUT,
+	R_INPUT,
+	R_APPEND,
 	HEREDOC
 } e_token_type;
 
@@ -50,9 +50,9 @@ typedef struct s_scmd
 	int				num_redirections;
 	char			*hd_file_name;
 	char			*redirect_token;
-	char			*redirect_input_file;
-	char			*redirect_output_file;
-	char			*redirect_append_file;
+	char			*R_INPUT_file;
+	char			*R_OUTPUT_file;
+	char			*R_APPEND_file;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
 	int				old_stdout_fd;
@@ -95,7 +95,7 @@ int		builtinexit(t_tools *t, t_scmd *node);
 /* ------------------------------------------------------------------------- */
 /*                           Parser Functions                                */
 /* ------------------------------------------------------------------------- */
-void	parser(char *input, t_tools *t);
+int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd);
@@ -112,5 +112,8 @@ char **split_arguments(t_parser *p);
 t_parser *init_parser(char *input);
 int check_quote(char c, t_parser *p);
 char *check_env(t_parser *p, char *arg);
+
+int initial_quote_check(char *arg);
+t_parser *append_token(char *arg, t_parser *p);
 
 #endif
