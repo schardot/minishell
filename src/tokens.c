@@ -71,11 +71,11 @@ void	assign_token_type(t_token *node)
 	if (ft_strncmp(node->value, "|", len) == 0 && len == 1)
 		node->type = PIPE;
 	else if (ft_strncmp(node->value, ">", len) == 0 && len == 1)
-		node->type = REDIRECT_OUTPUT;
+		node->type = R_OUTPUT;
 	else if (ft_strncmp(node->value, "<", len) == 0 && len == 1)
-		node->type = REDIRECT_INPUT;
+		node->type = R_INPUT;
 	else if (ft_strncmp(node->value, ">>", len) == 0 && len == 2)
-		node->type = REDIRECT_APPEND;
+		node->type = R_APPEND;
 	else if (ft_strncmp(node->value, "<<", len) == 0 && len == 2)
 		node->type = HEREDOC;
 	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value)))
@@ -87,7 +87,7 @@ void	assign_token_type(t_token *node)
 t_parser *append_token(char *arg, t_parser *p)
 {
 	arg = format_arg(p, arg);
-	p->tokens = ft_append_to_array(p->tokens, arg, ft_str2dlen(p->tokens));
+	p->tokens = ft_arrcat(p->tokens, arg, ft_str2dlen(p->tokens));
 	p->append = false;
 	return (p);
 }
