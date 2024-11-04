@@ -11,38 +11,37 @@ int main(int argc, char **argv, char **envp)
 	if (argc != 1)
 	{
 		printf("No arguments necessary");
-		exit (0);
+		return (EXIT_FAILURE);
 	}
 	t = init_t_tools(envp);
 	if (!t)
 	{
-		fprintf(stderr, "Failed to initialize tools\n");
+		ft_putstr_fd("Failed to initialize tools\n", 2);
 		return (EXIT_FAILURE);
 	}
 	setup_signal_handling();
 	while (1)
 	{
-		input = get_input();
-		if (input)
-			parser(input, t);
-		if (!input)
-			break;
-		free(input);
+		get_input(t);
 	}
 	free(t);
 	return (0);
 }
 
-char *get_input(void)
+int	get_input(t_tools *t)
 {
-	char *input;
+	char	*input;
 
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
 	if (input == NULL) // Handle Ctrl+D (EOF)
-		return (NULL);
+		return (EXIT_FAILURE);
 	if (input)
+	{
 		add_history(input);
-	return (input);
+		parser(input, t);
+	}
+	free (input);
+	return (EXIT_SUCCESS);
 }
 
 t_tools	*init_t_tools(char **envp)
