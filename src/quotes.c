@@ -42,3 +42,28 @@ char *trim_quotes(char *arg)
 	}
 	return (arg);
 }
+
+int initial_quote_check(char *arg)
+{
+	bool dq;
+	bool sq;
+	int i;
+
+	i = 0;
+	dq = false;
+	sq = false;
+	while (arg[i])
+	{
+		if (arg[i] == '"' && !sq)
+			dq = !dq;
+		if (arg[i] == '\'' && !dq)
+			sq = !sq;
+		i++;
+	}
+	if (dq || sq)
+	{
+		ft_putstr_fd("Error: Unclosed quotes in input.\n", 2);
+		return (-1);
+	}
+	return (0);
+}

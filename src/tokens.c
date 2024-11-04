@@ -83,3 +83,11 @@ void	assign_token_type(t_token *node)
 	else
 		node->type = ARGUMENT;
 }
+
+t_parser *append_token(char *arg, t_parser *p)
+{
+	arg = format_arg(p, arg);
+	p->tokens = ft_append_to_array(p->tokens, arg, ft_str2dlen(p->tokens));
+	p->append = false;
+	return (p);
+}
