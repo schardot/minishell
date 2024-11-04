@@ -15,6 +15,8 @@
 
 #define MAX_INPUT_SIZE 1024
 
+struct sigaction sa;
+
 int     get_input(t_tools *t);
 t_tools *init_t_tools(char **envp);
 void	handle_signal(int sig);

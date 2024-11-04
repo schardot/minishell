@@ -95,7 +95,7 @@ int		builtinexit(t_tools *t, t_scmd *node);
 /* ------------------------------------------------------------------------- */
 /*                           Parser Functions                                */
 /* ------------------------------------------------------------------------- */
-void	parser(char *input, t_tools *t);
+int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd);
@@ -112,5 +112,7 @@ char **split_arguments(t_parser *p);
 t_parser *init_parser(char *input);
 int check_quote(char c, t_parser *p);
 char *check_env(t_parser *p, char *arg);
+
+int initial_quote_check(char *arg);
 
 #endif

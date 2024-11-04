@@ -9,7 +9,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	int has_next;
 	int pid;
 
-	prev_fd= -1;
+	prev_fd = -1;
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
@@ -85,3 +85,23 @@ char	*is_executable(char *cmd)
 	ft_free_matrix(paths);
 	return (NULL);
 }
+
+// void	execute_executable()
+// {
+// 	pid = fork();
+// 	if (pid == 0)
+// 		execute_child_process(t, scmd, prev_fd, has_next);
+// 	else if (pid < 0)
+// 	{
+// 		perror("fork");
+// 		return (EXIT_FAILURE);
+// 	}
+// 	finalize_parent_process(&prev_fd, t, has_next);
+// }
+
+// void	check_builtin_and_exec(t_scmd *scmd, t_token *t)
+// {
+// 	scmd->builtin(t, scmd);
+// 	return(EXIT_SUCCESS);
+// 	finalize_parent_process(&prev_fd, t, has_next);
+// }
