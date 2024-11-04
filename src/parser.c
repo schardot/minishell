@@ -3,36 +3,29 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-char *append_char(char *arg, char c);
-char **split_arguments(t_parser *p);
-t_parser	*init_parser(char *input);
-int check_quote(char c, t_parser *p);
-int	initial_quote_check(char *arg);
-
-void parser(char *input, t_tools *t)
+int parser(char *input, t_tools *t)
 {
-	char		**tokens;
 	t_scmd		*scmd;
 	t_token		*lst;
 	t_parser	*parser;
-	char		**commands;
 
 	if (initial_quote_check(input))
-		return ;
+		return (EXIT_FAILURE);
 	parser = init_parser(input);
 	if (!parser)
-		return ;
+		return (EXIT_FAILURE);
 	parser->tokens = split_arguments(parser);
 	if (!parser->tokens)
-		return ;
-	// printf("argumento 0: %s\n", parser->tokens[0]);
-	// printf("argumento 1: %s\n", parser->tokens[1]);
+		return (EXIT_FAILURE);
 	lst = token_list(parser->tokens);
 	if (!lst)
-		return ;
+		return (EXIT_FAILURE);
 	scmd = simple_command(lst);
-	// printf("argumento: %s\n", scmd->args[0]);
-	check_exec_command(t, scmd);
+	if (!scmd)
+		return (EXIT_FAILURE);
+	if (check_exec_command(t, scmd) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 t_parser	*init_parser(char *input)
@@ -46,9 +39,9 @@ t_parser	*init_parser(char *input)
 	new->dq = false;
 	new->sq = false;
 	new->input = ft_strdup(input);
-	new->quote_token = '\0';
 	if (!new->input)
 		return (NULL);
+	new->quote_token = '\0';
 	new->tokens = NULL;
 	return (new);
 }
