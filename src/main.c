@@ -1,12 +1,10 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-struct sigaction	sa;
-
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
-	t_tools *t;
+	t_tools	*t;
 
 	if (argc != 1)
 	{
@@ -22,9 +20,10 @@ int main(int argc, char **argv, char **envp)
 	setup_signal_handling();
 	while (1)
 	{
-		get_input(t);
+		if (get_input(t) == EXIT_FAILURE)
+			break ;
 	}
-	free(t);
+	free(t); //actually we need a cleanup function
 	return (0);
 }
 
@@ -33,9 +32,12 @@ int	get_input(t_tools *t)
 	char	*input;
 
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
-	if (input == NULL) // Handle Ctrl+D (EOF)
+	if (!input)
+	{
+		printf("\n");
 		return (EXIT_FAILURE);
-	if (input)
+	}
+	if (input[0] != '\0')
 	{
 		add_history(input);
 		parser(input, t);
