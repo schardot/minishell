@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 11:03:32 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/05 13:50:05 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,12 @@
 
 int builtinunset(t_tools *t, t_scmd *scmd)
 {
-    const char *var;
-    int var_len;
-    int i;
+    const char  *var;
+    int         var_len;
+    int         i;
 
-    if (scmd->argsc != 2)
-        return (EXIT_FAILURE);
     if (check_unset_args(scmd))
-    {
-        printf("minishell: unset: \'%s\': not a valid identifier\n", scmd->args[1]);
         return (EXIT_FAILURE);
-    }
     var = scmd->args[1];
     var_len = ft_strlen(var);
     i = 0;
@@ -49,8 +44,25 @@ int builtinunset(t_tools *t, t_scmd *scmd)
 
 int check_unset_args(t_scmd *scmd)
 {
-    if (!ft_isalpha(scmd->args[1][0]))
-        return (EXIT_FAILURE);
-    // there are more examples of whats an invalid argument, but for now i just want to build the idea of the thing.
+    int i;
+    int j;
+
+    if (!scmd->args[1]) //print that crazy list
+        i = 0; //just a placeholder so the compiler is ok
+    j = 1;
+    while (scmd->args[j])
+    {
+        i = 0;
+        while (scmd->args[j][i])
+        {
+            if (!ft_isalnum(scmd->args[j][i]) && !(scmd->args[j][i] == '_'))
+            {
+                printf("minishell: unset: \'%s\': not a valid identifier\n", scmd->args[j]);
+                return (EXIT_FAILURE);
+            }
+            i++;
+        }
+        j ++;
+    }
     return (EXIT_SUCCESS);
 }
