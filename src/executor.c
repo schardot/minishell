@@ -14,7 +14,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	{
 		has_next = scmd->next != NULL;
 		if (scmd->builtin && !has_next && scmd->args[0][0] != 'e' && scmd->args[0][1] != 'c')
-		{
+        {
 			if (scmd->builtin(t, scmd) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 			return (EXIT_SUCCESS);

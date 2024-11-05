@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:26 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/01 11:04:12 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/04 17:13:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 
 int	builtinpwd(t_tools *t, t_scmd *node)
 {
-	(void)t;
-	(void)node;
-	char buffer[PATH_MAX];
+	char	buffer[PATH_MAX];
 
 	if (getcwd(buffer, sizeof(buffer)))
 		printf("%s\n", buffer);
