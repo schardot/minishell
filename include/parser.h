@@ -87,8 +87,6 @@ int		check_quotes(char *arg);
 char	*trim_quotes(char *arg);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
-int		builtinunset(t_tools *t, t_scmd *node);
-int		check_unset_args(t_scmd *scmd);
 int		builtinenv(t_tools *t, t_scmd *node);
 int		builtinexit(t_tools *t, t_scmd *node);
 
