@@ -24,6 +24,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 	}
 	free(t); //actually we need a cleanup function
+    clear_history();
 	return (0);
 }
 
