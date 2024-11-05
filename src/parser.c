@@ -14,7 +14,7 @@ int	parser(char *input, t_tools *t)
 	parser = init_parser(input);
 	if (!parser)
 		return (EXIT_FAILURE);
-	parser->tokens = split_arguments(parser);
+	parser->tokens = split_arguments(parser, t);
 	if (!parser->tokens)
 		return (EXIT_FAILURE);
 	lst = token_list(parser->tokens);
@@ -46,7 +46,7 @@ t_parser	*init_parser(char *input)
 	return (new);
 }
 
-char	**split_arguments(t_parser *p)
+char	**split_arguments(t_parser *p, t_tools *t)
 {
 	int		i;
 	char	*arg;
@@ -62,7 +62,7 @@ char	**split_arguments(t_parser *p)
 			p->append = true;
 		else if (arg && ft_isspace(p->input[i]) && (!p->sq && !p->dq))
 		{
-			p = append_token(arg, p);
+			p = append_token(arg, p, t);
 			arg = NULL;
 		}
 		if (p->append == true)
@@ -70,7 +70,7 @@ char	**split_arguments(t_parser *p)
 		i ++;
 	}
 	if (arg)
-		p = append_token(arg, p);
+		p = append_token(arg, p, t);
 	return (p->tokens);
 }
 
@@ -97,15 +97,17 @@ char	*append_char(char *arg, char c)
 	return (new_arg);
 }
 
-char	*format_arg(t_parser *p, char *arg)
+char	*format_arg(t_parser *p, char *arg, t_tools *t)
 {
 	arg = trim_quotes(arg);
-	if (arg[0] == '$' && p->quote_token != '\'')
-	{
-		arg ++;
-		arg = getenv(arg);
-		if (arg == NULL)
-			return (ft_strdup(""));
-	}
-	return (arg);
+    if (arg[0] == '$' && arg[1] == '?')
+        arg = ft_itoa(t->exit_status);
+    else if (arg[0] == '$' && p->quote_token != '\'')
+    {
+        arg++;
+        arg = getenv(arg);
+        if (arg == NULL)
+            return (ft_strdup(""));
+    }
+    return (arg);
 }
