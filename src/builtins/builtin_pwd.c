@@ -6,15 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:26 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/04 17:13:26 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 14:07:06 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
 #include "../../include/parser.h"
-#include "../../include/redirection.h"
 
-int	builtinpwd(t_tools *t, t_scmd *node)
+int builtinpwd(t_tools *t, t_scmd *node)
 {
 	char	buffer[PATH_MAX];
 

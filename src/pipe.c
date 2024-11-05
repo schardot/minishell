@@ -80,13 +80,13 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
     }
 }
 
-void finalize_parent_process(int *prev_fd, t_tools *t, int has_next)
-{
-    // Close unused pipe ends in the parent process
-    close_unused_pipes(prev_fd, t, has_next);
+// void finalize_parent_process(int *prev_fd, t_tools *t, int has_next)
+// {
+//     // Close unused pipe ends in the parent process
+//     close_unused_pipes(prev_fd, t, has_next);
 
-    // Wait for all child processes to complete
-    int status;
-    while (wait(&status) > 0)
-        ;
-}
+//     // Wait for all child processes to complete
+//     int status;
+//     while (wait(&status) > 0)
+//         ;
+// }
