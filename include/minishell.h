@@ -21,6 +21,7 @@ typedef enum
     E_NO_SUCH_FILE,
     E_NOT_A_DIR,
     E_PERMISSION_DENIED,
+    E_NOT_A_VALID_ID,
     E_UNKNOWN_ERROR // Optional: for catching unhandled errors
 } t_error;
 
@@ -31,6 +32,6 @@ t_tools *init_t_tools(char **envp);
 void	handle_signal(int sig);
 void	setup_signal_handling(void);
 
-void ft_error(t_error type, char *cmd, t_scmd *scmd);
+void ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/05 14:05:15 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/06 10:54:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	builtinunset(t_tools *t, t_scmd *scmd)
 {
-	if (check_unset_args(scmd))
+	if (check_unset_args(scmd, t))
 		return (EXIT_FAILURE);
 	if (!scmd->args[1])
 		export_empty();
@@ -24,7 +24,7 @@ int	builtinunset(t_tools *t, t_scmd *scmd)
 	return (EXIT_SUCCESS);
 }
 
-int	check_unset_args(t_scmd *scmd)
+int	check_unset_args(t_scmd *scmd, t_tools *t)
 {
 	int	i;
 	int	j;
@@ -37,14 +37,15 @@ int	check_unset_args(t_scmd *scmd)
 		{
 			if (!ft_isalnum(scmd->args[j][i]) && !(scmd->args[j][i] == '_'))
 			{
-				printf("minishell: unset: \'%s\': not a valid identifier\n", \
-				scmd->args[j]);
-				return (EXIT_FAILURE);
+                ft_error(E_NOT_A_VALID_ID, scmd->args[0], scmd->args[j], t);
+                t->exit_status = 1;
 			}
 			i++;
 		}
 		j ++;
 	}
+    if (t->exit_status == 1)
+        return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
