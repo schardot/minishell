@@ -121,5 +121,6 @@ char *check_env(t_parser *p, char *arg);
 
 int initial_quote_check(char *arg);
 t_parser *append_token(char *arg, t_parser *p, t_tools *t);
+char *ft_getenv(char *env, t_tools *t);
 
 #endif
