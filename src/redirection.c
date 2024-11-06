@@ -24,13 +24,20 @@ void	set_redirection(t_scmd *node, t_token *lst)
 			node->R_INPUT_file = lst->next->value;
 			node->num_redirections++;
 		}
+		else if (lst->type == R_HEREDOC)
+		{
+			node->redirect_token = "<<";
+			node->R_HEREDOC_delimiter = lst->next->value;
+			node->num_redirections++;
+		}
 	}
 	else
 		printf("Error");
 }
 
 // Handles input redirection: "<"
-int handle_INPUT_redirection(t_scmd *node) {
+int handle_INPUT_redirection(t_scmd *node) 
+{
 	printf("Handling input redirection from file: %s\n", node->R_INPUT_file);
 
 	node->old_stdin_fd = dup(STDIN_FILENO);
@@ -121,6 +128,8 @@ int handle_redirection(t_scmd *node)
 		return result;
 	if (node->R_APPEND_file && (result = handle_APPEND_redirection(node)) != 0)
 		return result;
+	if (node->R_HEREDOC_delimiter && (result = handle_HEREDOC_redirection(node)) != 0)
+		return result;	
 	return result;
 }
 
