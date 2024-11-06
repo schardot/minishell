@@ -8,8 +8,8 @@ typedef struct s_tools
 	char	**envp;
 	int		stdin_backup; //elmira are you using this
 	int		stdout_backup; //this also
-	// int exit_status; // Last command exit status
-	int pipefd[2];	 // Pipe file descriptors
+	int 	exit_status; // Last command exit status
+	int 	pipefd[2];	 // Pipe file descriptors
 } t_tools;
 
 typedef struct s_parser

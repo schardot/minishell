@@ -19,6 +19,7 @@ SRC = src/main.c \
 	src/builtins/builtin_cd.c \
 	src/builtins/builtin_env.c \
 	src/builtins/builtin_pwd.c \
+	src/builtins/builtin_exit.c \
 	src/quotes.c
 OBJ = $(SRC:.c=.o)
 
