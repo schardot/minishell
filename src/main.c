@@ -58,6 +58,10 @@ t_tools	*init_t_tools(char **envp)
 	n_tools->envp = ft_matrixdup(envp, ft_str2dlen(envp));
 	if (!n_tools->envp)
 		return (NULL);
+	n_tools->pipefd[0] = -1;
+	n_tools->pipefd[1] = -1;
+
+	n_tools->exit_status = 0;
 	return (n_tools);
 }
 
@@ -74,6 +78,8 @@ void	handle_signal(int sig)
 
 void	setup_signal_handling(void)
 {
+	struct sigaction sa;
+
 	sa.sa_handler = handle_signal;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;

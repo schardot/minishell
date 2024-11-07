@@ -61,6 +61,7 @@ typedef struct s_scmd
 	int				old_stdin_fd;
 	int				old_stdout_fd;
 	int				new_fd;
+	int				pipecount;
 	struct s_scmd	*next;
 	struct s_scmd	*prev;
 } t_scmd;
@@ -97,6 +98,7 @@ void    export_empty(void);
 int     create_new_envp(t_scmd *scmd, t_tools *t);
 int		builtinenv(t_tools *t, t_scmd *node);
 int		builtinexit(t_tools *t, t_scmd *node);
+int		builtinhistory(t_tools *t, t_scmd *node);
 
 /* ------------------------------------------------------------------------- */
 /*                           Parser Functions                                */

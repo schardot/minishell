@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/06 08:42:12 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/07 17:18:16 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -30,10 +30,14 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	else
 		newline = 0;
 	arg = create_arg(scmd, newline);
-	ft_putstr_fd(arg, STDOUT_FILENO);
+	//ft_putstr_fd(arg, STDOUT_FILENO);
+	if (scmd->pipecount == 0)
+		t->pipefd[0] = STDOUT_FILENO;
+	ft_putstr_fd(arg, t->pipefd[0]);
 	if (!newline)
-		ft_putstr_fd("\n", STDOUT_FILENO);
-	restore_stdout(scmd);
+		ft_putstr_fd("\n", t->pipefd[0]);
+	if (t->pipefd[0] == 0)
+		restore_stdout(scmd);
 	return (EXIT_SUCCESS);
 }
 

@@ -6,7 +6,6 @@ LIBFT = $(LIBFT_DIR)/libft.a
 NAME = minishell
 
 SRC = src/main.c \
-	src/builtins.c \
 	src/parser.c \
 	src/executor.c \
 	src/tokens.c \
@@ -19,6 +18,7 @@ SRC = src/main.c \
 	src/builtins/builtin_env.c \
 	src/builtins/builtin_pwd.c \
 	src/builtins/builtin_export.c \
+	src/builtins/builtin_utils.c \
 	src/quotes.c \
 	src/error.c
 OBJ = $(SRC:.c=.o)

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 14:02:23 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/06 17:47:41 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/07 11:29:08 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -21,17 +21,22 @@ static char	**sort_arr(char **arr);
 int	builtinexport(t_tools *t, t_scmd *scmd)
 {
 	int	i;
+	char	*arg;
 
 	if (!scmd->args[1])
 		print_export_list(t);
 	else
 	{
-		i = 0;
+		i = 1;
 		while (scmd->args[i])
 		{
+			arg = ft_strdup(scmd->args[i]);
 			if (check_exp_args(scmd->args[i], scmd, t) == 0)
 			{
-				if (!ft_arrcat(t->envp, scmd->args[i], ft_str2dlen(t->envp)))
+				//printf("last before arrcat: \"%s\" and this it what should be appended: \"%s\"\n", t->envp[ft_str2dlen(t->envp)], scmd->args[i]);
+				t->envp = ft_arrcat(t->envp, arg, ft_str2dlen(t->envp));
+				//printf("last after arrcat: \"%s\" and this it what should have been appended: \"%s\"\n", t->envp[ft_str2dlen(t->envp)-1], arg);
+				if (!t->envp)
 					return (EXIT_FAILURE);
 			}
 			i ++;

@@ -21,6 +21,7 @@ t_scmd	*simple_command(t_token *t)
 		{
 			next_command = simple_command(t->next);
 			s->next = next_command;
+			s->pipecount ++;
 			if (next_command)
 				t->next = NULL;
 		}
@@ -57,6 +58,7 @@ t_scmd	*scmd_new(void)
 	scmd->new_fd = 0;
 	scmd->next = NULL;
 	scmd->prev = NULL;
+	scmd->pipecount = 0;
 	return (scmd);
 }
 
@@ -77,7 +79,9 @@ int	(*get_builtin_function(char *command))(t_tools *, t_scmd *)
 		return (&builtinunset);
 	else if (!ft_strncmp(command, "env", len))
 		return (&builtinenv);
-	else if (!ft_strncmp(command, "exit", len))
-		return (&builtinexit);
+	// else if (!ft_strncmp(command, "exit", len))
+	// 	return (&builtinexit);
+	else if (!ft_strncmp(command, "history", len))
+		return (&builtinhistory);
 	return (NULL);
 }

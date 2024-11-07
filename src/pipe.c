@@ -61,15 +61,20 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
     setup_pipe_for_child(prev_fd, t, has_next);
 
-    if (is_builtin(scmd->args[0]))
+    // if (is_builtin(scmd->args[0]))
+    // {
+    //     scmd->builtin(t, scmd);
+    //     exit(0);
+    // }
+    printf("before if\n");
+    if (is_executable(scmd->args[0]))
     {
-        scmd->builtin(t, scmd);
-        exit(0);
-    }
-    else if (is_executable(scmd->args[0]))
-    {
+        printf("inside if\n");
         scmd->exec_path = is_executable(scmd->args[0]);
+        printf("after is_executable,  this is the path: \"%s\"\n", scmd->exec_path);
+        printf("%s, %s\n", scmd->args[1], scmd->args[2]);
         execve(scmd->exec_path, scmd->args, t->envp);
+        printf("after execve\n");
         perror("execve");
         exit(1);
     }
