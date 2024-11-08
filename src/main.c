@@ -28,6 +28,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 	}
 	free(t); //actually we need a cleanup function
+	clear_history();
 	return (0);
 }
 
@@ -63,32 +64,6 @@ t_tools	*init_t_tools(char **envp)
 	n_tools->envp = ft_matrixdup(envp, ft_str2dlen(envp));
 	if (!n_tools->envp)
 		return (NULL);
+	n_tools->exit_status = 0;
 	return (n_tools);
 }
-
-// void	handle_signal(int sig)
-// {
-// 	if (sig == SIGINT)
-// 	{
-// 		printf("\n");
-// 		rl_on_new_line();
-// 		rl_replace_line("", 0);
-// 		rl_redisplay();
-// 		interupted_flag = 1;
-// 	}
-// }
-
-// void	setup_signal_handling(void)
-// {
-// 	struct sigaction	sa;
-// 	sa.sa_handler = handle_signal;
-// 	sa.sa_flags = 0;
-// 	sigemptyset(&sa.sa_mask);
-
-// 	if (sigaction(SIGINT, &sa, NULL) == -1)
-// 	{
-// 		perror("sigaction");
-// 		exit(1);
-// 	}
-// 	signal(SIGQUIT, SIG_IGN);
-// }

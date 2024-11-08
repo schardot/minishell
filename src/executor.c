@@ -13,14 +13,14 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-		if (scmd->builtin && !has_next && scmd->args[0][0] != 'e' && scmd->args[0][1] != 'c')
+		if (create_pipe_if_needed(t, has_next, scmd) == -1)
+			return (EXIT_FAILURE);
+		if (scmd->builtin && !has_next)
 		{
 			if (scmd->builtin(t, scmd) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 			return (EXIT_SUCCESS);
 		}
-		if (create_pipe_if_needed(t, has_next, scmd) == -1)
-			return (EXIT_FAILURE);
 		pid = fork();
 		if (pid == 0)
 			execute_child_process(t, scmd, prev_fd, has_next);

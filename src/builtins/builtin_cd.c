@@ -3,55 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/04 16:44:02 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/08 19:08:18 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 #include "../../include/redirection.h"
+#include <sys/stat.h>
 
-int builtincd(t_tools *t, t_scmd *node)
+static int	check_cd_errors(char *path, t_scmd *node, t_tools *t);
+
+int	builtincd(t_tools *t, t_scmd *node)
 {
-	char *path;
-	char cwd[PATH_MAX];
+	char	*path;
 
-	// If no arguments are provided, change to HOME directory
+	(void)t;
 	if (!node->args[1])
 	{
-		path = getenv("HOME");
+		path = ft_getenv("HOME", t);
 		if (!path)
-		{
-			printf("Error: HOME environment variable not set\n");
 			return (EXIT_FAILURE);
-		}
 	}
 	else
-	{
 		path = node->args[1];
-	}
-
-	// Change directory and handle errors
+	if (check_cd_errors(path, node, t))
+		return (EXIT_FAILURE);
 	if (chdir(path) != 0)
 	{
-		printf("Error: %s\n", strerror(errno));
+		perror("minishell: cd");
 		return (EXIT_FAILURE);
 	}
+	return (EXIT_SUCCESS);
+}
 
-	// Update PWD environment variable
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
+static int	check_cd_errors(char *path, t_scmd *node, t_tools *t)
+{
+	struct stat	path_stat;
+
+	if (access(path, F_OK) != 0 || access(path, X_OK) != 0)
 	{
-		setenv("OLDPWD", getenv("PWD"), 1);
-		setenv("PWD", cwd, 1);
-	}
-	else
-	{
-		printf("Error: Unable to update current directory\n");
+		if (access(path, F_OK) != 0)
+			ft_error(E_NO_SUCH_FILE, node->args[0], node->args[1], t);
+		else if (access(path, X_OK) != 0)
+			ft_error(E_PERMISSION_DENIED, node->args[0], node->args[1], t);
 		return (EXIT_FAILURE);
 	}
-
+	if (stat(path, &path_stat) != 0 || !S_ISDIR(path_stat.st_mode))
+	{
+		ft_error(E_NOT_A_DIR, node->args[0], node->args[1], t);
+		return (EXIT_FAILURE);
+	}
 	return (EXIT_SUCCESS);
 }

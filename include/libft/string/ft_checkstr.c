@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   ft_checkstr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 10:50:19 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/08 19:08:47 by ekechedz         ###   ########.fr       */
+/*   Created: 2024/11/08 14:55:51 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/11/08 19:20:00 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/parser.h"
+#include "../libft.h"
 
-int	builtinenv(t_tools *t, t_scmd *scmd)
+int	ft_checkstr(char *s, int (*f)(int))
 {
 	int	i;
 
 	i = 0;
-	if (scmd->args[1])
+	while (s[i])
 	{
-		ft_error(E_NO_SUCH_FILE, "env", scmd->args[1], t);
-		return (EXIT_FAILURE);
-	}
-	if (scmd->pipecount == 0)
-		t->pipefd[0] = STDOUT_FILENO;
-	printf("in env: %d\n", t->pipefd[0]);
-	while (t->envp[i])
-	{
-		ft_putendl_fd(t->envp[i], t->pipefd[0]);
+		if(!f(s[i]))
+			return (1);
 		i ++;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }

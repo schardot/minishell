@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 19:23:45 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/04 14:29:23 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/08 19:20:23 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char		*ft_strtrim(char const *s1, char const *set);
 char		**ft_split(char const *s, char c);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char *));
-
+int			ft_checkstr(char *s, int (*f)(int));
 /* ------------------------------------------------------------------------- */
 /*                           Memory Manipulation                             */
 /* ------------------------------------------------------------------------- */

@@ -11,7 +11,7 @@ CHAR_CH = $(CH_DIR)/ft_isalpha.c $(CH_DIR)/ft_isdigit.c $(CH_DIR)/ft_isalnum.c $
 
 S_DIR = string
 STRING = $(S_DIR)/ft_strlen.c $(S_DIR)/ft_strlcpy.c $(S_DIR)/ft_strlcat.c $(S_DIR)/ft_strrchr.c $(S_DIR)/ft_strchr.c $(S_DIR)/ft_strncmp.c $(S_DIR)/ft_strnstr.c \
-	$(S_DIR)/ft_strdup.c $(S_DIR)/ft_substr.c $(S_DIR)/ft_strjoin.c $(S_DIR)/ft_strtrim.c $(S_DIR)/ft_strmapi.c $(S_DIR)/ft_striteri.c
+	$(S_DIR)/ft_strdup.c $(S_DIR)/ft_substr.c $(S_DIR)/ft_strjoin.c $(S_DIR)/ft_strtrim.c $(S_DIR)/ft_strmapi.c $(S_DIR)/ft_striteri.c $(S_DIR)/ft_checkstr.c
 
 MEM_DIR = memory
 MEM = $(MEM_DIR)/ft_memset.c $(MEM_DIR)/ft_bzero.c $(MEM_DIR)/ft_memcpy.c $(MEM_DIR)/ft_memmove.c $(MEM_DIR)/ft_memchr.c $(MEM_DIR)/ft_calloc.c $(MEM_DIR)/ft_realloc.c \
