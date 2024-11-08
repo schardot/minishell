@@ -79,8 +79,8 @@ int	(*get_builtin_function(char *command))(t_tools *, t_scmd *)
 		return (&builtinunset);
 	else if (!ft_strncmp(command, "env", len))
 		return (&builtinenv);
-	// else if (!ft_strncmp(command, "exit", len))
-	// 	return (&builtinexit);
+	else if (!ft_strncmp(command, "exit", len))
+		return (&builtinexit);
 	else if (!ft_strncmp(command, "history", len))
 		return (&builtinhistory);
 	return (NULL);
