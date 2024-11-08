@@ -2,18 +2,16 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-
+static volatile sig_atomic_t g_signal_received = 0;
 
 int create_heredoc_temp_file(char **filename)
 {
 	int fd;
-
 	*filename = malloc(strlen(".heredoc.tmp") + 1);
 	if (!*filename)
 		return -1;
-
 	strcpy(*filename, ".heredoc.tmp");
-	fd = open(*filename, O_WRONLY | O_CREAT, 0644);
+	fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
 		perror("open");
@@ -24,62 +22,33 @@ int create_heredoc_temp_file(char **filename)
 	return 0;
 }
 
-int open_heredoc_file(char *filename)
+// Signal handler for heredoc
+void heredoc_sigint_handler(int sig)
 {
-	int fd;
-
-	fd = open(filename, O_WRONLY | O_CREAT, 0644);
-	if (fd < 0)
-	{
-		perror("open");
-		return -1;
-	}
-
-	return fd;
-}
-
-int get_interrupt_flag(void)
-{
-    return interupted_flag;
-}
-
-// Reset the interrupt flag (after checking for interrupt)
-void reset_interrupt_flag(void)
-{
-    interupted_flag = 0;
+	(void)sig;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	exit(1);
 }
 
 int write_heredoc_input(int fd, char *delimiter)
 {
 	char *buf;
-
 	while (1)
 	{
-
-        if (get_interrupt_flag())  // Check if signal was received
-        {
-            free(buf);
-            reset_interrupt_flag();  // Reset the flag
-            return -1;  // Return error or handle it accordingly
-        }
 		buf = readline("> ");
-		if (!buf) // Interrupted or EOF
+		if (!buf)
 		{
-			 if (errno == EINTR)  // Check if interrupted by signal
-            {
-                free(buf);
-                reset_interrupt_flag();  // Reset the flag
-                return -1;  // Handle EOF or interruption
-            }
-            break;
+			if (errno == EINTR)
+				return -1;
+			break;
 		}
-
 		if (strcmp(buf, delimiter) == 0)
 		{
 			free(buf);
 			break;
 		}
-
 		if (write(fd, buf, strlen(buf)) < 0 || write(fd, "\n", 1) < 0)
 		{
 			perror("write");
@@ -91,39 +60,50 @@ int write_heredoc_input(int fd, char *delimiter)
 	return 0;
 }
 
-int read_heredoc_input(char *delimiter, char *filename)
+// Function to handle the heredoc input in a separate child process
+int handle_heredoc_child(char *delimiter, char *filename)
 {
-	int fd;
-	int					continue_reading;
-	struct sigaction	sa;
+	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror("open");
+		return -1;
+	}
 
-
-	sa.sa_handler = handle_signal;
+	struct sigaction sa;
+	sa.sa_handler = SIG_DFL;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-	{
-		perror("sigaction");
-		return -1;
-	}
-	fd = open_heredoc_file(filename);
-	if (fd < 0)
-		return -1;
-	if (write_heredoc_input(fd, delimiter) < 0)
-	{
-		close(fd);
-		return -1;
-	}
+	sigaction(SIGINT, &sa, NULL);
 
+	int result = write_heredoc_input(fd, delimiter);
 	close(fd);
+	return result;
+}
+
+// Function to wait for the heredoc process to complete and check for errors
+int wait_for_heredoc_process(pid_t pid, char *filename)
+{
+	int status;
+	waitpid(pid, &status, 0);
+
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		unlink(filename);
+		return -1;
+	}
+	else if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	{
+		unlink(filename);
+		return -1;
+	}
 	return 0;
 }
 
+// Function to redirect heredoc input to STDIN
 int redirect_heredoc_input(char *filename)
 {
-	int fd;
-
-	fd = open(filename, O_RDONLY);
+	int fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
 		perror("open");
@@ -139,27 +119,52 @@ int redirect_heredoc_input(char *filename)
 	return 0;
 }
 
-int	handle_HEREDOC_redirection(t_scmd *node)
+// Main function to handle heredoc redirection, integrating all steps
+int handle_HEREDOC_redirection(t_scmd *node)
 {
-	char	*delimiter;
-	char	*filename;
+	char *delimiter = node->R_HEREDOC_delimiter;
+	char *filename = NULL;
+	pid_t pid;
 
-	delimiter = node->R_HEREDOC_delimiter;
-	filename = NULL;
 	if (create_heredoc_temp_file(&filename) < 0)
 		return -1;
-	if (read_heredoc_input(delimiter, filename) < 0)
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		free(filename);
+		return -1;
+	}
+	else if (pid == 0)
+	{
+		if (handle_heredoc_child(delimiter, filename) < 0)
+			exit(1);
+		exit(0);
+	}
+	 struct sigaction sa;
+    sa.sa_handler = SIG_IGN;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+
+	int result = wait_for_heredoc_process(pid, filename);
+
+	sa.sa_handler = SIG_DFL;
+	sigaction(SIGINT, &sa, NULL);
+
+	if (result < 0)
+	{
+		free(filename);
+		return -1;
+	}
+
+	if (redirect_heredoc_input(filename) < 0)
 	{
 		unlink(filename);
 		free(filename);
 		return -1;
 	}
-	// if (redirect_heredoc_input(filename) < 0)
-	// {
-	// 	unlink(filename);
-	// 	free(filename);
-	// 	return -1;
-	// }
+
 	unlink(filename);
 	free(filename);
 	return 0;

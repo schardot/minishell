@@ -14,6 +14,7 @@ SRC = src/main.c \
 	src/redirection.c \
 	src/pipe.c \
 	src/heredoc.c \
+	src/handle_signals.c \
 	src/builtins/builtin_unset.c \
 	src/builtins/builtin_echo.c \
 	src/builtins/builtin_cd.c \
