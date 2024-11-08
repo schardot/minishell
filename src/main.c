@@ -1,6 +1,8 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
+// static int g_interrupt = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
@@ -68,14 +70,17 @@ void	handle_signal(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		interupted_flag = 1;
 	}
 }
 
 void	setup_signal_handling(void)
 {
+	struct sigaction	sa;
 	sa.sa_handler = handle_signal;
-	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 	{
 		perror("sigaction");
