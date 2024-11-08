@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/06 11:24:45 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/08 17:56:50 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -22,19 +22,25 @@ void	ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t)
 		"Not a directory",
 		"Permission denied",
 		"not a valid identifier",
+		"numeric argument required",
+		"too many arguments",
+		"command not found",
 		"Unknown error"};
-
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd, 2);
-	if (type == E_NOT_A_VALID_ID)
-		ft_putstr_fd(": `", 2);
-	else
-		ft_putstr_fd(": '", 2);
-	if (type == E_NOT_A_DIR || type == E_NO_SUCH_FILE || type == E_PERMISSION_DENIED || type == E_NOT_A_VALID_ID)
+	if (type != E_COMMAND_NOT_FOUND)
 	{
-		ft_putstr_fd(inv_arg, 2);
-		ft_putstr_fd("': ", 2);
-		ft_putendl_fd(err[type], 2);
+		ft_putstr_fd("minishell: ", 2);
 	}
+	ft_putstr_fd(cmd, 2);
+	if (inv_arg)
+	{
+		if (type == E_NOT_A_VALID_ID)
+			ft_putstr_fd(": `", 2);
+		else
+			ft_putstr_fd(": '", 2);
+		ft_putstr_fd(inv_arg, 2);
+		ft_putstr_fd("'", 2);
+	}
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(err[type], 2);
 	t->exit_status = 1;
 }

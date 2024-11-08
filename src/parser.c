@@ -8,6 +8,7 @@ int	parser(char *input, t_tools *t)
 	t_scmd		*scmd;
 	t_token		*lst;
 	t_parser	*parser;
+	int			exit_status;
 
 	if (initial_quote_check(input))
 		return (EXIT_FAILURE);
@@ -23,8 +24,9 @@ int	parser(char *input, t_tools *t)
 	scmd = simple_command(lst);
 	if (!scmd)
 		return (EXIT_FAILURE);
-	if (check_exec_command(t, scmd) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
+	t->exit_status = check_exec_command(t, scmd);
+	// if (check_exec_command(t, scmd) == EXIT_FAILURE)
+	// 	return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -89,9 +91,7 @@ char	*append_char(char *arg, char c)
 	if (!new_arg)
 		return (NULL);
 	if (arg)
-	{
 		ft_strlcpy(new_arg, arg, size);
-	}
 	new_arg[size - 2] = c;
 	new_arg[size - 1] = '\0';
 	return (new_arg);

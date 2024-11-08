@@ -8,7 +8,8 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	int prev_fd;
 	int has_next;
 	int pid;
-	int status;
+	int e_status;
+	int	status;
 
 	prev_fd = -1;
 	while (scmd)
@@ -16,9 +17,8 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		has_next = scmd->next != NULL;
 		if (scmd->builtin && !has_next)
 		{
-			if (scmd->builtin(t, scmd) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
-			return (EXIT_SUCCESS);
+			t->exit_status = scmd->builtin(t, scmd);
+			return (t->exit_status);
 		}
 		if (create_pipe_if_needed(t, has_next, scmd) == -1)
 			return (EXIT_FAILURE);
@@ -30,7 +30,8 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			perror("fork");
 			return (EXIT_FAILURE);
 		}
-		finalize_parent_process(&prev_fd, t, has_next);
+		while (wait(&status) > 0)
+			;
 		scmd = scmd->next;
 	}
 	return (EXIT_SUCCESS);
