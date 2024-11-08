@@ -22,6 +22,9 @@ typedef enum
     E_NOT_A_DIR,
     E_PERMISSION_DENIED,
     E_NOT_A_VALID_ID,
+    E_NUM_ARG_REQUIRED,
+    E_TOO_MANY_ARGS,
+    E_COMMAND_NOT_FOUND,
     E_UNKNOWN_ERROR // Optional: for catching unhandled errors
 } t_error;
 

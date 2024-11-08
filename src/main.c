@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 		if (get_input(t) == EXIT_FAILURE)
 			break ;
 	}
-	free(t); //actually we need a cleanup function
+	free(t);
     clear_history();
 	return (0);
 }

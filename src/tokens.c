@@ -52,13 +52,9 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	}
 	aux = *lst;
 	while (aux->next)
-	{
-		// prev = aux;
 		aux = aux->next;
-	}
 	aux->next = new;
-	//aux->prev = prev;
-	aux->prev = aux; // there is actually for me no change we can talk which one is better implementation
+	aux->prev = aux;
 }
 
 void	assign_token_type(t_token *node)
@@ -77,7 +73,8 @@ void	assign_token_type(t_token *node)
 	else if (ft_strncmp(node->value, ">>", len) == 0 && len == 2)
 		node->type = R_APPEND;
 	else if (ft_strncmp(node->value, "<<", len) == 0 && len == 2)
-		node->type = HEREDOC;
+		n// else if (!ft_strncmp(command, "exit", len))
+	// 	return (&builtinexit);ode->type = HEREDOC;
 	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value)))
 		node->type = COMMAND;
 	else
