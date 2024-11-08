@@ -1,15 +1,19 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <stdbool.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <limits.h>
+# include <unistd.h>
 
 typedef struct s_tools
 {
 	char	**envp;
 	int		stdin_backup; //elmira are you using this
 	int		stdout_backup; //this also
-	// int exit_status; // Last command exit status
-	int pipefd[2];	 // Pipe file descriptors
+	int     exit_status;
+	int     pipefd[2];	 //elmira do you use this
 } t_tools;
 
 typedef struct s_parser
@@ -57,6 +61,7 @@ typedef struct s_scmd
 	int				old_stdin_fd;
 	int				old_stdout_fd;
 	int				new_fd;
+	int				pipecount;
 	struct s_scmd	*next;
 	struct s_scmd	*prev;
 } t_scmd;
@@ -88,9 +93,12 @@ char	*trim_quotes(char *arg);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
-int		check_unset_args(t_scmd *scmd);
+int		check_unset_args(t_scmd *scmd, t_tools *t);
+void    export_empty(void);
+int     create_new_envp(t_scmd *scmd, t_tools *t);
 int		builtinenv(t_tools *t, t_scmd *node);
 int		builtinexit(t_tools *t, t_scmd *node);
+int		builtinhistory(t_tools *t, t_scmd *node);
 
 /* ------------------------------------------------------------------------- */
 /*                           Parser Functions                                */
@@ -99,7 +107,7 @@ int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd);
-char	*format_arg(t_parser *p, char *arg);
+char	*format_arg(t_parser *p, char *arg, t_tools *t);
 
 
 
@@ -108,12 +116,13 @@ int handle_redirection(t_scmd *node);
 char	**ft_append_to_arr(char **arr, char *str, int len);
 
 char *append_char(char *arg, char c);
-char **split_arguments(t_parser *p);
+char **split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
 int check_quote(char c, t_parser *p);
 char *check_env(t_parser *p, char *arg);
 
 int initial_quote_check(char *arg);
-t_parser *append_token(char *arg, t_parser *p);
+t_parser *append_token(char *arg, t_parser *p, t_tools *t);
+char *ft_getenv(char *env, t_tools *t);
 
 #endif

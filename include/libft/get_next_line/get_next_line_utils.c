@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:58:36 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/24 18:37:15 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/07 11:51:52 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "get_next_line.h"
 
@@ -63,7 +63,7 @@ char	*append_buffer(char *buffer, char *line, int *linelen)
 	return (line);
 }
 
-char	*ft_realloc(char *ptr, size_t size)
+char	*ft_rrealloc(char *ptr, size_t size)
 {
 	char	*newptr;
 	size_t	i;

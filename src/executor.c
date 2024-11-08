@@ -8,12 +8,13 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	int prev_fd;
 	int has_next;
 	int pid;
+	int status;
 
 	prev_fd = -1;
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-		if (scmd->builtin && !has_next && scmd->args[0][0] != 'e' && scmd->args[0][1] != 'c')
+		if (scmd->builtin && !has_next)
 		{
 			if (scmd->builtin(t, scmd) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
@@ -37,10 +38,9 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 
 int	is_builtin(char *token)
 {
-	const char *builtins[] = {"cd", "pwd", "echo", "exit", "export", "unset", "env", NULL};
-
-	int i;
-	int token_len;
+	const char	*builtins[] = {"cd", "pwd", "echo", "exit", "export", "unset", "env", "history", NULL};
+	int	i;
+	int	token_len;
 
 	i = 0;
 	token_len = ft_strlen(token);
