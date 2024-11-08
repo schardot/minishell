@@ -14,50 +14,25 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-		// if (scmd->builtin && !has_next && scmd->args[0][0] != 'e' && scmd->args[0][1] != 'c')
-		// {
-		// 	if (scmd->builtin(t, scmd) == EXIT_FAILURE)
-		// 		return (EXIT_FAILURE);
-		// 	return (EXIT_SUCCESS);
-		// }
-		if (create_pipe_if_needed(t, has_next, scmd) == -1)
-			return (EXIT_FAILURE);
-		if (scmd->builtin)
+		if (scmd->builtin && !has_next)
 		{
 			if (scmd->builtin(t, scmd) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
-			scmd = scmd->next;
-			printf("%s", scmd->args[0]);
-			continue ;
+			return (EXIT_SUCCESS);
 		}
-		//else
-		printf("this is [0]: %d, and this is [1] %d\n", t->pipefd[0], t->pipefd[1]);
-		if (t->pipefd[0] != -1 && t->pipefd[1] != -1)
+		if (create_pipe_if_needed(t, has_next, scmd) == -1)
+			return (EXIT_FAILURE);
+		pid = fork();
+		if (pid == 0)
+			execute_child_process(t, scmd, prev_fd, has_next);
+		else if (pid < 0)
 		{
-			pid = fork();
-			if (pid == 0)
-			{
-				printf("before child\n");
-				execute_child_process(t, scmd, prev_fd, has_next);
-				printf("executed child\n");
-			}
-			else if (pid < 0)
-			{
-				perror("fork");
-				return (EXIT_FAILURE);
-			}
-			else if (pid > 0)
-			{
-				close_unused_pipes(&prev_fd, t, has_next);
-				while (wait(&status) > 0)
-					;
-				t->exit_status = status;
-			}
+			perror("fork");
+			return (EXIT_FAILURE);
 		}
+		finalize_parent_process(&prev_fd, t, has_next);
 		scmd = scmd->next;
 	}
-	// char *line = get_next_line(t->pipefd[0]);
-	// printf("%s\n", line);
 	return (EXIT_SUCCESS);
 }
 

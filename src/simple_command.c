@@ -25,7 +25,7 @@ t_scmd	*simple_command(t_token *t)
 			if (next_command)
 				t->next = NULL;
 		}
-		else //i had to do it like this, line was too big
+		else
 		{
 			set_redirection(s, t);
 			t = t->next;
