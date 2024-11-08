@@ -61,12 +61,12 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
     setup_pipe_for_child(prev_fd, t, has_next);
 
-    if (is_builtin(scmd->args[0]))
-    {
-        scmd->builtin(t, scmd);
-        exit(0);
-    }
-    else if (is_executable(scmd->args[0]))
+    // if (is_builtin(scmd->args[0]))
+    // {
+    //     scmd->builtin(t, scmd);
+    //     exit(0);
+    // }
+    if (is_executable(scmd->args[0]))
     {
         scmd->exec_path = is_executable(scmd->args[0]);
         execve(scmd->exec_path, scmd->args, t->envp);
