@@ -15,24 +15,26 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		has_next = scmd->next != NULL;
 		if (create_pipe_if_needed(t, has_next, scmd) == -1)
 			return (EXIT_FAILURE);
-		if (scmd->builtin && !has_next)
+		if (scmd->builtin && !has_next && scmd->num_redirections == 0)
 		{
-			if (scmd->builtin(t, scmd) == EXIT_FAILURE)
+            if (scmd->builtin(t, scmd) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
-			return (EXIT_SUCCESS);
+            return (EXIT_SUCCESS);
 		}
-		pid = fork();
-		if (pid == 0)
+        handle_redirection(scmd);
+        pid = fork();
+        if (pid == 0)
 			execute_child_process(t, scmd, prev_fd, has_next);
 		else if (pid < 0)
 		{
 			perror("fork");
 			return (EXIT_FAILURE);
 		}
-		finalize_parent_process(&prev_fd, t, has_next);
-		scmd = scmd->next;
+        finalize_parent_process(&prev_fd, t, has_next);
+        restore_stdout(scmd);
+        scmd = scmd->next;
 	}
-	return (EXIT_SUCCESS);
+    return (EXIT_SUCCESS);
 }
 
 int	is_builtin(char *token)

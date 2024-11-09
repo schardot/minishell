@@ -32,7 +32,8 @@ t_scmd	*simple_command(t_token *t)
 		}
 		t = t->next;
 	}
-	return (s);
+    // handle_redirection(s);
+    return (s);
 }
 
 t_scmd	*scmd_new(void)
@@ -52,6 +53,7 @@ t_scmd	*scmd_new(void)
 	scmd->R_INPUT_file = NULL;
 	scmd->R_OUTPUT_file = NULL;
 	scmd->R_APPEND_file = NULL;
+    scmd->R_HEREDOC_delimiter = NULL;
 	scmd->redirect_file_name = NULL;
 	scmd->old_stdout_fd = 0;
 	scmd->old_stdin_fd = 0;

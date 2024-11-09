@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/02 12:57:52 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/09 20:03:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	char	*temp;
 	int		i;
 
-	handle_redirection(scmd);
-	if (!scmd->args[1])
-		printf("\n");
-	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
-		flag = 1;
+    // i = 0;
+    // if (i == 1)
+	//handle_redirection(scmd);
+	// if (!scmd->args[1])
+	// 	printf("\n");
+    if (scmd->args[1] && !ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
+        flag = 1;
 	else
 		flag = 0;
 	i = flag + 1;
@@ -44,6 +46,5 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	ft_putstr_fd(arg, STDOUT_FILENO);
 	if (!flag)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	restore_stdout(scmd);
-	return (EXIT_SUCCESS);
+    return (EXIT_SUCCESS);
 }

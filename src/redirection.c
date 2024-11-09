@@ -36,7 +36,7 @@ void	set_redirection(t_scmd *node, t_token *lst)
 }
 
 // Handles input redirection: "<"
-int handle_INPUT_redirection(t_scmd *node) 
+int handle_INPUT_redirection(t_scmd *node)
 {
 	printf("Handling input redirection from file: %s\n", node->R_INPUT_file);
 
@@ -68,10 +68,10 @@ void restore_stdout(t_scmd *node)
 	{
 		perror("Failed to restore STDIN");
 	}
-	if (node->old_stdout_fd >= 0)
-		close(node->old_stdout_fd);
-	if (node->old_stdin_fd >= 0)
-		close(node->old_stdin_fd);
+	// if (node->old_stdout_fd >= 0)
+	// 	close(node->old_stdout_fd);
+	// if (node->old_stdin_fd >= 0)
+	// 	close(node->old_stdin_fd);
 }
 
 // Handles output redirection: ">"
@@ -129,7 +129,7 @@ int handle_redirection(t_scmd *node)
 	if (node->R_APPEND_file && (result = handle_APPEND_redirection(node)) != 0)
 		return result;
 	if (node->R_HEREDOC_delimiter && (result = handle_HEREDOC_redirection(node)) != 0)
-		return result;	
+		return result;
 	return result;
 }
 

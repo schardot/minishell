@@ -1,7 +1,6 @@
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 #include "../../include/redirection.h"
-
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 
