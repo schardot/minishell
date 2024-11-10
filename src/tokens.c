@@ -40,7 +40,7 @@ t_token	*tokenlist_new(char *token, t_tools *t)
 	node->prev = NULL;
 	node->next = NULL;
 	node->redirect_count = 0;
-	assign_token_type(node);
+	assign_token_type(node, t);
 	// if(!node->next && node->redirect_count)
 	// 	return (NULL);
 	return (node);
@@ -93,7 +93,7 @@ void	assign_token_type(t_token *node, t_tools *t)
 		node->type = R_HEREDOC;
 		node->redirect_count++;
 	}
-	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value)))
+	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value, t)))
 		node->type = COMMAND;
 	else
 		node->type = ARGUMENT;

@@ -42,7 +42,6 @@ typedef struct s_token
 	e_token_type	type;
 	char			*value;
     int             redirect_count;
-	int				redirect_count;
 	struct s_token	*prev;
 	struct s_token	*next;
 } t_token;
