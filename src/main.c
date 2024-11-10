@@ -3,8 +3,10 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*input;
-	t_tools	*t;
+	char				*input;
+	t_tools				*t;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
 
 	if (argc != 1)
 	{
@@ -17,18 +19,18 @@ int	main(int argc, char **argv, char **envp)
 		ft_putstr_fd("Failed to initialize tools\n", 2);
 		return (EXIT_FAILURE);
 	}
-	setup_signal_handling();
+	setup_signal_handling(&sa_int, &sa_quit);
 	while (1)
 	{
-		if (get_input(t) == EXIT_FAILURE)
+		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
 	}
 	free(t);
-    clear_history();
+	clear_history();
 	return (0);
 }
 
-int	get_input(t_tools *t)
+int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
 	char	*input;
 
@@ -41,7 +43,9 @@ int	get_input(t_tools *t)
 	if (input[0] != '\0')
 	{
 		add_history(input);
+		switch_signal_handlers(sa_int, sa_quit, true);
 		parser(input, t);
+		switch_signal_handlers(sa_int, sa_quit, false);
 	}
 	free (input);
 	return (EXIT_SUCCESS);
@@ -65,29 +69,29 @@ t_tools	*init_t_tools(char **envp)
 	return (n_tools);
 }
 
-void	handle_signal(int sig)
-{
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-        interupted_flag = 1;
-    }
-}
+// void	handle_signal(int sig)
+// {
+// 	if (sig == SIGINT)
+// 	{
+// 		printf("\n");
+// 		rl_on_new_line();
+// 		rl_replace_line("", 0);
+// 		rl_redisplay();
+// 		interupted_flag = 1;
+// 	}
+// }
 
-void	setup_signal_handling(void)
-{
-	struct sigaction sa;
+// void	setup_signal_handling(void)
+// {
+// 	struct sigaction sa;
 
-	sa.sa_handler = handle_signal;
-	sa.sa_flags = 0;
-    sigemptyset(&sa.sa_mask);
-    if (sigaction(SIGINT, &sa, NULL) == -1)
-	{
-		perror("sigaction");
-		exit(1);
-	}
-	signal(SIGQUIT, SIG_IGN);
-}
+// 	sa.sa_handler = handle_signal;
+// 	sa.sa_flags = 0;
+// 	sigemptyset(&sa.sa_mask);
+// 	if (sigaction(SIGINT, &sa, NULL) == -1)
+// 	{
+// 		perror("sigaction");
+// 		exit(1);
+// 	}
+// 	signal(SIGQUIT, SIG_IGN);
+//}

@@ -31,4 +31,6 @@ int		handle_INPUT_redirection(t_scmd *node);
 void	set_redirection(t_scmd *node, t_token *lst);
 int     handle_HEREDOC_redirection(t_scmd *node);
 
+void switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr);
+
 #endif
