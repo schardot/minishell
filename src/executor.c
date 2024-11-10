@@ -15,7 +15,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-		if (scmd->builtin && !has_next)
+		if (scmd->builtin && !has_next && scmd->prev == NULL)
 		{
 			t->exit_status = scmd->builtin(t, scmd);
 			return (t->exit_status);
@@ -30,7 +30,8 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			perror("fork");
 			return (EXIT_FAILURE);
 		}
-		while (wait(&status) > 0)
+        close_unused_pipes(&prev_fd, t, has_next);
+        while (wait(&status) > 0)
 			;
 		scmd = scmd->next;
 	}

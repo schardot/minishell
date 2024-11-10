@@ -73,8 +73,7 @@ void	assign_token_type(t_token *node)
 	else if (ft_strncmp(node->value, ">>", len) == 0 && len == 2)
 		node->type = R_APPEND;
 	else if (ft_strncmp(node->value, "<<", len) == 0 && len == 2)
-		n// else if (!ft_strncmp(command, "exit", len))
-	// 	return (&builtinexit);ode->type = HEREDOC;
+		node->type = HEREDOC;
 	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value)))
 		node->type = COMMAND;
 	else

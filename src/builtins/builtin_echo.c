@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/08 11:54:34 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/10 08:07:47 by codespace        ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -23,10 +23,8 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	int		i;
 
 	handle_redirection(scmd);
-	if (!scmd->args[1])
-		printf("\n");
-	if (!ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
-		newline = 1;
+    if (scmd->args[1] && !ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
+        newline = 1;
 	else
 		newline = 0;
 	arg = create_arg(scmd, newline);
@@ -36,8 +34,8 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	// ft_putstr_fd(arg, t->pipefd[0]);
 	if (!newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	if (t->pipefd[0] == 0)
-		restore_stdout(scmd);
+	// if (t->pipefd[0] == 0)
+	restore_stdout(scmd);
 	return (EXIT_SUCCESS);
 }
 

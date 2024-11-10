@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/06 14:04:08 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/10 08:16:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	builtincd(t_tools *t, t_scmd *node)
 	(void)t;
 	if (!node->args[1])
 	{
-		path = ft_getenv("HOME", t);
+		path = getenv("HOME"); //change this later to ft_getenv
 		if (!path)
 			return (EXIT_FAILURE);
 	}

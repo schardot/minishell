@@ -61,10 +61,10 @@ void restore_stdout(t_scmd *node)
 	{
 		perror("Failed to restore STDIN");
 	}
-	if (node->old_stdout_fd >= 0)
-		close(node->old_stdout_fd);
-	if (node->old_stdin_fd >= 0)
-		close(node->old_stdin_fd);
+	// if (node->old_stdout_fd >= 0)
+	// 	close(node->old_stdout_fd);
+	// if (node->old_stdin_fd >= 0)
+	// 	close(node->old_stdin_fd);
 }
 
 // Handles output redirection: ">"
