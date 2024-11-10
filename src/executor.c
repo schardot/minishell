@@ -15,13 +15,13 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-		if (scmd->builtin && !has_next && scmd->prev == NULL)
+        if (create_pipe_if_needed(t, has_next, scmd) == -1)
+            return (EXIT_FAILURE);
+        if (scmd->builtin && !has_next && scmd->prev == NULL)
 		{
 			t->exit_status = scmd->builtin(t, scmd);
 			return (t->exit_status);
 		}
-		if (create_pipe_if_needed(t, has_next, scmd) == -1)
-			return (EXIT_FAILURE);
 		pid = fork();
 		if (pid == 0)
 			execute_child_process(t, scmd, prev_fd, has_next);

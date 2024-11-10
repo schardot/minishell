@@ -30,7 +30,7 @@ typedef enum
 
 static int interupted_flag = 0;
 
-int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit);
+int     get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit);
 t_tools *init_t_tools(char **envp);
 void default_sigint_handler(int signum);
 void setup_signal_handling(struct sigaction *sa_int, struct sigaction *sa_quit);
