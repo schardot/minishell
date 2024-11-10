@@ -3,7 +3,8 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	char				*input;
+	//char				*input;
+	(void)**argv;
 	t_tools				*t;
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
@@ -54,7 +55,6 @@ int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 t_tools	*init_t_tools(char **envp)
 {
 	t_tools	*n_tools;
-	int		i;
 
 	n_tools = malloc(sizeof(t_tools));
 	if (!n_tools)

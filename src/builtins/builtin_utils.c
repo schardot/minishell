@@ -1,17 +1,18 @@
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 
-int    builtinhistory(t_tools *t, t_scmd *node)
+int	builtinhistory(t_tools *t, t_scmd *node)
 {
-	HIST_ENTRY  **list;
-	int         i;
-
+	HIST_ENTRY	**list;
+	int			i;
+	(void)*t;
+	(void)*node;
 
 	list = history_list();
 	if (list)
 	{
 		i = 0;
-		while (list[i]) 
+		while (list[i])
 		{
 			printf("%d %s\n", i + history_base, list[i]->line);
 			i ++;
