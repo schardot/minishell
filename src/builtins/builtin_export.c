@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/10 13:03:47 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/10 15:27:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t);
 static int	print_export_list(t_tools *t);
 static char	**create_var_arr(t_tools *t);
 static char	**sort_arr(char **arr);
+void replace_env_var(char *full, int len, t_tools *t);
 
-int	builtinexport(t_tools *t, t_scmd *scmd)
+int builtinexport(t_tools *t, t_scmd *scmd)
 {
-	int	i;
-	char	*arg;
+	int		i;
+	char	**spl;
+	char	*full;
 
 	if (!scmd->args[1])
 		print_export_list(t);
@@ -31,16 +33,29 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 		i = 1;
 		while (scmd->args[i])
 		{
-			arg = ft_strdup(scmd->args[i]);
-			if (check_exp_args(scmd->args[i], scmd, t) == 0)
+			full = ft_strdup(scmd->args[i]);
+			if (!full)
+				return (EXIT_FAILURE);
+			spl = ft_split(full, '=');
+			if (!spl)
 			{
-				//printf("last before arrcat: \"%s\" and this it what should be appended: \"%s\"\n", t->envp[ft_str2dlen(t->envp)], scmd->args[i]);
-				t->envp = ft_arrcat(t->envp, arg, ft_str2dlen(t->envp));
-				//printf("last after arrcat: \"%s\" and this it what should have been appended: \"%s\"\n", t->envp[ft_str2dlen(t->envp)-1], arg);
-				if (!t->envp)
-					return (EXIT_FAILURE);
+				free(full);
+				return (EXIT_FAILURE);
 			}
-			i ++;
+			if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
+			{
+				if (ft_getenv(spl[0], t))
+					replace_env_var(full, strlen(spl[0]), t);
+				else
+				{
+					t->envp = ft_arrcat(t->envp, full, ft_str2dlen(t->envp));
+					if (!t->envp)
+						return (EXIT_FAILURE);
+				}
+			}
+			free(full);
+			ft_free_matrix(spl);
+			i++;
 		}
 	}
 	if (t->exit_status == 1)
@@ -50,29 +65,25 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 
 static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 {
-	int	i;
+	int	j;
 
-	i = 0;
-	if (arg[i] == '=')
+	j = 0;
+	while (arg[j])
 	{
-		ft_error(E_NOT_A_VALID_ID, "export", scmd->args[1], t);
-		return (EXIT_FAILURE);
-	}
-	while (arg[i])
-	{
-		if (!ft_isalpha(arg[i]) && arg[i] != '=')
+		if ((j == 0 && !ft_isalpha(arg[j]) && arg[j] != '_') ||
+			(j > 0 && !ft_isalnum(arg[j]) && arg[j] != '_'))
 		{
 			ft_error(E_NOT_A_VALID_ID, "export", scmd->args[1], t);
 			return (EXIT_FAILURE);
 		}
-		i ++;
+		j ++;
 	}
 	return (EXIT_SUCCESS);
 }
 
 static int	print_export_list(t_tools *t)
 {
-	size_t	i; // changed from int to size_t
+	size_t	i;
 	char	**envcpy;
 	char	*full_env;
 
@@ -83,13 +94,15 @@ static int	print_export_list(t_tools *t)
 	i = 0;
 	while (envcpy[i])
 	{
-        printf("declare -x  %s=", envcpy[i]);
-        full_env = ft_getenv(envcpy[i], t);
+		printf("declare -x %s=", envcpy[i]);
+		full_env = ft_getenv(envcpy[i], t);
 		if (!full_env)
 			break ;
-		printf("%s\n", full_env);
+		printf("\"%s\"\n", full_env);
+		free(envcpy[i]);
 		i++;
 	}
+	free (envcpy);
 	if (i == ft_str2dlen(t->envp))
 		return (EXIT_SUCCESS);
 	return (EXIT_FAILURE);
@@ -97,11 +110,11 @@ static int	print_export_list(t_tools *t)
 
 static char	**create_var_arr(t_tools *t)
 {
-	char		**sp;
-	char		**sorted_envs;
-	int			i;
+	char	**sp;
+	char	**sorted_envs;
+	int		i;
 
-	sorted_envs = (char **)malloc(sizeof(char *) * ft_str2dlen(t->envp));
+	sorted_envs = (char **)malloc(sizeof(char *) * (ft_str2dlen(t->envp) + 1));
 	if (!sorted_envs)
 		return (NULL);
 	i = 0;
@@ -109,11 +122,20 @@ static char	**create_var_arr(t_tools *t)
 	{
 		sp = ft_split(t->envp[i], '=');
 		if (!sp)
+		{
+			ft_free_matrix(sorted_envs);
 			return (NULL);
+		}
 		sorted_envs[i] = ft_strdup(sp[0]);
-		if (!sorted_envs[i++])
+		ft_free_matrix(sp);
+		if (!sorted_envs[i])
+		{
+			ft_free_matrix(sorted_envs);
 			return (NULL);
+		}
+		i ++;
 	}
+	sorted_envs[i] = NULL;
 	return (sorted_envs);
 }
 
@@ -129,7 +151,7 @@ static char	**sort_arr(char **arr)
 		j = i + 1;
 		while (arr[j])
 		{
-			if (ft_strncmp(arr[i], arr[j], 100000000) > 0)
+			if (ft_strncmp(arr[i], arr[j], strlen(arr[i])) > 0)
 			{
 				swp = arr[i];
 				arr[i] = arr[j];
@@ -140,4 +162,26 @@ static char	**sort_arr(char **arr)
 		i ++;
 	}
 	return (arr);
+}
+
+void	replace_env_var(char *full, int len, t_tools *t)
+{
+	int	i;
+
+	i = 0;
+	while (t->envp[i])
+	{
+		if (ft_strncmp(full, t->envp[i], len) == 0 && t->envp[i][len] == '=')
+		{
+			free (t->envp[i]);
+			t->envp[i] = ft_strdup(full);
+			if (!t->envp[i])
+			{
+				printf("error allocating");
+				return;
+			}
+			return ;
+		}
+		i ++;
+	}
 }

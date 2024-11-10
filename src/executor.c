@@ -16,7 +16,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		has_next = scmd->next != NULL;
         if (create_pipe_if_needed(t, has_next, scmd) == -1)
             return (EXIT_FAILURE);
-        if (scmd->builtin && !has_next && !scmd->redirect_token)
+        if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
         {
             t->exit_status = scmd->builtin(t, scmd);
             return (t->exit_status);
@@ -41,7 +41,7 @@ int	is_builtin(char *token)
 {
 	const char	*builtins[] = {"cd", "pwd", "echo", "exit", "export", "unset", "env", "history", NULL};
 	int	i;
-	size_t	token_len; // not sure if i can make this we will check it it was int before 
+	size_t	token_len; // not sure if i can make this we will check it it was int before
 
 	i = 0;
 	token_len = ft_strlen(token);
