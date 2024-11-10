@@ -37,5 +37,6 @@ void setup_signal_handling(struct sigaction *sa_int, struct sigaction *sa_quit);
 void switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr);
 
 void ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t);
+void restore_stdin(int saved_stdin);
 
 #endif

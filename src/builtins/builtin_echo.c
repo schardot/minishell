@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/10 08:07:47 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/10 09:00:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	char	*arg;
 	int		i;
 
-	handle_redirection(scmd);
     if (scmd->args[1] && !ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
         newline = 1;
 	else

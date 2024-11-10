@@ -51,7 +51,8 @@ void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
 	setup_pipe_for_child(prev_fd, t, has_next);
-	if (is_executable(scmd->args[0]))
+    handle_redirection(scmd);
+    if (is_executable(scmd->args[0]))
 	{
 		scmd->exec_path = is_executable(scmd->args[0]);
 		execve(scmd->exec_path, scmd->args, t->envp);

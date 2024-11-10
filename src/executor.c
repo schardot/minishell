@@ -17,10 +17,10 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		has_next = scmd->next != NULL;
         if (create_pipe_if_needed(t, has_next, scmd) == -1)
             return (EXIT_FAILURE);
-        if (scmd->builtin && !has_next && scmd->prev == NULL)
-		{
-			t->exit_status = scmd->builtin(t, scmd);
-			return (t->exit_status);
+        if (scmd->builtin && !has_next && !scmd->R_HEREDOC_delimiter)
+        {
+            t->exit_status = scmd->builtin(t, scmd);
+            return (t->exit_status);
 		}
 		pid = fork();
 		if (pid == 0)

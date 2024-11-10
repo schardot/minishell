@@ -52,7 +52,8 @@ t_scmd	*scmd_new(void)
 	scmd->R_INPUT_file = NULL;
 	scmd->R_OUTPUT_file = NULL;
 	scmd->R_APPEND_file = NULL;
-	scmd->redirect_file_name = NULL;
+    scmd->R_HEREDOC_delimiter = NULL;
+    scmd->redirect_file_name = NULL;
 	scmd->old_stdout_fd = 0;
 	scmd->old_stdin_fd = 0;
 	scmd->new_fd = 0;

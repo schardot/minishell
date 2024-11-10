@@ -4,6 +4,7 @@
 
 static volatile sig_atomic_t g_signal_received = 0;
 
+
 int create_heredoc_temp_file(char **filename)
 {
 	int fd;
@@ -161,4 +162,10 @@ int	handle_HEREDOC_redirection(t_scmd *node)
 	unlink(filename);
 	free(filename);
 	return 0;
+}
+
+void restore_stdin(int saved_stdin)
+{
+	dup2(saved_stdin, STDIN_FILENO); // Restore original stdin
+	close(saved_stdin);
 }
