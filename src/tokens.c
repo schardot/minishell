@@ -18,6 +18,11 @@ t_token	*token_list(char **tokens, t_tools *t)
 			printf("minishell: syntax error near unexpected token `newline'\n");
 			return(NULL);
 		}
+		if(new->pipe_count > 0 &&  !tokens[i + 1])
+		{
+			printf("minishell: syntax error near unexpected token '|'\n");
+			return(NULL);
+		}
 		tokenlist_addback(&head, new);
 		i++;
 	}
@@ -40,6 +45,7 @@ t_token	*tokenlist_new(char *token, t_tools *t)
 	node->prev = NULL;
 	node->next = NULL;
 	node->redirect_count = 0;
+	node->pipe_count = 0;
 	assign_token_type(node, t);
 	// if(!node->next && node->redirect_count)
 	// 	return (NULL);
@@ -72,7 +78,10 @@ void	assign_token_type(t_token *node, t_tools *t)
 		return;
 	len = ft_strlen(node->value);
 	if (ft_strncmp(node->value, "|", len) == 0 && len == 1)
+	{
 		node->type = PIPE;
+		node->pipe_count++;
+	}
 	else if (ft_strncmp(node->value, ">", len) == 0 && len == 1)
 	{
 		node->type = R_OUTPUT;
