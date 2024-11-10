@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/10 09:00:33 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/10 11:45:44 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 
 static char	*create_arg(t_scmd *scmd, int newline);
 
-int	builtinecho(t_tools *t, t_scmd *scmd)
+int	builtinecho(t_tools *t, t_scmd *scmd) // do we need to pass t_tools *t here??
 {
 	int		newline;
 	char	*arg;
-	int		i;
+	(void)*t;
 
     if (scmd->args[1] && !ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
         newline = 1;

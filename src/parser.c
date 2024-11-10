@@ -8,8 +8,7 @@ int	parser(char *input, t_tools *t)
 	t_scmd		*scmd;
 	t_token		*lst;
 	t_parser	*parser;
-	int			exit_status;
-
+	
 	if (initial_quote_check(input))
 		return (EXIT_FAILURE);
 	parser = init_parser(input);

@@ -1,6 +1,6 @@
 CC = clang
 
-FLAGS = -g
+FLAGS = -g -Wextra -Wall -Werror
 LIBFT_DIR = include/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 NAME = minishell

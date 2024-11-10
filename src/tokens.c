@@ -13,7 +13,7 @@ t_token	*token_list(char **tokens)
 	while (tokens[i])
 	{
 		new = tokenlist_new(tokens[i]);
-		if(!new)
+		if(new->redirect_count > 0 &&  !tokens[i + 1])
 		{
 			printf("minishell: syntax error near unexpected token `newline'\n");
 			return(NULL);
@@ -41,15 +41,14 @@ t_token	*tokenlist_new(char *token)
 	node->next = NULL;
 	node->redirect_count = 0;
 	assign_token_type(node);
-	if(node->redirect_count && !node->next)
-		return (NULL);
+	// if(!node->next && node->redirect_count)
+	// 	return (NULL);
 	return (node);
 }
 
 void	tokenlist_addback(t_token **lst, t_token *new)
 {
 	t_token	*aux;
-	t_token	*prev;
 
 	if (!new)
 		return;

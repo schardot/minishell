@@ -8,7 +8,6 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	int prev_fd;
 	int has_next;
 	int pid;
-	int e_status;
 	int	status;
 
 	prev_fd = -1;
@@ -42,7 +41,7 @@ int	is_builtin(char *token)
 {
 	const char	*builtins[] = {"cd", "pwd", "echo", "exit", "export", "unset", "env", "history", NULL};
 	int	i;
-	int	token_len;
+	size_t	token_len; // not sure if i can make this we will check it it was int before 
 
 	i = 0;
 	token_len = ft_strlen(token);
