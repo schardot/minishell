@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 14:10:11 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/11/08 18:01:01 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/10 11:50:37 by ekechedz         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -35,7 +35,7 @@ static int check_exit_args(t_tools *t, t_scmd *scmd)
 {
 	int exit_stat;
 
-
+	exit_stat = 0; // i think this will breake the exit but lets see;
 	if (scmd->pipecount == 0)
 		printf("exit\n"); //is it on stdout or stderr?
 	if (ft_checkstr(scmd->args[1], &ft_isdigit) != 0)

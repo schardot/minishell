@@ -2,7 +2,7 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-static volatile sig_atomic_t g_signal_received = 0;
+//static volatile sig_atomic_t g_signal_received = 0;
 
 int create_heredoc_temp_file(char **filename)
 {

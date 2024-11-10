@@ -13,6 +13,11 @@ t_token	*token_list(char **tokens, t_tools *t)
 	while (tokens[i])
 	{
 		new = tokenlist_new(tokens[i], t);
+		if(new->redirect_count > 0 &&  !tokens[i + 1])
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n");
+			return(NULL);
+		}
 		tokenlist_addback(&head, new);
 		i++;
 	}
@@ -34,14 +39,16 @@ t_token	*tokenlist_new(char *token, t_tools *t)
 	}
 	node->prev = NULL;
 	node->next = NULL;
-	assign_token_type(node, t);
+	node->redirect_count = 0;
+	assign_token_type(node);
+	// if(!node->next && node->redirect_count)
+	// 	return (NULL);
 	return (node);
 }
 
 void	tokenlist_addback(t_token **lst, t_token *new)
 {
 	t_token	*aux;
-	t_token	*prev;
 
 	if (!new)
 		return;
@@ -67,14 +74,26 @@ void	assign_token_type(t_token *node, t_tools *t)
 	if (ft_strncmp(node->value, "|", len) == 0 && len == 1)
 		node->type = PIPE;
 	else if (ft_strncmp(node->value, ">", len) == 0 && len == 1)
+	{
 		node->type = R_OUTPUT;
+		node->redirect_count++;
+	}
 	else if (ft_strncmp(node->value, "<", len) == 0 && len == 1)
+	{
 		node->type = R_INPUT;
+		node->redirect_count++;
+	}
 	else if (ft_strncmp(node->value, ">>", len) == 0 && len == 2)
+	{
 		node->type = R_APPEND;
+		node->redirect_count++;
+	}
 	else if (ft_strncmp(node->value, "<<", len) == 0 && len == 2)
+	{
 		node->type = R_HEREDOC;
-	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value, t)))
+		node->redirect_count++;
+	}
+	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value)))
 		node->type = COMMAND;
 	else
 		node->type = ARGUMENT;

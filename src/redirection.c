@@ -31,8 +31,6 @@ void	set_redirection(t_scmd *node, t_token *lst)
             node->num_redirections++;
         }
     }
-	else
-		printf("Error");
 }
 
 // Handles input redirection: "<"

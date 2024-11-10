@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/10 12:44:34 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/10 13:03:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 
 static char	*create_arg(t_scmd *scmd, int newline);
 
-int	builtinecho(t_tools *t, t_scmd *scmd)
+int	builtinecho(t_tools *t, t_scmd *scmd) // do we need to pass t_tools *t here??
 {
 	int		newline;
 	char	*arg;
-	int		i;
+	(void)*t;
 
     if (scmd->args[1] && !ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
         newline = 1;

@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 14:02:23 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/10 10:03:01 by codespace        ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/11/10 13:03:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -71,7 +72,7 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 
 static int	print_export_list(t_tools *t)
 {
-	int		i;
+	size_t	i; // changed from int to size_t
 	char	**envcpy;
 	char	*full_env;
 
