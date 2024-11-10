@@ -55,7 +55,7 @@ int	is_builtin(char *token)
 	return (EXIT_SUCCESS);
 }
 
-char	*is_executable(char *cmd)
+char	*is_executable(char *cmd, t_tools *t)
 {
 	char	*path_env;
 	char	**paths;
@@ -65,7 +65,7 @@ char	*is_executable(char *cmd)
 	i = 0;
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	path_env = getenv("PATH");
+	path_env = ft_getenv("PATH", t);
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');

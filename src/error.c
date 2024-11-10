@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/08 17:56:50 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/10 11:10:08 by codespace        ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -25,6 +25,7 @@ void	ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t)
 		"numeric argument required",
 		"too many arguments",
 		"command not found",
+        "HOME not set",
 		"Unknown error"};
 	if (type != E_COMMAND_NOT_FOUND)
 	{

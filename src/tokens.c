@@ -1,25 +1,25 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-t_token	*token_list(char **tokens)
+t_token	*token_list(char **tokens, t_tools *t)
 {
 	int		i;
 	t_token	*head;
 	t_token	*new;
 
 	i = 0;
-	head = tokenlist_new(tokens[i]);
+	head = tokenlist_new(tokens[i], t);
 	i ++;
 	while (tokens[i])
 	{
-		new = tokenlist_new(tokens[i]);
+		new = tokenlist_new(tokens[i], t);
 		tokenlist_addback(&head, new);
 		i++;
 	}
 	return (head);
 }
 
-t_token	*tokenlist_new(char *token)
+t_token	*tokenlist_new(char *token, t_tools *t)
 {
 	t_token	*node;
 
@@ -34,7 +34,7 @@ t_token	*tokenlist_new(char *token)
 	}
 	node->prev = NULL;
 	node->next = NULL;
-	assign_token_type(node);
+	assign_token_type(node, t);
 	return (node);
 }
 
@@ -57,7 +57,7 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	aux->prev = aux;
 }
 
-void	assign_token_type(t_token *node)
+void	assign_token_type(t_token *node, t_tools *t)
 {
 	int	len;
 
@@ -74,7 +74,7 @@ void	assign_token_type(t_token *node)
 		node->type = R_APPEND;
 	else if (ft_strncmp(node->value, "<<", len) == 0 && len == 2)
 		node->type = R_HEREDOC;
-	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value)))
+	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value, t)))
 		node->type = COMMAND;
 	else
 		node->type = ARGUMENT;

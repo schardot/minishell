@@ -25,6 +25,7 @@ typedef enum
     E_NUM_ARG_REQUIRED,
     E_TOO_MANY_ARGS,
     E_COMMAND_NOT_FOUND,
+    E_HOME_NOT_SET,
     E_UNKNOWN_ERROR // Optional: for catching unhandled errors
 } t_error;
 

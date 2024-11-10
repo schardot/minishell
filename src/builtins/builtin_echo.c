@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/10 09:00:33 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/10 12:44:34 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	else
 		newline = 0;
 	arg = create_arg(scmd, newline);
-	ft_putstr_fd(arg, STDOUT_FILENO);
+	ft_putstr_fd(arg, 1);
 	// if (scmd->pipecount == 0)
 	// 	t->pipefd[0] = STDOUT_FILENO;
 	// ft_putstr_fd(arg, t->pipefd[0]);
 	if (!newline)
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putstr_fd("\n", 1);
 	// if (t->pipefd[0] == 0)
 	restore_stdout(scmd);
 	return (EXIT_SUCCESS);

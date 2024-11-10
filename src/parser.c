@@ -8,7 +8,6 @@ int	parser(char *input, t_tools *t)
 	t_scmd		*scmd;
 	t_token		*lst;
 	t_parser	*parser;
-	int			exit_status;
 
 	if (initial_quote_check(input))
 		return (EXIT_FAILURE);
@@ -18,15 +17,13 @@ int	parser(char *input, t_tools *t)
 	parser->tokens = split_arguments(parser, t);
 	if (!parser->tokens)
 		return (EXIT_FAILURE);
-	lst = token_list(parser->tokens);
+	lst = token_list(parser->tokens, t);
 	if (!lst)
 		return (EXIT_FAILURE);
 	scmd = simple_command(lst);
 	if (!scmd)
 		return (EXIT_FAILURE);
 	t->exit_status = check_exec_command(t, scmd);
-	// if (check_exec_command(t, scmd) == EXIT_FAILURE)
-	// 	return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -105,7 +102,7 @@ char	*format_arg(t_parser *p, char *arg, t_tools *t)
     else if (arg[0] == '$' && p->quote_token != '\'')
     {
         arg++;
-        arg = getenv(arg);
+        arg = ft_getenv(arg, t);
         if (arg == NULL)
             return (ft_strdup(""));
     }

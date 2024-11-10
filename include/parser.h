@@ -41,6 +41,7 @@ typedef struct s_token
 {
 	e_token_type	type;
 	char			*value;
+    int             redirect_count;
 	struct s_token	*prev;
 	struct s_token	*next;
 } t_token;
@@ -72,10 +73,10 @@ typedef struct s_scmd
 /* ------------------------------------------------------------------------- */
 /*                           Token List Functions         		             */
 /* ------------------------------------------------------------------------- */
-t_token	*tokenlist_new(char *token);
+t_token *tokenlist_new(char *token, t_tools *t);
 void	tokenlist_addback(t_token **lst, t_token *new);
-t_token	*token_list(char **tokens);
-void	assign_token_type(t_token *node);
+t_token *token_list(char **tokens, t_tools *t);
+void assign_token_type(t_token *node, t_tools *t);
 
 /* ------------------------------------------------------------------------- */
 /*                           Simple Command Functions                        */
@@ -107,7 +108,7 @@ int		builtinhistory(t_tools *t, t_scmd *node);
 int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
-char	*is_executable(char *cmd);
+char	*is_executable(char *cmd, t_tools *t);
 char	*format_arg(t_parser *p, char *arg, t_tools *t);
 
 

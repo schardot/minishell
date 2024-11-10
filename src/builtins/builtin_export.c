@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 14:02:23 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/07 11:29:08 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/10 10:03:01 by codespace        ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -82,8 +82,8 @@ static int	print_export_list(t_tools *t)
 	i = 0;
 	while (envcpy[i])
 	{
-		printf("declare -x ");
-		full_env = ft_getenv(envcpy[i], t);
+        printf("declare -x  %s=", envcpy[i]);
+        full_env = ft_getenv(envcpy[i], t);
 		if (!full_env)
 			break ;
 		printf("%s\n", full_env);
