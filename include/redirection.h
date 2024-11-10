@@ -25,9 +25,10 @@ void finalize_parent_process(int *prev_fd, t_tools *t, int has_next);
 // Function prototypes for redirection handling
 void set_redirection(t_scmd *node, t_token *lst);
 void	restore_stdout(t_scmd *node);
-int		handle_append_redirection(t_scmd *node);
-int 	handle_output_redirection(t_scmd *node);
-int		handle_input_redirection(t_scmd *node);
+int		handle_APPEND_redirection(t_scmd *node);
+int 	handle_OUTPUT_redirection(t_scmd *node);
+int		handle_INPUT_redirection(t_scmd *node);
 void	set_redirection(t_scmd *node, t_token *lst);
+int     handle_HEREDOC_redirection(t_scmd *node);
 
 #endif

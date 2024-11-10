@@ -34,7 +34,7 @@ typedef enum
 	R_OUTPUT,
 	R_INPUT,
 	R_APPEND,
-	HEREDOC
+	R_HEREDOC
 } e_token_type;
 
 typedef struct s_token
@@ -57,6 +57,7 @@ typedef struct s_scmd
 	char			*R_INPUT_file;
 	char			*R_OUTPUT_file;
 	char			*R_APPEND_file;
+    char            *R_HEREDOC_delimiter;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
 	int				old_stdout_fd;
