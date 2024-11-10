@@ -28,7 +28,7 @@ typedef enum
     E_UNKNOWN_ERROR // Optional: for catching unhandled errors
 } t_error;
 
-//extern struct sigaction sa;
+static int interupted_flag = 0;
 
 int     get_input(t_tools *t);
 t_tools *init_t_tools(char **envp);

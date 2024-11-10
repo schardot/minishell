@@ -73,7 +73,8 @@ void	handle_signal(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-	}
+        interupted_flag = 1;
+    }
 }
 
 void	setup_signal_handling(void)
@@ -81,9 +82,9 @@ void	setup_signal_handling(void)
 	struct sigaction sa;
 
 	sa.sa_handler = handle_signal;
-	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
-	if (sigaction(SIGINT, &sa, NULL) == -1)
+    sigemptyset(&sa.sa_mask);
+    if (sigaction(SIGINT, &sa, NULL) == -1)
 	{
 		perror("sigaction");
 		exit(1);
