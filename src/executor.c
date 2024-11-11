@@ -3,23 +3,25 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-int check_exec_command(t_tools *t, t_scmd *scmd)
+int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
 	int prev_fd;
 	int has_next;
 	int pid;
 	int	status;
+	int n;
 
 	prev_fd = -1;
+	n = 0;
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
-        if (create_pipe_if_needed(t, has_next, scmd) == -1)
-            return (EXIT_FAILURE);
-        if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
-        {
-            t->exit_status = scmd->builtin(t, scmd);
-            return (t->exit_status);
+		if (create_pipe_if_needed(t, has_next, scmd) == -1)
+			return (EXIT_FAILURE);
+		if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
+		{
+			t->exit_status = scmd->builtin(t, scmd);
+			return (t->exit_status);
 		}
 		pid = fork();
 		if (pid == 0)
@@ -29,10 +31,15 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			perror("fork");
 			return (EXIT_FAILURE);
 		}
-        close_unused_pipes(&prev_fd, t, has_next);
-        while (wait(&status) > 0)
-			;
+		else
+			n++;
+		close_unused_pipes(&prev_fd, t, has_next);
 		scmd = scmd->next;
+	}
+	while (n > 0)
+	{
+		wait(&status);
+		n--;
 	}
 	return (EXIT_SUCCESS);
 }

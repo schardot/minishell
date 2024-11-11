@@ -67,4 +67,3 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 		exit(127);
 	}
 }
-
