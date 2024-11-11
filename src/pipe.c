@@ -57,14 +57,9 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 	{
 		scmd->exec_path = is_executable(scmd->args[0], t);
 		execve(scmd->exec_path, scmd->args, t->envp);
-		perror("execve");
-		exit(1);
 	}
-	else
-	{
-		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-		//printf("minishell: command not found: %s\n", scmd->args[0]);
-		exit(127);
-	}
+	ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
+	//printf("minishell: command not found: %s\n", scmd->args[0]);
+	exit(127);
 }
 
