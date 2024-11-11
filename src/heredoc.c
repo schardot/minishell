@@ -16,6 +16,7 @@ int create_heredoc_temp_file(char **filename)
 	{
 		perror("open");
 		free(*filename);
+		close(fd);
 		return -1;
 	}
 	close(fd);
