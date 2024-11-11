@@ -62,4 +62,3 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 	//printf("minishell: command not found: %s\n", scmd->args[0]);
 	exit(127);
 }
-

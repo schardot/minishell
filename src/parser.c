@@ -23,6 +23,7 @@ int	parser(char *input, t_tools *t)
 	scmd = simple_command(lst);
 	if (!scmd)
 		return (EXIT_FAILURE);
+
 	t->exit_status = check_exec_command(t, scmd);
 	return (EXIT_SUCCESS);
 }
@@ -65,6 +66,8 @@ char	**split_arguments(t_parser *p, t_tools *t)
 		}
 		if (p->append == true)
 			arg = append_char(arg, p->input[i]);
+		if (!p->input[i])
+			break ;
 		i ++;
 	}
 	if (arg)
