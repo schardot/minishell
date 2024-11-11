@@ -4,6 +4,7 @@
 
 int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 {
+	(void)*scmd;
 	if (has_next != 0)
 	{
 		if (pipe(t->pipefd) == -1)
@@ -12,11 +13,11 @@ int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 			return -1;
 		}
 	}
-	if (!scmd->args || !scmd->args[0])
-	{
-		printf("minishell: syntax error near unexpected token '|'\n");
-		return (EXIT_FAILURE);
-	}
+	// if (!scmd->args || !scmd->args[0])
+	// {
+	// 	printf("minishell: syntax error near unexpected token '|'\n");
+	// 	return (EXIT_FAILURE);
+	// }
 	return 0;
 }
 
