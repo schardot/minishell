@@ -54,8 +54,7 @@ char	**split_arguments(t_parser *p, t_tools *t)
 	arg = NULL;
 	while (p->input[i])
 	{
-		while (check_quote(p->input[i], p))
-			i ++;
+		check_quote(p->input[i], p);
 		if (p->input[i] && !ft_isspace(p->input[i]) && p->input[i] != '\"' \
 		&& p->input[i] != '\'')
 			p->append = true;
@@ -96,12 +95,12 @@ char	*append_char(char *arg, char c)
 
 char	*format_arg(t_parser *p, char *arg, t_tools *t)
 {
-	arg = trim_quotes(arg);
-	if (arg[0] == '$')
+	arg = trim_quotes(arg, false);
+	if (arg[1] == '$')
 	{
-		if (!arg[1])
+		if (!arg[2])
 			return (arg);
-		else if (arg[1] == '?')
+		else if (arg[2] == '?')
 			arg = ft_itoa(t->exit_status);
 		else if (arg[1] && p->quote_token != '\'')
 		{
