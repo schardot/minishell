@@ -104,9 +104,9 @@ char	*format_arg(t_parser *p, char *arg, t_tools *t)
 	arg = trim_quotes(arg, false);
 
 	i = 0;
-	while (arg[i])
+	while (arg && arg[i])
 	{
-		if (arg[i] == '$')
+		if (arg && arg[i] == '$')
 		{
 			if (!arg[i + 1])
 				return (arg);
@@ -119,7 +119,6 @@ char	*format_arg(t_parser *p, char *arg, t_tools *t)
 		}
 		i ++;
 	}
-
 	return (arg);
 }
 
@@ -141,7 +140,7 @@ char	*expand_the_argument(char *arg, int *i, t_tools *t)
 		return (NULL);
 	var_value = ft_getenv(var_name, t);
 	if (!var_value)
-		var_value = ft_strdup("");
+		return (NULL);
 	new_arg = malloc(strlen(arg) + strlen(var_value) - len);
 	if (!new_arg)
 		return (NULL);
