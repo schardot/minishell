@@ -67,6 +67,8 @@ char	**split_arguments(t_parser *p, t_tools *t)
 		}
 		if (p->append == true)
 			arg = append_char(arg, p->input[i]);
+		if (!p->input[i])
+			break ;
 		i ++;
 	}
 	if (arg)
@@ -98,14 +100,19 @@ char	*append_char(char *arg, char c)
 char	*format_arg(t_parser *p, char *arg, t_tools *t)
 {
 	arg = trim_quotes(arg);
-    if (arg[0] == '$' && arg[1] == '?')
-        arg = ft_itoa(t->exit_status);
-    else if (arg[0] == '$' && p->quote_token != '\'')
-    {
-        arg++;
-        arg = ft_getenv(arg, t);
-        if (arg == NULL)
-            return (ft_strdup(""));
-    }
-    return (arg);
+	if (arg[0] == '$')
+	{
+		if (!arg[1])
+			return (arg);
+		else if (arg[1] == '?')
+			arg = ft_itoa(t->exit_status);
+		else if (arg[1] && p->quote_token != '\'')
+		{
+			arg++;
+			arg = ft_getenv(arg, t);
+			if (arg == NULL)
+				return (ft_strdup(""));
+		}
+	}
+	return (arg);
 }
