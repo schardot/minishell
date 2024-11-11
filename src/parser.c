@@ -66,6 +66,8 @@ char	**split_arguments(t_parser *p, t_tools *t)
 		}
 		if (p->append == true)
 			arg = append_char(arg, p->input[i]);
+		if (!p->input[i])
+			break ;
 		i ++;
 	}
 	if (arg)
