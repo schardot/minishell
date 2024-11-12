@@ -8,16 +8,14 @@ int	check_quote(char c, t_parser *p)
 	if (c == '\"' && !p->sq)
 	{
 		p->dq = !p->dq;
-		p->append = true;
-		//p->append = !p->append;
+		p->append = !p->append;
 		p->quote_token = '\"';
 		return (1);
 	}
 	else if (c == '\'' && !p->dq)
 	{
 		p->sq = !p->sq;
-		p->append = true;
-		//p->append = !p->append;
+		p->append = !p->append;
 		p->quote_token = '\'';
 		return (1);
 	}

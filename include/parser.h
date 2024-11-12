@@ -43,6 +43,8 @@ typedef struct s_token
 	char			*value;
     int             redirect_count;
 	int				pipe_count;
+	bool			sq;
+	bool			dq;
 	struct s_token	*prev;
 	struct s_token	*next;
 } t_token;
@@ -127,5 +129,6 @@ char *check_env(t_parser *p, char *arg);
 int initial_quote_check(char *arg);
 t_parser *append_token(char *arg, t_parser *p, t_tools *t);
 char *ft_getenv(char *env, t_tools *t);
+char	*expand_the_argument(char *arg, int *i, t_tools *t);
 
 #endif

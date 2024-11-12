@@ -1,6 +1,9 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
+int	token_quotes(char *arg, char quote);
+char *token_value(char *token, bool sq, t_tools *t);
+
 t_token	*token_list(char **tokens, t_tools *t)
 {
 	int		i;
@@ -16,7 +19,6 @@ t_token	*token_list(char **tokens, t_tools *t)
 		if(new->redirect_count > 0 &&  !tokens[i + 1])
 		{
 			ft_error(E_SYNTAX_ERROR, NULL, "newline", t);
-			//printf("minishell: syntax error near unexpected token `newline'\n");
 			return(NULL);
 		}
 		if(new->pipe_count > 0 &&  !tokens[i + 1])
@@ -32,25 +34,73 @@ t_token	*token_list(char **tokens, t_tools *t)
 
 t_token	*tokenlist_new(char *token, t_tools *t)
 {
-	t_token	*node;
+	t_token	*tk;
 
-	node = (t_token *)malloc(sizeof(t_token));
-	if (node == NULL)
+	tk = (t_token *)malloc(sizeof(t_token));
+	if (tk == NULL)
 		return (NULL);
-	node->value = ft_strdup(token);
-	if (node->value == NULL)
+	tk->sq = token_quotes(token, '\'');
+	tk->dq = token_quotes(token, '\"');
+	tk->value = token_value(token, tk->sq, t);
+	if (tk->value == NULL)
 	{
-		free(node);
+		free(tk);
 		return (NULL);
 	}
-	node->prev = NULL;
-	node->next = NULL;
-	node->redirect_count = 0;
-	node->pipe_count = 0;
-	assign_token_type(node, t);
-	// if(!node->next && node->redirect_count)
-	// 	return (NULL);
-	return (node);
+	tk->prev = NULL;
+	tk->next = NULL;
+	tk->redirect_count = 0;
+	tk->pipe_count = 0;
+	assign_token_type(tk, t);
+	return (tk);
+}
+
+char *token_value(char *token, bool sq, t_tools *t)
+{
+	int	i;
+
+	i = 0;
+	token = trim_quotes(token, false);
+	while (token && token[i])
+	{
+		if (token[i] == '$' && !sq)
+		{
+			if (!token[i + 1])
+				return (token);
+			else if (token[i + 1] == '?')
+			{
+				token = ft_itoa(t->exit_status);
+				if (token == NULL)
+					return (NULL);
+				if (!ft_strchr(token, '$'))
+			   		return (token);
+			}
+			else if (token[i + 1] && !sq)
+			{
+				token = expand_the_argument(token, &i, t);
+				if (token == NULL)
+					return (NULL);
+				if (!ft_strchr(token, '$'))
+			   		return (token);
+			}
+		}
+		i ++;
+	}
+	return (token);
+}
+
+int	token_quotes(char *arg, char quote)
+{
+	int z;
+
+	if (!arg || ft_strlen(arg) < 2)
+		return (0);
+
+	z = ft_strlen(arg) - 1;
+	 if (arg[0] == quote && arg[z] == quote)
+		return (1);
+
+	return (0);
 }
 
 void	tokenlist_addback(t_token **lst, t_token *new)
@@ -71,47 +121,48 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	aux->prev = aux;
 }
 
-void	assign_token_type(t_token *node, t_tools *t)
+void	assign_token_type(t_token *tk, t_tools *t)
 {
 	int	len;
 
-	if (!node || !node->value)
+	if (!tk || !tk->value)
 		return;
-	len = ft_strlen(node->value);
-	if (ft_strncmp(node->value, "|", len) == 0 && len == 1)
+	len = ft_strlen(tk->value);
+	if (ft_strncmp(tk->value, "|", len) == 0 && len == 1 && !tk->dq && !tk->sq)
 	{
-		node->type = PIPE;
-		node->pipe_count++;
+		tk->type = PIPE;
+		tk->pipe_count++;
 	}
-	else if (ft_strncmp(node->value, ">", len) == 0 && len == 1)
+	else if (ft_strncmp(tk->value, ">", len) == 0 && len == 1 && !tk->dq && !tk->sq)
 	{
-		node->type = R_OUTPUT;
-		node->redirect_count++;
+		tk->type = R_OUTPUT;
+		tk->redirect_count++;
 	}
-	else if (ft_strncmp(node->value, "<", len) == 0 && len == 1)
+	else if (ft_strncmp(tk->value, "<", len) == 0 && len == 1 && !tk->dq && !tk->sq)
 	{
-		node->type = R_INPUT;
-		node->redirect_count++;
+		tk->type = R_INPUT;
+		tk->redirect_count++;
 	}
-	else if (ft_strncmp(node->value, ">>", len) == 0 && len == 2)
+	else if (ft_strncmp(tk->value, ">>", len) == 0 && len == 2 && !tk->dq && !tk->sq)
 	{
-		node->type = R_APPEND;
-		node->redirect_count++;
+		tk->type = R_APPEND;
+		tk->redirect_count++;
 	}
-	else if (ft_strncmp(node->value, "<<", len) == 0 && len == 2)
+	else if (ft_strncmp(tk->value, "<<", len) == 0 && len == 2 && !tk->dq && !tk->sq)
 	{
-		node->type = R_HEREDOC;
-		node->redirect_count++;
+		tk->type = R_HEREDOC;
+		tk->redirect_count++;
 	}
-	else if (node->prev == NULL && (is_builtin(node->value) || is_executable(node->value, t)))
-		node->type = COMMAND;
+	else if (tk->prev == NULL && (is_builtin(tk->value) || is_executable(tk->value, t)))
+		tk->type = COMMAND;
 	else
-		node->type = ARGUMENT;
+		tk->type = ARGUMENT;
 }
 
 t_parser *append_token(char *arg, t_parser *p, t_tools *t)
 {
-	arg = format_arg(p, arg, t);
+	(void) t;
+	//arg = format_arg(p, arg, t);
 	if (arg)
 		p->tokens = ft_arrcat(p->tokens, arg, ft_str2dlen(p->tokens));
 	p->append = false;

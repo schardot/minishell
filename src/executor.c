@@ -29,7 +29,6 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		if (pid == 0)
 		{
 			execute_child_process(t, scmd, prev_fd, has_next);
-			//printf("this is cmd %s after child %d\n", scmd->args[0], t->exit_status);
 		}
 		else if (pid < 0)
 		{
@@ -40,15 +39,10 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 			n++;
 
 		close_unused_pipes(&prev_fd, t, has_next);
-		//printf("this is cmd %s after close %d\n", scmd->args[0], t->exit_status);
 
 		scmd = scmd->next;
 	}
-	// while (n > 0)
-	// {
-	// 	wait(&status);
-	// 	n--;
-	// }
+
 	while (n > 0)
 	{
 		if (waitpid(-1, &status, 0) == -1)
@@ -56,14 +50,10 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 			perror("waitpid");
 			return (EXIT_FAILURE);
 		}
-		//printf("in procces  waiting %d\n", t->exit_status);
 		last_exit = WEXITSTATUS(status);
-		if (last_exit != 0)
-			t->exit_status = last_exit;
-
+		t->exit_status = last_exit;
 		n--;
 	}
-	//printf("in exec%d\n", t->exit_status);
 	return (t->exit_status);
 }
 
@@ -78,10 +68,10 @@ int	is_builtin(char *token)
 	while (builtins[i] != NULL)
 	{
 		if (ft_strncmp(token, builtins[i], token_len) == 0 && ft_strlen(builtins[i]) == token_len)
-			return (EXIT_FAILURE);
+			return (1);
 		i++;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 char	*is_executable(char *cmd, t_tools *t)
@@ -103,7 +93,7 @@ char	*is_executable(char *cmd, t_tools *t)
 	while (paths[i])
 	{
 		exec_full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
-		if (exec_full_path == NULL)
+		if (!exec_full_path)
 		{
 			ft_free_matrix(paths);
 			return (NULL);
@@ -123,22 +113,3 @@ char	*is_executable(char *cmd, t_tools *t)
 	return (NULL);
 }
 
-// void	execute_executable()
-// {
-// 	pid = fork();
-// 	if (pid == 0)
-// 		execute_child_process(t, scmd, prev_fd, has_next);
-// 	else if (pid < 0)
-// 	{
-// 		perror("fork");
-// 		return (EXIT_FAILURE);
-// 	}
-// 	finalize_parent_process(&prev_fd, t, has_next);
-// }
-
-// void	check_builtin_and_exec(t_scmd *scmd, t_token *t)
-// {
-// 	scmd->builtin(t, scmd);
-// 	return(EXIT_SUCCESS);
-// 	finalize_parent_process(&prev_fd, t, has_next);
-// }

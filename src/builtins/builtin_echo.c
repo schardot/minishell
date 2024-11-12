@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/11 19:17:14 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:30:24 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -16,7 +16,6 @@
 
 int	builtinecho(t_tools *t, t_scmd *scmd)
 {
-	char	*arg;
 	int		i;
 	int		newline;
 	(void)*t;
@@ -29,14 +28,13 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 		while (scmd->args[i][j] == 'n')
 			j++;
 		if (scmd->args[i][j] != '\0')
-			break;
+			break ;
 		newline = 0;
 		i++;
 	}
 	while (i < scmd->argsc)
 	{
-		arg = trim_quotes(scmd->args[i], true);
-		ft_putstr_fd(arg, 1);
+		ft_putstr_fd(scmd->args[i], 1);
 		if (i != scmd->argsc - 1)
 			ft_putchar_fd(' ', 1);
 		i++;
