@@ -111,7 +111,8 @@ void	assign_token_type(t_token *node, t_tools *t)
 t_parser *append_token(char *arg, t_parser *p, t_tools *t)
 {
 	arg = format_arg(p, arg, t);
-	p->tokens = ft_arrcat(p->tokens, arg, ft_str2dlen(p->tokens));
+	if (arg)
+		p->tokens = ft_arrcat(p->tokens, arg, ft_str2dlen(p->tokens));
 	p->append = false;
 	return (p);
 }
