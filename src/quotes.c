@@ -8,21 +8,23 @@ int	check_quote(char c, t_parser *p)
 	if (c == '\"' && !p->sq)
 	{
 		p->dq = !p->dq;
-		p->append = !p->append;
+		p->append = true;
+		//p->append = !p->append;
 		p->quote_token = '\"';
 		return (1);
 	}
 	else if (c == '\'' && !p->dq)
 	{
 		p->sq = !p->sq;
-		p->append = !p->append;
+		p->append = true;
+		//p->append = !p->append;
 		p->quote_token = '\'';
 		return (1);
 	}
 	return (0);
 }
 
-char *trim_quotes(char *arg)
+char *trim_quotes(char *arg, bool trim)
 {
 	int i;
 	int z;
@@ -31,6 +33,8 @@ char *trim_quotes(char *arg)
 		return (NULL);
 	z = ft_strlen(arg) - 1;
 	i = 0;
+	if (!ft_strncmp(arg, "\"\"", 2) && trim == false)
+		return (arg);
 	if ((arg[i] == '\'' && arg[z] == '\'') || (arg[i] == '\"' && arg[z] == '\"'))
 	{
 		// if (arg[i] == '\'' && arg[z] == '\'')

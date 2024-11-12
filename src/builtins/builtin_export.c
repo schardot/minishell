@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/10 15:27:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/11 19:23:27 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 
 #include "../../include/minishell.h"
@@ -42,7 +42,7 @@ int builtinexport(t_tools *t, t_scmd *scmd)
 				free(full);
 				return (EXIT_FAILURE);
 			}
-			if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
+			if (check_exp_args(scmd->args[0], scmd, t) == EXIT_SUCCESS)
 			{
 				if (ft_getenv(spl[0], t))
 					replace_env_var(full, strlen(spl[0]), t);
@@ -67,16 +67,20 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 {
 	int	j;
 
-	j = 0;
-	while (arg[j])
+	if (!arg[0] || (!ft_isalpha(arg[0]) && arg[0] != '_'))  // Check first character
 	{
-		if ((j == 0 && !ft_isalpha(arg[j]) && arg[j] != '_') ||
-			(j > 0 && !ft_isalnum(arg[j]) && arg[j] != '_'))
+		ft_error(E_NOT_A_VALID_ID, "export", scmd->args[1], t);
+		return (EXIT_FAILURE);
+	}
+	j = 1;
+	while (arg[j] && arg[j] != '=')  // Check remaining characters until `=`
+	{
+		if (!ft_isalnum(arg[j]) && arg[j] != '_')
 		{
 			ft_error(E_NOT_A_VALID_ID, "export", scmd->args[1], t);
 			return (EXIT_FAILURE);
 		}
-		j ++;
+		j++;
 	}
 	return (EXIT_SUCCESS);
 }

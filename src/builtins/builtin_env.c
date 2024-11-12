@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:19 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/07 11:49:10 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:37:02 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -16,7 +16,7 @@
 int	builtinenv(t_tools *t, t_scmd *scmd)
 {
 	int	i;
-	
+
 	i = 0;
 	if (scmd->args[1])
 	{
@@ -25,10 +25,11 @@ int	builtinenv(t_tools *t, t_scmd *scmd)
 	}
 	if (scmd->pipecount == 0)
 		t->pipefd[0] = STDOUT_FILENO;
-	printf("in env: %d\n", t->pipefd[0]);
+
 	while (t->envp[i])
 	{
-		ft_putendl_fd(t->envp[i], t->pipefd[0]);
+		if (ft_strchr(t->envp[i], '='))
+			ft_putendl_fd(t->envp[i], t->pipefd[0]);
 		i ++;
 	}
 	return (EXIT_SUCCESS);

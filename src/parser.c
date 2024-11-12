@@ -3,6 +3,8 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
+char	*expand_the_argument(char *arg, int *i, t_tools *t);
+
 int	parser(char *input, t_tools *t)
 {
 	t_scmd		*scmd;
@@ -23,7 +25,7 @@ int	parser(char *input, t_tools *t)
 	scmd = simple_command(lst);
 	if (!scmd)
 		return (EXIT_FAILURE);
-	
+
 	t->exit_status = check_exec_command(t, scmd);
 	return (EXIT_SUCCESS);
 }
@@ -55,8 +57,7 @@ char	**split_arguments(t_parser *p, t_tools *t)
 	arg = NULL;
 	while (p->input[i])
 	{
-		while (check_quote(p->input[i], p))
-			i ++;
+		check_quote(p->input[i], p);
 		if (p->input[i] && !ft_isspace(p->input[i]) && p->input[i] != '\"' \
 		&& p->input[i] != '\'')
 			p->append = true;
@@ -99,20 +100,54 @@ char	*append_char(char *arg, char c)
 
 char	*format_arg(t_parser *p, char *arg, t_tools *t)
 {
-	arg = trim_quotes(arg);
-	if (arg[0] == '$')
+	int	i;
+	arg = trim_quotes(arg, false);
+
+	i = 0;
+	while (arg && arg[i])
 	{
-		if (!arg[1])
-			return (arg);
-		else if (arg[1] == '?')
-			arg = ft_itoa(t->exit_status);
-		else if (arg[1] && p->quote_token != '\'')
+		if (arg && arg[i] == '$')
 		{
-			arg++;
-			arg = ft_getenv(arg, t);
-			if (arg == NULL)
-				return (ft_strdup(""));
+			if (!arg[i + 1])
+				return (arg);
+			else if (arg[i + 1] == '?')
+				arg = ft_itoa(t->exit_status);
+			else if (arg[i] && p->quote_token != '\'')
+			{
+				arg = expand_the_argument(arg, &i, t);
+			}
 		}
+		i ++;
 	}
 	return (arg);
 }
+
+#include <stdlib.h>
+#include <string.h>
+
+char	*expand_the_argument(char *arg, int *i, t_tools *t)
+{
+	char	*var_name;
+	char	*var_value;
+	char	*new_arg;
+	int		start = *i + 1;
+	int		len = 0;
+
+	while (arg[start + len] && (ft_isalnum(arg[start + len]) || arg[start + len] == '_'))
+		len++;
+	var_name = ft_substr(arg, start, len);
+	if (!var_name)
+		return (NULL);
+	var_value = ft_getenv(var_name, t);
+	if (!var_value)
+		return (NULL);
+	new_arg = malloc(strlen(arg) + strlen(var_value) - len);
+	if (!new_arg)
+		return (NULL);
+	strncpy(new_arg, arg, *i);
+	strcpy(new_arg + *i, var_value);
+	strcpy(new_arg + *i + strlen(var_value), arg + start + len);
+	*i += strlen(var_value) - 1;
+	return (new_arg);
+}
+

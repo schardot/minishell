@@ -1,85 +1,48 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/10 13:03:33 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/11 19:17:14 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 #include "../../include/redirection.h"
 
-static char	*create_arg(t_scmd *scmd, int newline);
-
-int	builtinecho(t_tools *t, t_scmd *scmd) // do we need to pass t_tools *t here??
+int	builtinecho(t_tools *t, t_scmd *scmd)
 {
-	int		newline;
 	char	*arg;
+	int		i;
+	int		newline;
 	(void)*t;
 
-    if (scmd->args[1] && !ft_strncmp(scmd->args[1], "-n", ft_strlen(scmd->args[1])))
-        newline = 1;
-	else
+	i = 1;
+	newline = 1;
+	while (i < scmd->argsc && scmd->args[i][0] == '-' && scmd->args[i][1] == 'n')
+	{
+		int j = 1;
+		while (scmd->args[i][j] == 'n')
+			j++;
+		if (scmd->args[i][j] != '\0')
+			break;
 		newline = 0;
-	arg = create_arg(scmd, newline);
-	ft_putstr_fd(arg, 1);
-	// if (scmd->pipecount == 0)
-	// 	t->pipefd[0] = STDOUT_FILENO;
-	// ft_putstr_fd(arg, t->pipefd[0]);
-	if (!newline)
+		i++;
+	}
+	while (i < scmd->argsc)
+	{
+		arg = trim_quotes(scmd->args[i], true);
+		ft_putstr_fd(arg, 1);
+		if (i != scmd->argsc - 1)
+			ft_putchar_fd(' ', 1);
+		i++;
+	}
+	if (newline)
 		ft_putstr_fd("\n", 1);
-	// if (t->pipefd[0] == 0)
 	restore_stdout(scmd);
 	return (EXIT_SUCCESS);
 }
-
-static char	*create_arg(t_scmd *scmd, int newline)
-{
-	char	*temp;
-	char	*arg;
-	int		i;
-
-	i = newline + 1;
-	arg = ft_strdup("");
-	if (!arg)
-		return (NULL);
-	while (scmd->args[i])
-	{
-		temp = ft_strjoin(arg, scmd->args[i]);
-		if (!temp)
-			return (NULL);
-		arg = temp;
-		if (scmd->args[i + 1])
-		{
-			temp = ft_strjoin(arg, " ");
-			arg = temp;
-		}
-		i++;
-	}
-	return (arg);
-}
-
-/*
-Permission Denied Errors (in rare cases when redirecting output):
-Example: echo "Hello" > /root/hello.txt
-If you try to redirect echo output to a file or directory where you
-lack write permissions,bash will return a "Permission denied" error
-for the redirection, not echo itself. This is an error from
-the shell related to file permissions rather than from echo.
-
-Invalid Redirections:
-Example: echo "Hello" > /dev/full
-If you attempt to write to a device like /dev/full, which always
-acts as a "full" storage, bash will output an error (e.g., No space
- left on device), even though echo itself works.
-
-Command Substitution Errors:
-Example: echo $(undefined_command)
-If echo is used with command substitution (e.g., echo $(command)),
- and the command inside substitution fails or doesn’t exist, bash
-  will throw an error like command not found.*/
