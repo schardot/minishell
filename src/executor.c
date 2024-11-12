@@ -5,11 +5,11 @@
 
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	int prev_fd;
-	int has_next;
-	int pid;
+	int	prev_fd;
+	int	has_next;
+	int	pid;
 	int	status;
-	int n;
+	int	n;
 
 	prev_fd = -1;
 	n = 0;
