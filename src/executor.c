@@ -5,11 +5,11 @@
 
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	int prev_fd;
-	int has_next;
-	int pid;
+	int	prev_fd;
+	int	has_next;
+	int	pid;
 	int	status;
-	int n;
+	int	n;
 
 	prev_fd = -1;
 	n = 0;
@@ -36,12 +36,26 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		close_unused_pipes(&prev_fd, t, has_next);
 		scmd = scmd->next;
 	}
+	// while (n > 0)
+	// {
+	// 	wait(&status);
+	// 	n--;
+	// }
 	while (n > 0)
 	{
-		wait(&status);
+		if (waitpid(-1, &status, 0) == -1)
+		{
+			perror("waitpid");
+			return (EXIT_FAILURE);
+		}
+
+		// If a process exited normally, set exit status to its exit code
+		if (WIFEXITED(status))
+			t->exit_status = WEXITSTATUS(status);
+
 		n--;
 	}
-	return (EXIT_SUCCESS);
+	return (t->exit_status);
 }
 
 int	is_builtin(char *token)

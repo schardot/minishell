@@ -15,7 +15,8 @@ t_token	*token_list(char **tokens, t_tools *t)
 		new = tokenlist_new(tokens[i], t);
 		if(new->redirect_count > 0 &&  !tokens[i + 1])
 		{
-			printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_error(E_SYNTAX_ERROR, NULL, "newline", t);
+			//printf("minishell: syntax error near unexpected token `newline'\n");
 			return(NULL);
 		}
 		if(new->pipe_count > 0 &&  !tokens[i + 1])
