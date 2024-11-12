@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/11 18:04:41 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:22:12 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ void	update_exit(t_error type, t_tools *t)
 		t->exit_status = 127;
 	else if (type == E_SYNTAX_ERROR || type == E_NUM_ARG_REQUIRED)
 		t->exit_status = 2;
-	else if (type == E_NOT_A_VALID_ID || type == E_NOT_A_DIR)
-		t->exit_status = 1;
+	else if (type == E_NOT_A_VALID_ID || type == E_NOT_A_DIR || type == E_NO_SUCH_FILE)
+		t->exit_status = 127;
 	else if (type == E_TOO_MANY_ARGS || type == E_PERMISSION_DENIED)
 		t->exit_status = 1;
 	else

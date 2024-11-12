@@ -26,7 +26,7 @@ int	parser(char *input, t_tools *t)
 	if (!scmd)
 		return (EXIT_FAILURE);
 
-	t->exit_status = check_exec_command(t, scmd);
+	check_exec_command(t, scmd);
 	return (EXIT_SUCCESS);
 }
 
@@ -150,4 +150,3 @@ char	*expand_the_argument(char *arg, int *i, t_tools *t)
 	*i += strlen(var_value) - 1;
 	return (new_arg);
 }
-

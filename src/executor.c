@@ -10,9 +10,11 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	int	pid;
 	int	status;
 	int	n;
+	int last_exit;
 
 	prev_fd = -1;
 	n = 0;
+	last_exit = 0;
 	while (scmd)
 	{
 		has_next = scmd->next != NULL;
@@ -25,7 +27,10 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		}
 		pid = fork();
 		if (pid == 0)
+		{
 			execute_child_process(t, scmd, prev_fd, has_next);
+			//printf("this is cmd %s after child %d\n", scmd->args[0], t->exit_status);
+		}
 		else if (pid < 0)
 		{
 			perror("fork");
@@ -33,7 +38,10 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		}
 		else
 			n++;
+
 		close_unused_pipes(&prev_fd, t, has_next);
+		//printf("this is cmd %s after close %d\n", scmd->args[0], t->exit_status);
+
 		scmd = scmd->next;
 	}
 	// while (n > 0)
@@ -48,13 +56,14 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 			perror("waitpid");
 			return (EXIT_FAILURE);
 		}
-
-		// If a process exited normally, set exit status to its exit code
-		if (WIFEXITED(status))
-			t->exit_status = WEXITSTATUS(status);
+		//printf("in procces  waiting %d\n", t->exit_status);
+		last_exit = WEXITSTATUS(status);
+		if (last_exit != 0)
+			t->exit_status = last_exit;
 
 		n--;
 	}
+	//printf("in exec%d\n", t->exit_status);
 	return (t->exit_status);
 }
 
