@@ -7,17 +7,16 @@ int	check_quote(char c, t_parser *p)
 {
 	if (c == '\"' && !p->sq)
 	{
+
 		p->dq = !p->dq;
 		p->append = !p->append;
-		p->quote_token = '\"';
-		return (1);
+		return (0);
 	}
 	else if (c == '\'' && !p->dq)
 	{
 		p->sq = !p->sq;
 		p->append = !p->append;
-		p->quote_token = '\'';
-		return (1);
+		return (0);
 	}
 	return (0);
 }

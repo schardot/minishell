@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:12 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/12 17:30:24 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/13 17:25:48 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -34,6 +34,7 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	}
 	while (i < scmd->argsc)
 	{
+		scmd->args[i] = trim_quotes(scmd->args[i], true);
 		ft_putstr_fd(scmd->args[i], 1);
 		if (i != scmd->argsc - 1)
 			ft_putchar_fd(' ', 1);

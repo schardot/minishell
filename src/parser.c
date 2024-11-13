@@ -51,37 +51,14 @@ t_parser	*init_parser(char *input)
 #include <stdbool.h>
 #include <string.h>
 
-#define SYMBOLS_PARSING " |><"
+#define SYMBOLS " |><"
 
-// Helper function to check if the character is a symbol
-static bool is_single_symbol(char c) {
-	return strchr(SYMBOLS_PARSING, c) != NULL;
-}
 
 // Helper function to check for multi-character symbols (e.g., <<, >>)
 static bool is_multi_symbol(const char *input, int i) {
 	return (input[i] == '<' && input[i + 1] == '<') || (input[i] == '>' && input[i + 1] == '>');
 }
 
-// Helper function to handle quoted content
-static int handle_quotes(char *input, int i, char **arg) {
-    char quote_char = input[i]; // Store the opening quote type
-    *arg = append_char(*arg, input[i]); // Append the opening quote
-    i++; // Move past the opening quote
-
-    while (input[i] && input[i] != quote_char) { // Continue until closing quote
-        *arg = append_char(*arg, input[i]);
-        i++;
-    }
-
-    // If we encounter the closing quote, append it and move past it
-    if (input[i] == quote_char) {
-        *arg = append_char(*arg, input[i]);
-        i++;
-    }
-
-    return i; // Return the updated index
-}
 
 // Handle multi-character symbol (e.g., <<, >>)
 static int handle_multi_symbol(char *input, int i, char **arg, t_parser *p, t_tools *t) {
@@ -92,54 +69,53 @@ static int handle_multi_symbol(char *input, int i, char **arg, t_parser *p, t_to
 	return i + 2; // move index forward by 2
 }
 
-char **split_arguments(t_parser *p, t_tools *t) {
-	int i = 0;
-	char *arg = NULL;
+char **split_arguments(t_parser *p, t_tools *t)
+{
+	int		i;
+	char	*arg;
 
+	arg = NULL;
+	i = 0;
 	while (p->input[i])
 	{
-		if (p->input[i] == '\'' || p->input[i] == '\"') {
-			i = handle_quotes(p->input, i, &arg);
-			continue;
-		}
+		check_quote(p->input[i], p);
 
-		// Handle multi-character symbols like << or >>
-		if (is_multi_symbol(p->input, i)) {
-			if (arg) {
-				p = append_token(arg, p, t);
-				arg = NULL;
-			}
-			i = handle_multi_symbol(p->input, i, &arg, p, t);
-			continue;
-		}
+		// // Handle multi-character symbols like << or >>
+		// if (is_multi_symbol(p->input, i))
+		// {
+		// 	if (arg) {
+		// 		p = append_token(arg, p, t);
+		// 		arg = NULL;
+		// 	}
+		// 	i = handle_multi_symbol(p->input, i, &arg, p, t);
+		// 	continue;
+		// }
 
-		// Start a new token when encountering non-space, non-symbol characters
-		if (!ft_isspace(p->input[i]) && !is_single_symbol(p->input[i])) {
-			p->append = true;
-		}
-
-		// Append token if end of argument or if encountering single-character symbols or whitespace
-		if (arg && (ft_isspace(p->input[i]) || is_single_symbol(p->input[i]))) {
+		while (!ft_strchr(SYMBOLS, p->input[i]))
+			arg = append_char(arg, p->input[i++]);
+		if (arg && ft_strchr(SYMBOLS, p->input[i]) && !p->dq && !p->sq)
+		{
 			p = append_token(arg, p, t);
 			arg = NULL;
 		}
-
-		// Append current character if it's part of a token
-		if (p->append) {
-			arg = append_char(arg, p->input[i]);
-			p->append = false;
+		while (!ft_isspace(p->input[i]) && ft_strchr(SYMBOLS, p->input[i]) && !p->dq && !p->sq)
+			arg = append_char(arg, p->input[i++]);
+		if (arg)
+		{
+			p = append_token(arg, p, t);
+			if (!ft_isspace(p->input[i + 1]) && ft_strchr(SYMBOLS, p->input[i]))
+				arg = NULL;
 		}
-
+		if (p->append)
+			arg = append_char(arg, p->input[i]);
+		if (!p->input[i])
+			break ;
 		i++;
 	}
-
-	// Final append if there's leftover arg
-	if (arg) {
+	if (arg)
 		p = append_token(arg, p, t);
-	}
 	return p->tokens;
 }
-
 
 char	*append_char(char *arg, char c)
 {
