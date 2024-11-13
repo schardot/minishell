@@ -16,6 +16,8 @@ t_token	*token_list(char **tokens, t_tools *t)
 	while (tokens[i])
 	{
 		new = tokenlist_new(tokens[i], t);
+        if (!new)
+            return (head);
 		if(new->redirect_count > 0 &&  !tokens[i + 1])
 		{
 			ft_error(E_SYNTAX_ERROR, NULL, "newline", t);
