@@ -22,6 +22,7 @@ void	process_running_sigint_handler(int signum)
 // Signal handler for SIGQUIT
 void	sigquit_handler(int signum)
 {
+
 	ft_putendl_fd("Quit", STDOUT_FILENO);
 	(void)signum;
 }
@@ -40,9 +41,9 @@ void	init_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit)
 	sa_quit->sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, sa_quit, NULL);
 }
-void	switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr)
+void	switch_signal_handlers(char *input, struct sigaction *sa_int, struct sigaction *sa_quit, bool pr)
 {
-	if (pr)
+	if (pr && input && !ft_memmem(input, strlen(input), "<<", 2))
 	{
 		sa_int->sa_handler = process_running_sigint_handler;
 		sigaction(SIGINT, sa_int, NULL);
@@ -58,8 +59,8 @@ void	switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit,
 	}
 }
 // Function to setup signal handling
-void	setup_signal_handling(struct sigaction *sa_int, struct sigaction *sa_quit)
+void	setup_signal_handling(char *input, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
 	init_signal_handlers(sa_int, sa_quit);
-	switch_signal_handlers(sa_int, sa_quit, false);
+	switch_signal_handlers(input, sa_int, sa_quit, false);
 }

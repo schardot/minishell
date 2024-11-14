@@ -1,12 +1,14 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
+#include <asm-generic/signal-defs.h>
 
 //static volatile sig_atomic_t g_signal_received = 0;
 
 int create_heredoc_temp_file(char **filename)
 {
 	int fd;
+
 	*filename = malloc(strlen(".heredoc.tmp") + 1);
 	if (!*filename)
 		return -1;
@@ -16,7 +18,6 @@ int create_heredoc_temp_file(char **filename)
 	{
 		perror("open");
 		free(*filename);
-		close(fd);
 		return -1;
 	}
 	close(fd);
@@ -29,7 +30,7 @@ void heredoc_sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	exit(1);
+	exit(130);
 }
 
 int	write_heredoc_input(int fd, char *delimiter)
@@ -68,30 +69,32 @@ int handle_heredoc_child(char *delimiter, char *filename)
 		perror("open");
 		return -1;
 	}
-	struct sigaction sa;
-	sa.sa_handler = SIG_DFL;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
+	signal(SIGINT, heredoc_sigint_handler);
+    signal(SIGQUIT, SIG_IGN);
 	int result = write_heredoc_input(fd, delimiter);
 	close(fd);
 	return result;
 }
-// Function to wait for the heredoc process to complete and check for errors
+
 int wait_for_heredoc_process(pid_t pid, char *filename)
 {
 	int status;
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+
+	while (waitpid(pid, &status, 0) == -1 && errno == EINTR)
+		continue;
+	if (WIFSIGNALED(status))
 	{
+		int signal_code = WTERMSIG(status);
 		unlink(filename);
-		return -1;
+		return 128 + signal_code;
 	}
 	else if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 	{
 		unlink(filename);
-		return -1;
+		return WEXITSTATUS(status);
+
 	}
+	printf("ouside%d", status);
 	return 0;
 }
 
@@ -102,7 +105,7 @@ int	redirect_heredoc_input(char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		perror("open");
+		perror("opaaopen");
 		return -1;
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
@@ -114,6 +117,7 @@ int	redirect_heredoc_input(char *filename)
 	close(fd);
 	return 0;
 }
+
 
 int	handle_HEREDOC_redirection(t_scmd *node)
 {
@@ -136,23 +140,30 @@ int	handle_HEREDOC_redirection(t_scmd *node)
 	}
 	else if (pid == 0)
 	{
+
 		if (handle_heredoc_child(delimiter, filename) < 0)
 			exit(1);
 		exit(0);
 	}
 	struct sigaction sa;
 	sa.sa_handler = SIG_IGN;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
+	//  sa.sa_handler = SIG_DFL;
+    // sigaction(SIGQUIT, &sa, NULL);
 	int result = wait_for_heredoc_process(pid, filename);
-	sa.sa_handler = SIG_DFL;
+
 	sigaction(SIGINT, &sa, NULL);
 	if (result < 0)
 	{
 		free(filename);
 		return -1;
 	}
+	 if (result == 130 || result < 0)
+    {
+        free(filename);
+		printf("before retunr %d\n", result);
+        return result;
+    }
 	if (redirect_heredoc_input(filename) < 0)
 	{
 		unlink(filename);
@@ -161,11 +172,5 @@ int	handle_HEREDOC_redirection(t_scmd *node)
 	}
 	unlink(filename);
 	free(filename);
-	return 0;
-}
-
-void restore_stdin(int saved_stdin)
-{
-	dup2(saved_stdin, STDIN_FILENO); // Restore original stdin
-	close(saved_stdin);
+	return result;
 }

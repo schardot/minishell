@@ -3,85 +3,98 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
+t_exec	*init_t_exec(void)
+{
+	t_exec	*e;
+
+	e->prev_fd = -1;
+	e->n = 0;
+	return (e);
+}
+
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	int	prev_fd;
-	int	has_next;
-	int	pid;
-	int	status;
-	int	n;
-	int last_exit;
+	t_exec	*e;
 
-	prev_fd = -1;
-	n = 0;
-	last_exit = 0;
+	e = init_t_exec();
 	while (scmd)
 	{
-		has_next = scmd->next != NULL;
-		if (create_pipe_if_needed(t, has_next, scmd) == -1)
+		e->has_next = scmd->next != NULL;
+		if (create_pipe_if_needed(t, e->has_next, scmd) == -1)
 			return (EXIT_FAILURE);
 		if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
 		{
 			t->exit_status = scmd->builtin(t, scmd);
 			return (t->exit_status);
 		}
-		pid = fork();
-		if (pid == 0)
-		{
-			execute_child_process(t, scmd, prev_fd, has_next);
-		}
-		else if (pid < 0)
-		{
-			perror("fork");
-			return (EXIT_FAILURE);
-		}
-		else
-			n++;
-
-		close_unused_pipes(&prev_fd, t, has_next);
-
+		e->pid = fork();
+		after_fork(t, scmd, e);
 		scmd = scmd->next;
 	}
-
-	while (n > 0)
-	{
-		if (waitpid(-1, &status, 0) == -1)
-		{
-			perror("waitpid");
-			return (EXIT_FAILURE);
-		}
-		last_exit = WEXITSTATUS(status);
-		t->exit_status = last_exit;
-		n--;
-	}
-	return (t->exit_status);
+	return (wait_for_pids(e->pids, e->n, t));
 }
 
 int	is_builtin(char *token)
 {
-	const char	*builtins[] = {"cd", "pwd", "echo", "exit", "export", "unset", "env", "history", NULL};
-	int	i;
-	size_t	token_len; // not sure if i can make this we will check it it was int before
+	const char	*func[9];
+	int			i;
+	size_t		len;
 
+	func[0] = "cd";
+	func[1] = "pwd";
+	func[2] = "echo";
+	func[3] = "exit";
+	func[4] = "export";
+	func[5] = "unset";
+	func[6] = "env";
+	func[7] = "history";
+	func[8] = NULL;
 	i = 0;
-	token_len = ft_strlen(token);
-	while (builtins[i] != NULL)
+	len = ft_strlen(token);
+	while (func[i] != NULL)
 	{
-		if (ft_strncmp(token, builtins[i], token_len) == 0 && ft_strlen(builtins[i]) == token_len)
+		if (ft_strncmp(token, func[i], len) == 0 && ft_strlen(func[i]) == len)
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
+char	*create_full_path(char **paths, char *cmd)
+{
+	char	*full_path;
+	int		i;
+
+	i = 0;
+	while (paths[i])
+	{
+		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
+		if (!full_path)
+		{
+			ft_free_matrix(paths);
+			return (NULL);
+		}
+		ft_strlcpy(full_path, paths[i], ft_strlen(paths[i]) + 1);
+		ft_strlcat(full_path, "/", ft_strlen(paths[i]) + 2);
+		ft_strlcat(full_path, cmd, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
+		if (access(full_path, X_OK) == 0)
+		{
+			ft_free_matrix(paths);
+			return (full_path);
+		}
+		free(full_path);
+		i++;
+	}
+	ft_free_matrix(paths);
+	return (NULL);
+}
+
 char	*is_executable(char *cmd, t_tools *t)
 {
 	char	*path_env;
 	char	**paths;
-	char	*exec_full_path;
-	int		i;
+	char	*full_path;
 
-	i = 0;
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	path_env = ft_getenv("PATH", t);
@@ -90,26 +103,24 @@ char	*is_executable(char *cmd, t_tools *t)
 	paths = ft_split(path_env, ':');
 	if (paths == NULL)
 		return (NULL);
-	while (paths[i])
-	{
-		exec_full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
-		if (!exec_full_path)
-		{
-			ft_free_matrix(paths);
-			return (NULL);
-		}
-		ft_strlcpy(exec_full_path, paths[i], ft_strlen(paths[i]) + 1);
-		ft_strlcat(exec_full_path, "/", ft_strlen(paths[i]) + 2);
-		ft_strlcat(exec_full_path, cmd, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
-		if (access(exec_full_path, X_OK) == 0)
-		{
-			ft_free_matrix(paths);
-			return (exec_full_path);
-		}
-		free(exec_full_path);
-		i++;
-	}
-	ft_free_matrix(paths);
-	return (NULL);
+	full_path = create_full_path(paths, cmd);
+	return (full_path);
 }
 
+int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
+{
+	if (e->pid == 0)
+	{
+		execute_child_process(t, scmd, e->prev_fd, e->has_next);
+		exit(t->exit_status);
+	}
+	else if (e->pid < 0)
+	{
+		perror("fork");
+		return (EXIT_FAILURE);
+	}
+	else
+		e->pids[e->n++] = e->pid;
+	close_unused_pipes(&e->prev_fd, t, e->has_next);
+	return (0);
+}

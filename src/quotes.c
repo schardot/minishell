@@ -3,61 +3,52 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-int	check_quote(char c, t_parser *p)
+int	check_quote(char c, char **arg, t_parser *p)
 {
-	if (c == '\"' && !p->sq)
+	if (c == DQ && !p->sq)
 	{
-
 		p->dq = !p->dq;
-		p->append = !p->append;
 		return (0);
 	}
-	else if (c == '\'' && !p->dq)
+	else if (c == SQ && !p->dq)
 	{
 		p->sq = !p->sq;
-		p->append = !p->append;
 		return (0);
 	}
 	return (0);
 }
 
-char *trim_quotes(char *arg, bool trim)
+char	*trim_quotes(char *s, bool trim)
 {
-	int i;
-	int z;
+	int	i;
+	int	z;
 
-	if (!arg)
+	if (!s)
 		return (NULL);
-	z = ft_strlen(arg) - 1;
+	z = ft_strlen(s) - 1;
 	i = 0;
-	if (!ft_strncmp(arg, "\"\"", 2) && trim == false)
-		return (arg);
-	if ((arg[i] == '\'' && arg[z] == '\'') || (arg[i] == '\"' && arg[z] == '\"'))
+	if ((s[i] == SQ && s[z] == SQ) || (s[i] == DQ && s[z] == DQ))
 	{
-		// if (arg[i] == '\'' && arg[z] == '\'')
-		// 	scmd->quote_token = '\'';
-		// else
-		// 	scmd->quote_token = '\"';
-		arg[z] = '\0';
-		arg++;
+		s[z] = '\0';
+		s++;
 	}
-	return (arg);
+	return (s);
 }
 
-int initial_quote_check(char *arg)
+int	initial_quote_check(char *arg)
 {
-	bool dq;
-	bool sq;
-	int i;
+	bool	dq;
+	bool	sq;
+	int		i;
 
 	i = 0;
 	dq = false;
 	sq = false;
 	while (arg[i])
 	{
-		if (arg[i] == '"' && !sq)
+		if (arg[i] == DQ && !sq)
 			dq = !dq;
-		if (arg[i] == '\'' && !dq)
+		if (arg[i] == SQ && !dq)
 			sq = !sq;
 		i++;
 	}

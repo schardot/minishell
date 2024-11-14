@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/11 18:47:10 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/14 16:42:54 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -32,7 +32,7 @@ int	builtincd(t_tools *t, t_scmd *node)
 		}
 	}
 	else
-			path = trim_quotes(node->args[1], true);
+		path = trim_quotes(node->args[1], true);
 	if (check_cd_errors(path, node, t) != EXIT_SUCCESS)
 		return (EXIT_FAILURE);
 	if (chdir(path) != 0)
@@ -62,6 +62,5 @@ static int	check_cd_errors(char *path, t_scmd *node, t_tools *t)
 		ft_error(E_NOT_A_DIR, node->args[0], path, t);
 		return (EXIT_FAILURE);
 	}
-
 	return (EXIT_SUCCESS);
 }

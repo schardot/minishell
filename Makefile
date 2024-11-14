@@ -1,17 +1,19 @@
 CC = clang
 
-FLAGS = -g -Wextra -Wall -Werror
+FLAGS = -g #-Wextra -Wall -Werror
 LIBFT_DIR = include/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 NAME = minishell
 
 SRC = src/main.c \
 	src/parser.c \
+	src/lexer.c \
 	src/executor.c \
 	src/tokens.c \
 	src/simple_command.c \
 	src/redirection.c \
 	src/pipe.c \
+	src/pid.c \
 	src/heredoc.c \
 	src/handle_signals.c \
 	src/builtins/builtin_unset.c \
