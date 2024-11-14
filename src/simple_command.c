@@ -16,7 +16,8 @@ t_scmd	*simple_command(t_token *t)
 			set_redirection(s, t);
 			t = t->next;
 		}
-		t = t->next;
+		if (t && t->next)
+			t = t->next;
 	}
 	return (s);
 }
