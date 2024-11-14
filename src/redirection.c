@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/14 19:34:56 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/14 19:55:35 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -146,7 +146,6 @@ int handle_redirection(t_scmd *node)
 	{
 			if (result == 128 + SIGINT) // Heredoc was interrupted by SIGINT
 		{
-			printf("before retunr %d\n", result);
 			return 130; // Mimicking the default behavior of bash for signal interruption
 		}
 		return result;

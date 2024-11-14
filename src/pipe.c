@@ -58,7 +58,6 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 	if (result != 0)
 	{
 		t->exit_status = result;
-		printf("execute %d\n", t->exit_status);
 		exit(t->exit_status);
 	}
 	if (is_executable(scmd->args[0], t))

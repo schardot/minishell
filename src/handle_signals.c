@@ -43,7 +43,14 @@ void	init_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit)
 }
 void	switch_signal_handlers(char *input, struct sigaction *sa_int, struct sigaction *sa_quit, bool pr)
 {
-	if (pr && input && !ft_memmem(input, strlen(input), "<<", 2))
+	if (pr && input && ft_memmem(input, strlen(input), "<<", 2))
+	{
+		sa_int->sa_handler = process_running_sigint_handler;
+		sigaction(SIGINT, sa_int, NULL);
+		sa_quit->sa_handler = SIG_IGN;
+		sigaction(SIGQUIT, sa_quit, NULL);
+	}
+	else if (pr)
 	{
 		sa_int->sa_handler = process_running_sigint_handler;
 		sigaction(SIGINT, sa_int, NULL);

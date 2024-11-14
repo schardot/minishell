@@ -161,7 +161,6 @@ int	handle_HEREDOC_redirection(t_scmd *node)
 	 if (result == 130 || result < 0)
     {
         free(filename);
-		printf("before retunr %d\n", result);
         return result;
     }
 	if (redirect_heredoc_input(filename) < 0)
