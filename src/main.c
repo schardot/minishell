@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_putstr_fd("Failed to initialize tools\n", 2);
 		return (EXIT_FAILURE);
 	}
-	setup_signal_handling(&sa_int, &sa_quit);
+	setup_signal_handling(NULL, &sa_int, &sa_quit);
 	while (1)
 	{
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	free(t);
 	clear_history();
-	return (0);
+	return (t->exit_status);
 }
 
 int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
@@ -38,15 +38,15 @@ int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
 	if (!input)
 	{
-		printf("\n");
+		printf("exit\n");
 		return (EXIT_FAILURE);
 	}
 	if (input[0] != '\0')
 	{
 		add_history(input);
-		switch_signal_handlers(sa_int, sa_quit, true);
+		switch_signal_handlers(input, sa_int, sa_quit, true);
 		parser(input, t);
-		switch_signal_handlers(sa_int, sa_quit, false);
+		switch_signal_handlers(input, sa_int, sa_quit, false);
 	}
 	free (input);
 	return (EXIT_SUCCESS);

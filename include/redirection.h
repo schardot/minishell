@@ -13,7 +13,7 @@ typedef struct s_redirection
 } t_redirection;
 
 // Function prototypes for redirection handling
-int handle_redirection(t_scmd *node); // Uses t_scmd struct
+int	handle_redirection(t_scmd *node); // Uses t_scmd struct
 
 // Function prototypes for pipe handling
 int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd);
@@ -31,6 +31,8 @@ int		handle_INPUT_redirection(t_scmd *node);
 void	set_redirection(t_scmd *node, t_token *lst);
 int     handle_HEREDOC_redirection(t_scmd *node);
 
-void switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr);
+int wait_for_pids(pid_t *pids, int count, t_tools *t);
+void	sigquit_handler(int signum);
+void	switch_signal_handlers(char *input, struct sigaction *sa_int, struct sigaction *sa_quit, bool pr);
 
 #endif

@@ -10,22 +10,8 @@ t_scmd	*simple_command(t_token *t)
 	s = scmd_new();
 	while (t)
 	{
-		if (t->type == ARGUMENT || t->type == COMMAND)
-		{
-			s->args = ft_arrcat(s->args, t->value, ft_str2dlen(s->args));
-			s->argsc ++;
-			if (t->type == COMMAND && is_builtin(s->args[0]))
-				s->builtin = get_builtin_function(s->args[0]);
-		}
-		else if (t->type == PIPE)
-		{
-			next_command = simple_command(t->next);
-			s->next = next_command;
-			s->pipecount ++;
-			if (next_command)
-				t->next = NULL;
-		}
-		else
+		handle_type(t, s, next_command);
+		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
 		{
 			set_redirection(s, t);
 			t = t->next;
@@ -33,6 +19,25 @@ t_scmd	*simple_command(t_token *t)
 		t = t->next;
 	}
 	return (s);
+}
+
+void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command)
+{
+	if (t->type == ARGUMENT || t->type == COMMAND)
+	{
+		s->args = ft_arrcat(s->args, t->value, ft_str2dlen(s->args));
+		s->argsc ++;
+		if (t->type == COMMAND && is_builtin(s->args[0]))
+			s->builtin = get_builtin_function(s->args[0]);
+	}
+	else if (t->type == PIPE)
+	{
+		next_command = simple_command(t->next);
+		s->next = next_command;
+		s->pipecount ++;
+		if (next_command)
+			t->next = NULL;
+	}
 }
 
 t_scmd	*scmd_new(void)

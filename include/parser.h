@@ -21,7 +21,6 @@ typedef struct s_parser
 	bool	dq;
 	bool	sq;
 	bool	append;
-	char	quote_token;
 	char	**tokens;
 	char	*input;
 } t_parser;
@@ -43,6 +42,8 @@ typedef struct s_token
 	char			*value;
     int             redirect_count;
 	int				pipe_count;
+	bool			sq;
+	bool			dq;
 	struct s_token	*prev;
 	struct s_token	*next;
 } t_token;
@@ -69,7 +70,14 @@ typedef struct s_scmd
 	struct s_scmd	*prev;
 } t_scmd;
 
-
+typedef struct s_exec {
+	int	prev_fd;
+	int	has_next;
+	pid_t	pid;
+	int n;
+	int	status;
+	int 	pids[250];
+} t_exec;
 
 /* ------------------------------------------------------------------------- */
 /*                           Token List Functions         		             */
@@ -110,22 +118,26 @@ int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd, t_tools *t);
-char	*format_arg(t_parser *p, char *arg, t_tools *t);
 
 
 
-
-int handle_redirection(t_scmd *node);
+void	process_running_sigint_handler(int signum);
+//int handle_redirection(t_scmd *node);
 char	**ft_append_to_arr(char **arr, char *str, int len);
 
 char *append_char(char *arg, char c);
 char **split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
-int check_quote(char c, t_parser *p);
+int	check_quote(char c, char **arg, t_parser *p);
 char *check_env(t_parser *p, char *arg);
 
 int initial_quote_check(char *arg);
-t_parser *append_token(char *arg, t_parser *p, t_tools *t);
+t_parser *append_token(char **arg, t_parser *p, t_tools *t);
 char *ft_getenv(char *env, t_tools *t);
+char	*expand_the_argument(char *arg, int *i, int start, t_tools *t);
+void symbol_check(char **arg, int *i, t_parser *p, t_tools *t);
+char	*create_full_path(char **paths, char *cmd);
+void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command);
+int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e);
 
 #endif

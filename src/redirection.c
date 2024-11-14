@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/11 18:45:33 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/14 19:34:56 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/redirection.h"
 #include "../include/parser.h"
@@ -96,7 +96,7 @@ int handle_OUTPUT_redirection(t_scmd *node)
 	node->new_fd = open(node->R_OUTPUT_file, flags, 0644);
 	if (node->new_fd < 0)
 	{
-		perror("Failed to open output file");
+		//perror("Failed to open output file");
 		return (-1);
 	}
 
@@ -143,6 +143,13 @@ int handle_redirection(t_scmd *node)
 	// if (node->R_APPEND_file && (result = handle_APPEND_redirection(node)) != 0)
 	// 	return result;
 	if (node->R_HEREDOC_delimiter && (result = handle_HEREDOC_redirection(node)) != 0)
+	{
+			if (result == 128 + SIGINT) // Heredoc was interrupted by SIGINT
+		{
+			printf("before retunr %d\n", result);
+			return 130; // Mimicking the default behavior of bash for signal interruption
+		}
 		return result;
+	}
 	return result;
 }

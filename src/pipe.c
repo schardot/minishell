@@ -51,15 +51,22 @@ void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 
 void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
+	int result;
+
+	result = handle_redirection(scmd);
 	setup_pipe_for_child(prev_fd, t, has_next);
-	if (handle_redirection(scmd) != 0)
-		exit(1);
-    if (is_executable(scmd->args[0], t))
+	if (result != 0)
+	{
+		t->exit_status = result;
+		printf("execute %d\n", t->exit_status);
+		exit(t->exit_status);
+	}
+	if (is_executable(scmd->args[0], t))
 	{
 		scmd->exec_path = is_executable(scmd->args[0], t);
 		execve(scmd->exec_path, scmd->args, t->envp);
-		perror("execve");
-		exit(1);
+		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
+		exit(t->exit_status);
 	}
 	else
 	{
