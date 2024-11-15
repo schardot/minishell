@@ -89,8 +89,12 @@ void symbol_check(char **arg, int *i, t_parser *p, t_tools *t)
 	if (c == '|' || c == '<' || c == '>')
 	{
 		*arg = append_char(*arg, str[j]);
-		if (c == '<' && str[j + 1] == '<' || c == '>' && str[j + 1] == '>')
-			*arg = append_char(*arg, str[j++]);
+        (*i)++;
+        if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
+        {
+            *arg = append_char(*arg, str[j]);
+            (*i)++;
+        }
 		p = append_token(arg, p, t);
 	}
 }
