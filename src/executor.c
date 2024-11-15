@@ -3,13 +3,19 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_exec	*init_t_exec(void)
+t_exec *init_t_exec(void)
 {
-	t_exec	*e;
+    t_exec *e;
 
-	e->prev_fd = -1;
-	e->n = 0;
-	return (e);
+    e = malloc(sizeof(t_exec)); // Allocate memory for the struct
+    if (!e)
+    {
+        perror("malloc failed"); // Handle allocation failure
+        return (NULL);
+    }
+    e->prev_fd = -1; // Initialize fields
+    e->n = 0;
+    return (e); // Return the allocated and initialized struct
 }
 
 int	check_exec_command(t_tools *t, t_scmd *scmd)
