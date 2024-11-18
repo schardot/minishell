@@ -43,5 +43,6 @@ void	setup_signal_handling(char *input, struct sigaction *sa_int, struct sigacti
 void	switch_signal_handlers(char *input,struct sigaction *sa_int, struct sigaction *sa_quit, bool pr);
 void	ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t);
 void	restore_stdin(int saved_stdin);
+int     is_directory(const char *path);
 
 #endif
