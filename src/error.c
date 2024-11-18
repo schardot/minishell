@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/12 13:22:12 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:17:59 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,37 +16,24 @@
 #include "../include/redirection.h"
 
 void	update_exit(t_error type, t_tools *t);
+char    **make_error_str(void);
 
-void	ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t)
+void ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t)
 {
-	static char	*err[] = {
-		"No such file or directory",
-		"Not a directory",
-		"Permission denied",
-		"not a valid identifier",
-		"numeric argument required",
-		"too many arguments",
-		"command not found",
-		"HOME not set",
-		"syntax error near unexpected token",
-		"Unknown error"};
-	if (type != E_COMMAND_NOT_FOUND)
-		ft_putstr_fd("minishell: ", 2);
-	if (type != E_SYNTAX_ERROR)
-		ft_putstr_fd(cmd, 2);
+	char    **err;
+
+    err = make_error_str();
+    ft_putstr_fd("minishell: ", 2);
+    if (cmd)
+    {
+        ft_putstr_fd(cmd, 2);
+        ft_putstr_fd(": ", 2);
+    }
 	if (inv_arg)
 	{
-		if (type != E_SYNTAX_ERROR)
-		{
-			if (type == E_NOT_A_VALID_ID)
-				ft_putstr_fd(": `", 2);
-			else
-				ft_putstr_fd(": '", 2);
-		}
 		ft_putstr_fd(inv_arg, 2);
-		ft_putstr_fd("'", 2);
-	}
-	ft_putstr_fd(": ", 2);
+        ft_putstr_fd(": ", 2);
+    }
 	ft_putendl_fd(err[type], 2);
 	update_exit(type, t);
 }
@@ -67,6 +54,23 @@ void	update_exit(t_error type, t_tools *t)
 		t->exit_status = 0;
 }
 
+char **make_error_str(void)
+{
+    static char *err[] = {
+        "No such file or directory",
+        "Not a directory",
+        "Permission denied",
+        "not a valid identifier",
+        "numeric argument required",
+        "too many arguments",
+        "command not found",
+        "HOME not set",
+        "syntax error near unexpected token",
+        "invalid option",
+        "Unknown error",
+        NULL};
+    return (err);
+}
 
 // if type= e_syntax_error
 // t-.exitsttus = 2//if (type == E_NOT_A_VALID_ID)

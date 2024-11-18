@@ -30,6 +30,7 @@ typedef enum
 	E_COMMAND_NOT_FOUND,
 	E_HOME_NOT_SET,
 	E_SYNTAX_ERROR,
+    E_INVALID_OPTION,
 	E_UNKNOWN_ERROR // Optional: for catching unhandled errors
 } t_error;
 
