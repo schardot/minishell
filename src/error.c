@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/18 15:17:59 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/18 18:27:00 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t)
 
 void	update_exit(t_error type, t_tools *t)
 {
-
 	if (type == E_COMMAND_NOT_FOUND)
 		t->exit_status = 127;
 	else if (type == E_SYNTAX_ERROR || type == E_NUM_ARG_REQUIRED)
@@ -71,9 +70,3 @@ char **make_error_str(void)
         NULL};
     return (err);
 }
-
-// if type= e_syntax_error
-// t-.exitsttus = 2//if (type == E_NOT_A_VALID_ID)
-// 			ft_putstr_fd(": `", 2);
-// 		else
-// 			ft_putstr_fd(": '", 2);

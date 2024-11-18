@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
-#include <asm-generic/signal-defs.h>
+//#include <asm-generic/signal-defs.h>
 
 //static volatile sig_atomic_t g_signal_received = 0;
 

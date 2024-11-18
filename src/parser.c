@@ -3,8 +3,7 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-
-int	parser(char *input, t_tools *t)
+int parser(char *input, t_tools *t)
 {
 	t_scmd		*scmd;
 	t_token		*lst;
@@ -21,7 +20,7 @@ int	parser(char *input, t_tools *t)
 	lst = token_list(parser->tokens, t);
 	if (!lst)
 		return (EXIT_FAILURE);
-	scmd = simple_command(lst);
+    scmd = simple_command(lst);
 	if (!scmd)
 		return (EXIT_FAILURE);
 	check_exec_command(t, scmd);

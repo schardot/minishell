@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/11 19:23:27 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/18 19:34:01 by nataliascha      ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 
 #include "../../include/minishell.h"
@@ -42,7 +42,7 @@ int builtinexport(t_tools *t, t_scmd *scmd)
 				free(full);
 				return (EXIT_FAILURE);
 			}
-			if (check_exp_args(scmd->args[0], scmd, t) == EXIT_SUCCESS)
+			if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
 			{
 				if (ft_getenv(spl[0], t))
 					replace_env_var(full, strlen(spl[0]), t);

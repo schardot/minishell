@@ -50,5 +50,5 @@ int is_directory(const char *path)
 		perror("stat");
 		return (-1);
 	}
-	return (S_ISDIR(path_stat.st_mode));
+	return (S_ISDIR(path_stat.st_mode)); //1 is a directory, 0 isnt
 }

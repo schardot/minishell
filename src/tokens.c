@@ -1,10 +1,11 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-int	token_quotes(char *arg, char quote);
-char *token_value(char *token, bool sq, t_tools *t);
+int		token_quotes(char *arg, char quote);
+char	*token_value(char *token, bool sq, t_tools *t);
+int		syntax_check(t_token *tk, int i, char **tokens);
 
-t_token	*token_list(char **tokens, t_tools *t)
+t_token *token_list(char **tokens, t_tools *t)
 {
 	int		i;
 	t_token	*head;
@@ -12,20 +13,14 @@ t_token	*token_list(char **tokens, t_tools *t)
 
 	i = 0;
 	head = tokenlist_new(tokens[i], t);
+	if (syntax_check(head, i, tokens))
+		return (NULL);
 	i ++;
 	while (tokens[i])
 	{
 		new = tokenlist_new(tokens[i], t);
-		if(new && new->redirect_count > 0 &&  !tokens[i + 1])
-		{
-			ft_error(E_SYNTAX_ERROR, NULL, "newline", t);
-			return(NULL);
-		}
-		if(new && new->pipe_count > 0 &&  !tokens[i + 1])
-		{
-			printf("minishell: syntax error near unexpected token '|'\n");
-			return(NULL);
-		}
+		if (syntax_check(new, i, tokens))
+			return (NULL);
 		tokenlist_addback(&head, new);
 		i++;
 	}
@@ -166,4 +161,27 @@ t_parser *append_token(char **arg, t_parser *p, t_tools *t)
 		p->tokens = ft_arrcat(p->tokens, *arg, ft_str2dlen(p->tokens));
 	*arg = NULL;
 	return (p);
+}
+
+int syntax_check(t_token *tk, int i, char **tokens)
+{
+	if (tk->type == PIPE)
+	{
+		if (!tokens[i - 1] && !tokens[i + 1])
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token '|'\n", 2);
+			return (EXIT_FAILURE);
+		}
+	}
+	else if (tk->type == R_APPEND || tk->type == R_INPUT || tk->type == R_OUTPUT)
+	{
+		if (!tokens[i - 1] || !tokens[i + 1] || (tokens[i + 1] && tokens[i + 1][0] == '\0'))
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token \'", 2);
+			ft_putstr_fd(tk->value, 2);
+			ft_putstr_fd("\'\n", 2);
+			return (EXIT_FAILURE);
+		}
+	}
+	return (EXIT_SUCCESS);
 }

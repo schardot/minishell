@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/14 16:42:54 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:39:21 by nataliascha      ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -47,19 +47,19 @@ static int	check_cd_errors(char *path, t_scmd *node, t_tools *t)
 {
 	struct stat	path_stat;
 
-	if (access(path, F_OK) != 0)
+    if (access(path, F_OK) != 0)
 	{
 		ft_error(E_NO_SUCH_FILE, node->args[0], path, t);
 		return (EXIT_FAILURE);
 	}
-	if (access(path, X_OK) != 0)
+    if (stat(path, &path_stat) != 0 || !S_ISDIR(path_stat.st_mode))
+    {
+        ft_error(E_NOT_A_DIR, node->args[0], path, t);
+        return (EXIT_FAILURE);
+    }
+    if (access(path, X_OK) != 0)
 	{
 		ft_error(E_PERMISSION_DENIED, node->args[0], path, t);
-		return (EXIT_FAILURE);
-	}
-	if (stat(path, &path_stat) != 0 || !S_ISDIR(path_stat.st_mode))
-	{
-		ft_error(E_NOT_A_DIR, node->args[0], path, t);
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
