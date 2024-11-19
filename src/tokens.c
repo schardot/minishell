@@ -35,7 +35,7 @@ t_token	*tokenlist_new(char *token, t_tools *t)
 	if (tk == NULL)
 		return (NULL);
 	tk->sq = token_quotes(token, '\'');
-	tk->dq = token_quotes(token, '\"');
+	tk->dq = token_quotes(token, '"');
 	tk->value = token_value(token, tk->sq, t);
 	if (tk->value == NULL)
 	{
@@ -55,7 +55,7 @@ char *token_value(char *token, bool sq, t_tools *t)
 	int	i;
 
 	i = 0;
-	token = trim_quotes(token, false);
+	token = trim_quotes(token);
 	while (token && token[i])
 	{
 		if (token[i] == '$' && !sq)

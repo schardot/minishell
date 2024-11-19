@@ -61,9 +61,12 @@ char	**split_arguments(t_parser *p, t_tools *t)
 	arg = NULL;
 	while (p->input[i])
 	{
-		c = p->input[i];
-		check_quote(c, &arg, p);
-		if ((p->sq || p->dq) || !ft_strchr(SYMBOL, c))
+		// c = p->input[i];
+		// check_quote(c, &arg, p);
+        if (p->input[i] == DQ || p->input[i] == SQ)
+            check_quote(p->input[i], &arg, p);
+        c = p->input[i];
+        if ((p->sq || p->dq) || !ft_strchr(SYMBOL, c))
 			arg = append_char(arg, p->input[i]);
 		else
 		{
