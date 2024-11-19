@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/18 19:34:01 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/19 11:22:05 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 
 	if (!arg[0] || (!ft_isalpha(arg[0]) && arg[0] != '_'))  // Check first character
 	{
-		ft_error(E_NOT_A_VALID_ID, "export", scmd->args[1], t);
+		ft_error(E_NOT_A_VALID_ID, "export", arg, t);
 		return (EXIT_FAILURE);
 	}
 	j = 1;
@@ -77,8 +77,8 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 	{
 		if (!ft_isalnum(arg[j]) && arg[j] != '_')
 		{
-			ft_error(E_NOT_A_VALID_ID, "export", scmd->args[1], t);
-			return (EXIT_FAILURE);
+            ft_error(E_NOT_A_VALID_ID, "export", arg, t);
+            return (EXIT_FAILURE);
 		}
 		j++;
 	}
