@@ -169,7 +169,7 @@ int syntax_check(t_token *tk, int i, char **tokens)
 	{
 		if (!tokens[i - 1] && !tokens[i + 1])
 		{
-			ft_putstr_fd("minishell: syntax error near unexpected token '|'\n", 2);
+			ft_fprintf(2, "minishell: syntax error near unexpected token `|'\n");
 			return (EXIT_FAILURE);
 		}
 	}
@@ -177,9 +177,7 @@ int syntax_check(t_token *tk, int i, char **tokens)
 	{
 		if (!tokens[i - 1] || !tokens[i + 1] || (tokens[i + 1] && tokens[i + 1][0] == '\0'))
 		{
-			ft_putstr_fd("minishell: syntax error near unexpected token \'", 2);
-			ft_putstr_fd(tk->value, 2);
-			ft_putstr_fd("\'\n", 2);
+            ft_fprintf(2, "minishell: syntax error near unexpected token `newline'\n");
 			return (EXIT_FAILURE);
 		}
 	}

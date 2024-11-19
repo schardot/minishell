@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/18 18:27:00 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/19 10:21:55 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,15 @@ void ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t)
 	char    **err;
 
     err = make_error_str();
-    ft_putstr_fd("minishell: ", 2);
+    ft_fprintf(2, "minishell: ");
     if (cmd)
-    {
-        ft_putstr_fd(cmd, 2);
-        ft_putstr_fd(": ", 2);
-    }
+        ft_fprintf(2, "%s: ", cmd);
 	if (inv_arg)
-	{
-		ft_putstr_fd(inv_arg, 2);
-        ft_putstr_fd(": ", 2);
+    {
+        if (type == E_NOT_A_VALID_ID)
+            ft_fprintf(2, "`%s': ", inv_arg);
+        else
+            ft_fprintf(2, "%s: ", inv_arg);
     }
 	ft_putendl_fd(err[type], 2);
 	update_exit(type, t);
