@@ -34,13 +34,14 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	len = 0;
 	while (arg[st + len] && (ft_isalnum(arg[st + len]) || arg[st + len] == '_'))
 		len ++;
-	name = ft_substr(arg, st, len);
+    name = ft_substr(arg, st, len);
 	if (!name)
 		return (NULL);
 	value = ft_getenv(name, t);
-	if (!value)
-		return (NULL);
-	new = malloc(strlen(arg) + ft_strlen(value) - len);
+    free(name);
+    if (!value)
+        value = "";
+    new = malloc(strlen(arg) + ft_strlen(value) - len);
 	if (!new)
 		return (NULL);
 	strncpy(new, arg, *i);
