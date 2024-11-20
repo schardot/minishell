@@ -1,14 +1,26 @@
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_fprintf.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 10:24:02 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/11/20 10:24:03 by nleite-s         ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
+
 #include "../libft.h"
 
-static void handle_string(va_list args, int fd);
-static void handle_num(va_list args, int fd);
+static void	handle_string(va_list args, int fd);
+static void	handle_num(va_list args, int fd);
 static void	handle_char(va_list args, int fd);
 
-void ft_fprintf(int fd, const char *format, ...)
+void	ft_fprintf(int fd, const char *format, ...)
 {
-	va_list args;
+	va_list	args;
 	va_start(args, format);
-	const char *p;
+	const char	*p;
 
 	p = format;
 	while (*p)

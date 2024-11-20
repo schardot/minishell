@@ -11,11 +11,6 @@ t_scmd	*simple_command(t_token *t)
 	while (t)
 	{
 		handle_type(t, s, next_command);
-		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
-		{
-			set_redirection(s, t);
-			t = t->next;
-		}
 		t = t->next;
 	}
 	return (s);

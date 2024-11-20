@@ -35,19 +35,48 @@
 // 	return (i + 1);
 // }
 
-int check_quote(char c, char **arg, t_parser *p)
+//int check_quote(char c, char **arg, t_parser *p)
+int	check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t)
 {
-	if (c == DQ && !p->sq)
+	char	q;
+
+	q = input[i];
+	i++;
+	if (q == input[i])
 	{
-		p->dq = !p->dq;
-		return (0);
+		*arg = ft_strdup("");
+		i ++;
+		return (i);
 	}
-	else if (c == SQ && !p->dq)
+	while (input[i] && input[i] != q)
 	{
-		p->sq = !p->sq;
-		return (0);
+		if (input[i] == '$' && input[i + 1] && q == DQ)
+		{
+			if (input[i + 1] == '?')
+				*arg = ft_itoa(t->exit_status);
+			else
+			{
+				char *expanded = expand_the_argument(input, &i, i + 1, t);  // Expand the variable
+				if (*arg)
+					*arg = strcat(*arg, expanded);
+				else
+					*arg = ft_strdup(expanded);
+			}
+		}
+		else
+		{
+			*arg = append_char(*arg, input[i]);
+			if (q == SQ)
+				p->sq = true;
+			else if (q == DQ)
+				p->dq = true;
+		}
+		i ++;
 	}
-	return (0);
+	if (input[i] == q)
+
+		i ++;
+	return (i);
 }
 
 char	*trim_quotes(char *s)
@@ -63,7 +92,6 @@ char	*trim_quotes(char *s)
 		s[z] = '\0';
 		s++;
 	}
-
 	return (s);
 }
 

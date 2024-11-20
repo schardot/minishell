@@ -34,24 +34,18 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	len = 0;
 	while (arg[st + len] && (ft_isalnum(arg[st + len]) || arg[st + len] == '_'))
 		len ++;
-    name = ft_substr(arg, st, len);
+	name = ft_substr(arg, st, len);
 	if (!name)
 		return (NULL);
 	value = ft_getenv(name, t);
-    free(name);
-    if (!value)
-        value = "";
-    new = malloc(strlen(arg) + ft_strlen(value) - len);
-	if (!new)
-		return (NULL);
-	strncpy(new, arg, *i);
-	strcpy(new + *i, value);
-	strcpy(new+ *i + ft_strlen(value), arg + st + len);
-	*i += ft_strlen(value) - 1;
-	return (new);
+	if (!value)
+		value = "";
+	*i += ft_strlen(name);
+	free(name);
+	return (value);
 }
 
-char	**split_arguments(t_parser *p, t_tools *t)
+t_token	*split_arguments(t_parser *p, t_tools *t)
 {
 	int		i;
 	char	*arg;
@@ -61,24 +55,35 @@ char	**split_arguments(t_parser *p, t_tools *t)
 	arg = NULL;
 	while (p->input[i])
 	{
-		// c = p->input[i];
-		// check_quote(c, &arg, p);
-        if (p->input[i] == DQ || p->input[i] == SQ)
-            check_quote(p->input[i], &arg, p);
-        c = p->input[i];
-        if ((p->sq || p->dq) || !ft_strchr(SYMBOL, c))
+		c = p->input[i];
+		if (c == DQ || c == SQ)
+			i = check_quote(p->input, i, p, &arg, t);
+		else if (c == '$')
+		{
+			char *expanded = expand_the_argument(p->input, &i, i + 1, t);
+			if (arg)
+				arg = strcat(arg, expanded);
+			else
+				arg = ft_strdup(expanded);
+			i ++;
+		}
+		else if (!ft_strchr(SYMBOL, c))
+		{
 			arg = append_char(arg, p->input[i]);
+			i ++;
+		}
 		else
 		{
 			if (arg)
 				p = append_token(&arg, p, t);
 			symbol_check(&arg, &i, p, t);
+			if (ft_isspace(c))
+				i++;
 		}
-		i ++;
 	}
 	if (arg)
 		p = append_token(&arg, p, t);
-	return (p->tokens);
+	return (p->tk_lst);
 }
 
 void symbol_check(char **arg, int *i, t_parser *p, t_tools *t)
@@ -93,12 +98,12 @@ void symbol_check(char **arg, int *i, t_parser *p, t_tools *t)
 	if (c == '|' || c == '<' || c == '>')
 	{
 		*arg = append_char(*arg, str[j]);
-        (*i)++;
-        if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
-        {
-            *arg = append_char(*arg, str[j]);
-            (*i)++;
-        }
+		(*i)++;
+		if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
+		{
+			*arg = append_char(*arg, str[j]);
+			(*i)++;
+		}
 		p = append_token(arg, p, t);
 	}
 }

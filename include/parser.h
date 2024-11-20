@@ -16,15 +16,6 @@ typedef struct s_tools
 	int     pipefd[2];	 //elmira do you use this
 } t_tools;
 
-typedef struct s_parser
-{
-	bool	dq;
-	bool	sq;
-	bool	append;
-	char	**tokens;
-	char	*input;
-} t_parser;
-
 typedef enum
 {
 	COMMAND,
@@ -33,20 +24,30 @@ typedef enum
 	R_OUTPUT,
 	R_INPUT,
 	R_APPEND,
-	R_HEREDOC
+	R_HEREDOC,
+	O_FILE,
+	I_FILE,
+	A_FILE,
+	H_DEL
 } e_token_type;
 
 typedef struct s_token
 {
 	e_token_type	type;
 	char			*value;
-    int             redirect_count;
-	int				pipe_count;
 	bool			sq;
 	bool			dq;
 	struct s_token	*prev;
 	struct s_token	*next;
 } t_token;
+
+typedef struct s_parser
+{
+	bool			sq;
+	bool			dq;
+	char		*input;
+	t_token		*tk_lst;
+} t_parser;
 
 typedef struct s_scmd
 {
@@ -60,7 +61,7 @@ typedef struct s_scmd
 	char			*R_INPUT_file;
 	char			*R_OUTPUT_file;
 	char			*R_APPEND_file;
-    char            *R_HEREDOC_delimiter;
+	char            *R_HEREDOC_delimiter;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
 	int				old_stdout_fd;
@@ -82,10 +83,10 @@ typedef struct s_exec {
 /* ------------------------------------------------------------------------- */
 /*                           Token List Functions         		             */
 /* ------------------------------------------------------------------------- */
-t_token *tokenlist_new(char *token, t_tools *t);
-void	tokenlist_addback(t_token **lst, t_token *new);
-t_token *token_list(char **tokens, t_tools *t);
-void assign_token_type(t_token *node, t_tools *t);
+t_token		*tokenlist_new(char *token, t_tools *t, t_parser *p);
+void		tokenlist_addback(t_token **lst, t_token *new);
+void		assign_token_type(t_token *node, t_tools *t);
+void		assign_token_files(t_token *tk);
 
 /* ------------------------------------------------------------------------- */
 /*                           Simple Command Functions                        */
@@ -99,14 +100,14 @@ int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 /* ------------------------------------------------------------------------- */
 int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
-int		check_quotes(char *arg);
-char	*trim_quotes(char *arg, bool trim);
+int		check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t);
+char	*trim_quotes(char *arg);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
 int		builtinunset(t_tools *t, t_scmd *node);
 int		check_unset_args(t_scmd *scmd, t_tools *t);
-void    export_empty(void);
-int     create_new_envp(t_scmd *scmd, t_tools *t);
+void	export_empty(void);
+int		create_new_envp(t_scmd *scmd, t_tools *t);
 int		builtinenv(t_tools *t, t_scmd *node);
 int		builtinexit(t_tools *t, t_scmd *node);
 int		builtinhistory(t_tools *t, t_scmd *node);
@@ -120,15 +121,14 @@ int		is_builtin(char *token);
 char	*is_executable(char *cmd, t_tools *t);
 
 
-
+int	syntax_errors(t_token *lst, t_tools *t);
 void	process_running_sigint_handler(int signum);
 //int handle_redirection(t_scmd *node);
 char	**ft_append_to_arr(char **arr, char *str, int len);
 
 char *append_char(char *arg, char c);
-char **split_arguments(t_parser *p, t_tools *t);
+t_token	*split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
-int	check_quote(char c, char **arg, t_parser *p);
 char *check_env(t_parser *p, char *arg);
 
 int initial_quote_check(char *arg);

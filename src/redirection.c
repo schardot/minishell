@@ -6,44 +6,12 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/14 19:55:35 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:42:41 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../include/redirection.h"
 #include "../include/parser.h"
-
-void	set_redirection(t_scmd *node, t_token *lst)
-{
-	if (lst->next)
-	{
-		if (lst->type == R_APPEND)
-		{
-			node->redirect_token = ">>";
-			node->R_APPEND_file = lst->next->value;
-			node->num_redirections++;
-		}
-		else if (lst->type == R_OUTPUT)
-		{
-			node->redirect_token = ">";
-			node->R_OUTPUT_file = lst->next->value;
-			node->num_redirections++;
-
-		}
-		else if (lst->type == R_INPUT)
-		{
-			node->redirect_token = "<";
-			node->R_INPUT_file = lst->next->value;
-			node->num_redirections++;
-		}
-		else if (lst->type == R_HEREDOC)
-		{
-			node->redirect_token = "<<";
-			node->R_HEREDOC_delimiter = lst->next->value;
-			node->num_redirections++;
-		}
-	}
-}
 
 // Handles input redirection: "<"
 int handle_INPUT_redirection(t_scmd *node)
