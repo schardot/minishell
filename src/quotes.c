@@ -52,11 +52,12 @@ int	check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t)
 	{
 		if (input[i] == '$' && input[i + 1] && q == DQ)
 		{
-			if (input[i + 1] == '?')
+            i ++;
+			if (input[i] == '?')
 				*arg = ft_itoa(t->exit_status);
 			else
 			{
-				char *expanded = expand_the_argument(input, &i, i + 1, t);  // Expand the variable
+				char *expanded = expand_the_argument(input, &i, i, t);  // Expand the variable
 				if (*arg)
 					*arg = strcat(*arg, expanded);
 				else

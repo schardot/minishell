@@ -58,14 +58,20 @@ t_token	*split_arguments(t_parser *p, t_tools *t)
 		c = p->input[i];
 		if (c == DQ || c == SQ)
 			i = check_quote(p->input, i, p, &arg, t);
-		else if (c == '$')
-		{
-			char *expanded = expand_the_argument(p->input, &i, i + 1, t);
-			if (arg)
-				arg = strcat(arg, expanded);
-			else
-				arg = ft_strdup(expanded);
-			i ++;
+        else if (c == '$' && p->input[i + 1])
+        {
+            i ++;
+            if (p->input[i] == '?')
+                arg = ft_itoa(t->exit_status);
+            else
+            {
+                char *expanded = expand_the_argument(p->input, &i, i, t);
+                if (arg)
+                    arg = strcat(arg, expanded);
+                else
+                    arg = ft_strdup(expanded);
+            }
+            i ++;
 		}
 		else if (!ft_strchr(SYMBOL, c))
 		{
