@@ -126,11 +126,12 @@ int	syntax_errors(t_token *lst, t_tools *t);
 void	process_running_sigint_handler(int signum);
 //int handle_redirection(t_scmd *node);
 char	**ft_append_to_arr(char **arr, char *str, int len);
-
+int process_redirections(t_token *t);
 char *append_char(char *arg, char c);
 t_token	*split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
 char *check_env(t_parser *p, char *arg);
+int execute_redirections(t_scmd *node);
 
 int initial_quote_check(char *arg);
 t_parser *append_token(char **arg, t_parser *p, t_tools *t);

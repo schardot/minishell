@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_putstr_fd("Failed to initialize tools\n", 2);
 		return (EXIT_FAILURE);
 	}
-	setup_signal_handling(NULL, &sa_int, &sa_quit);
+	setup_signal_handling(&sa_int, &sa_quit);
 	while (1)
 	{
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
@@ -44,10 +44,9 @@ int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 	if (input[0] != '\0')
 	{
 		add_history(input);
-		switch_signal_handlers(input, sa_int, sa_quit, true);
 		parser(input, t);
-		switch_signal_handlers(input, sa_int, sa_quit, false);
 	}
+	printf("Received input: %s\n", input);
 	free (input);
 	return (EXIT_SUCCESS);
 }

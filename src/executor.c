@@ -21,8 +21,24 @@ t_exec *init_t_exec(void)
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
 	t_exec	*e;
+	int	result;
+	struct sigaction sa_int, sa_quit;
+	t_scmd *scmd_backup;
 
+	init_signal_handlers(&sa_int, &sa_quit);
 	e = init_t_exec();
+	scmd_backup = scmd;
+	while (scmd)
+	{
+		if (scmd->R_HEREDOC_delimiter)
+		{
+			switch_signal_handlers(&sa_int, &sa_quit, true, false);
+			if (handle_HEREDOC_redirection(scmd) < 0)
+				return (t->exit_status);
+		}
+		scmd = scmd->next;
+	}
+	scmd = scmd_backup;
 	while (scmd)
 	{
 		e->has_next = scmd->next != NULL;
@@ -33,11 +49,14 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 			t->exit_status = scmd->builtin(t, scmd);
 			return (t->exit_status);
 		}
+		switch_signal_handlers(&sa_int, &sa_quit, true, true);
 		e->pid = fork();
 		after_fork(t, scmd, e);
 		scmd = scmd->next;
 	}
-	return (wait_for_pids(e->pids, e->n, t));
+	result = wait_for_pids(e->pids, e->n, t);
+	switch_signal_handlers(&sa_int, &sa_quit, false, false);
+	return (result);
 }
 
 int	is_builtin(char *token)

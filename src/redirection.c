@@ -1,37 +1,44 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/20 17:42:41 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:55:17 by ekechedz         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/redirection.h"
 #include "../include/parser.h"
 
-// Handles input redirection: "<"
-int handle_INPUT_redirection(t_scmd *node)
+int handle_input_redirection(char *file)
 {
-	printf("Handling input redirection from file: %s\n", node->R_INPUT_file);
-
-	node->old_stdin_fd = dup(STDIN_FILENO);
-	node->new_fd = open(node->R_INPUT_file, O_RDONLY);
-	if (node->new_fd < 0)
+	if (access(file, F_OK) != 0)
+	{
+		perror("Error: Input file does not exist");
+		return 1;
+	}
+	if (access(file, R_OK) != 0)
+	{
+		perror("Error: Input file is not readable");
+		return 1;
+	}
+	int old_stdin_fd = dup(STDIN_FILENO);
+	int new_fd = open(file, O_RDONLY);
+	if (new_fd < 0)
 	{
 		perror("Failed to open input file");
 		return 1;
 	}
-	if (dup2(node->new_fd, STDIN_FILENO) < 0)
+	if (dup2(new_fd, STDIN_FILENO) < 0)
 	{
 		perror("Error in dup2 for stdin");
-		close(node->new_fd);
+		close(new_fd);
 		return 1;
 	}
-	close(node->new_fd);
+	close(new_fd);
 	return 0;
 }
 
@@ -51,72 +58,114 @@ void restore_stdout(t_scmd *node)
 	// 	close(node->old_stdin_fd);
 }
 
-// Handles output redirection: ">"
-int handle_OUTPUT_redirection(t_scmd *node)
+int handle_output_redirection(char *file)
 {
-	int	flags;
+	int fd;
 
-	if (node->R_OUTPUT_file)
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	else
-		flags = O_CREAT | O_WRONLY | O_APPEND;
-	node->old_stdout_fd = dup(STDOUT_FILENO);
-	node->new_fd = open(node->R_OUTPUT_file, flags, 0644);
-	if (node->new_fd < 0)
+	// Open the file in write-only mode and truncate it if it exists
+	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
 	{
-		//perror("Failed to open output file");
-		return (-1);
+		perror("Output redirection failed");
+		return -1;
 	}
 
-	if (dup2(node->new_fd, STDOUT_FILENO) < 0)
+	// Redirect the standard output (STDOUT) to the file
+	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
-		perror("Error redirecting stdout");
-		close(node->new_fd);
-		return (-1);
+		perror("Failed to duplicate output file descriptor");
+		close(fd); // Close the file descriptor
+		return -1;
 	}
-	close(node->new_fd);
-	return (0);
+
+	close(fd);
+	return 0;
 }
 
-// Handles append redirection: ">>"
-// int handle_APPEND_redirection(t_scmd *node)
-// {
-// 	//int fd;
-// 	node->old_stdout_fd = dup(STDOUT_FILENO);
-// 	node->new_fd = open(node->R_APPEND_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
-// 	if (node->new_fd < 0)
-// 	{
-// 		perror("Failed to open append file");
-// 		return (-1);
-// 	}
-// 	if (dup2(node->new_fd, STDOUT_FILENO) < 0)
-// 	{
-// 		perror("Error stdout");
-// 		close(node->new_fd);
-// 		//close(node->old_fd);
-// 		return(-1);
-// 	}
-// 	close(node->new_fd);
-// 	return (0);
-// }
+int handle_append_redirection(char *file)
+{
+	int fd;
 
-int handle_redirection(t_scmd *node)
+	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		perror("Append redirection failed");
+		return -1;
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror("Failed to duplicate append file descriptor");
+		close(fd);
+		return -1;
+	}
+	close(fd);
+	return 0;
+}
+
+int process_redirections(t_token *t)
 {
 	int result = 0;
 
-	if (node->R_INPUT_file && (result = handle_INPUT_redirection(node)) != 0)
-		return result;
-	if ((node->R_OUTPUT_file || node->R_APPEND_file) && (result = handle_OUTPUT_redirection(node)) != 0)
-		return result;
-	// if (node->R_APPEND_file && (result = handle_APPEND_redirection(node)) != 0)
-	// 	return result;
-	if (node->R_HEREDOC_delimiter && (result = handle_HEREDOC_redirection(node)) != 0)
+	// printf("append :%i\n", result);
+	// printf("token type: %u\n", t->type);
+
+	if (t->type == R_INPUT)
 	{
-			if (result == 128 + SIGINT) // Heredoc was interrupted by SIGINT
-		{
-			return 130; // Mimicking the default behavior of bash for signal interruption
-		}
-		return result;
+		result = handle_input_redirection(t->next->value);
+		if (result != 0)
+			return result;
 	}
+	if (t->type == R_OUTPUT)
+	{
+		result = handle_output_redirection(t->next->value);
+		if (result != 0)
+			return result;
+	}
+	if (t->type == R_APPEND)
+	{
+		// printf("it is here in append\n");
+		result = handle_append_redirection(t->next->value);
+		if (result != 0)
+			return result;
+	}
+
+	// Handle heredoc redirection
+	// if (t->type->R_HEREDOC_delimiter)
+	// {
+	// 	result = handle_HEREDOC_redirection(t->type);
+	// 	if (result != 0)
+	// 		return result;
+	// }
 	return result;
+}
+
+int execute_redirections(t_scmd *node)
+{
+	// Handle input redirection if it exists
+	if (node->R_INPUT_file)
+	{
+		if (handle_input_redirection(node->R_INPUT_file) == -1)
+			return -1; // If input redirection fails, stop execution
+	}
+
+	// Handle output redirection if it exists
+	if (node->R_OUTPUT_file)
+	{
+		if (handle_output_redirection(node->R_OUTPUT_file) == -1)
+			return -1; // If output redirection fails, stop execution
+	}
+
+	// Handle append redirection if it exists
+	if (node->R_APPEND_file)
+	{
+		if (handle_append_redirection(node->R_APPEND_file) == -1)
+			return -1; // If append redirection fails, stop execution
+	}
+
+	// Handle heredoc redirection if it exists (implement it similarly)
+	// if (node->R_HEREDOC_delimiter) {
+	//    handle_heredoc(node->R_HEREDOC_delimiter);
+	// }
+
+	return 0; // Success
 }

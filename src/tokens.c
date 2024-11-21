@@ -21,7 +21,7 @@ t_token	*tokenlist_new(char *token, t_tools *t, t_parser *p)
 	}
 	tk->prev = NULL;
 	tk->next = NULL;
-	//assign_token_type(tk, t);
+	assign_token_type(tk, t);
 	return (tk);
 }
 
@@ -102,4 +102,3 @@ t_parser *append_token(char **arg, t_parser *p, t_tools *t)
 	p->dq = false;
 	return (p);
 }
-
