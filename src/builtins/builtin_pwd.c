@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:26 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/18 15:17:16 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/21 14:57:56 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,11 @@ static int check_pwd_args(t_scmd *scmd, t_tools *t);
 
 int builtinpwd(t_tools *t, t_scmd *scmd)
 {
-	char	buffer[PATH_MAX];
-
     if (check_pwd_args(scmd, t) == 1)
         return (EXIT_FAILURE);
-    if (getcwd(buffer, sizeof(buffer)))
+    if (getcwd(t->cwd, sizeof(t->cwd)))
 	{
-		printf("%s\n", buffer);
+		printf("%s\n", t->cwd);
 		return (EXIT_SUCCESS);
 	}
 	else

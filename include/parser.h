@@ -14,6 +14,7 @@ typedef struct s_tools
 	int		stdout_backup; //this also
 	int     exit_status;
 	int     pipefd[2];	 //elmira do you use this
+    char    cwd[PATH_MAX];
 } t_tools;
 
 typedef enum

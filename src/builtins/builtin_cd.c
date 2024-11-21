@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/19 13:19:21 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/21 14:57:24 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	builtincd(t_tools *t, t_scmd *node)
 {
 	char	*path;
 
-	(void)t;
 	if (!node->args[1])
 	{
 		path = ft_getenv("HOME", t);
@@ -40,7 +39,12 @@ int	builtincd(t_tools *t, t_scmd *node)
 		perror("minishell: cd");
 		return (EXIT_FAILURE);
 	}
-	return (EXIT_SUCCESS);
+    if (!getcwd(t->cwd, sizeof(t->cwd)))
+    {
+        perror("minishell: cd");
+        return (EXIT_FAILURE);
+    }
+    return (EXIT_SUCCESS);
 }
 
 static int	check_cd_errors(char *path, t_scmd *node, t_tools *t)

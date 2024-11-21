@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/18 18:27:47 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/21 15:08:47 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ int	check_unset_args(t_scmd *s, t_tools *t)
     j = 1;
     while (s->args[j])
 	{
+        if (s->args[j][0] == '\0')
+        {
+            ft_error(E_NOT_A_VALID_ID, s->args[0], s->args[j], t);
+            t->exit_status = 1; // Indicate failure
+            j++;
+            continue;
+        }
         i = 0;
         while (s->args[j][i]) //check if a loop is necessary or if it quits in the first error
         {
