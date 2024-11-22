@@ -68,7 +68,7 @@ int	syntax_errors(t_token *lst, t_tools *t)
 				ft_fprintf(2, "minishell: syntax error near unexpected token `newline'\n");
 				return (EXIT_FAILURE);
 			}
-            else if (tk->next->type != ARGUMENT)
+            else if (tk->next->type != ARGUMENT || tk->next->type != COMMAND)
             {
                 ft_fprintf(2, "minishell: syntax error near unexpected token `%c'\n", tk->value[0]);
                 return (EXIT_FAILURE);
