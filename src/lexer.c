@@ -40,7 +40,7 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	value = ft_getenv(name, t);
 	if (!value)
 		value = "";
-	*i += ft_strlen(name);
+	*i += ft_strlen(name) - 1;
 	free(name);
 	return (value);
 }
@@ -67,7 +67,7 @@ t_token	*split_arguments(t_parser *p, t_tools *t)
             {
                 char *expanded = expand_the_argument(p->input, &i, i, t);
                 if (arg)
-                    arg = strcat(arg, expanded);
+                    arg = ft_strjoin(arg, expanded);
                 else
                     arg = ft_strdup(expanded);
             }

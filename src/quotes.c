@@ -42,11 +42,14 @@ int	check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t)
 
 	q = input[i];
 	i++;
-	if (q == input[i])
+    while (input[i] == q) // If the next character is the same quote, skip it
+        i++;
+    if (q == input[i])
 	{
 		*arg = ft_strdup("");
 		i ++;
-		return (i);
+        if (!input[i] || ft_strchr(SYMBOL, input[i]))
+            return (i);
 	}
 	while (input[i] && input[i] != q)
 	{
