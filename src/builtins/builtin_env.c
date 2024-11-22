@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 10:50:19 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/14 19:25:24 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/11/22 14:50:03 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 14:50:04 by nataliascha      ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -25,7 +25,6 @@ int	builtinenv(t_tools *t, t_scmd *scmd)
 	}
 	if (scmd->pipecount == 0)
 		t->pipefd[0] = STDOUT_FILENO;
-
 	while (t->envp[i])
 	{
 		if (ft_strchr(t->envp[i], '=') && t->envp[i][0] != '=')
