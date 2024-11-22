@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.de>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 14:10:11 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/11/10 11:50:37 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/22 14:46:50 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 
-static int check_exit_args(t_tools *t, t_scmd *scmd);
+static int	check_exit_args(t_tools *t, t_scmd *scmd);
 
-int builtinexit(t_tools *t, t_scmd *scmd)
+int	builtinexit(t_tools *t, t_scmd *scmd)
 {
-	int status;
+	int	status;
 
 	status = 0;
 	if (scmd->pipecount == 0)
-			printf("exit\n");
+		printf("exit\n");
 	if (scmd->args[1])
 	{
 		status = check_exit_args(t, scmd);
@@ -31,13 +31,13 @@ int builtinexit(t_tools *t, t_scmd *scmd)
 	exit (1);
 }
 
-static int check_exit_args(t_tools *t, t_scmd *scmd)
+static int	check_exit_args(t_tools *t, t_scmd *scmd)
 {
-	int exit_stat;
+	int	exit_stat;
 
-	exit_stat = 0; // i think this will breake the exit but lets see;
+	exit_stat = 0;
 	if (scmd->pipecount == 0)
-		printf("exit\n"); //is it on stdout or stderr?
+		printf("exit\n");
 	if (ft_checkstr(scmd->args[1], &ft_isdigit) != 0)
 	{
 		ft_error(E_NUM_ARG_REQUIRED, "exit", scmd->args[1], t);
