@@ -1,15 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 16:58:51 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
 int	main(int argc, char **argv, char **envp)
 {
-	//char				*input;
-	(void)**argv;
 	t_tools				*t;
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
 
-	if (argc != 1)
+	if (argc != 1 || argv[1])
 	{
 		printf("No arguments necessary");
 		return (EXIT_FAILURE);
@@ -31,7 +41,7 @@ int	main(int argc, char **argv, char **envp)
 	return (t->exit_status);
 }
 
-int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
+int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
 	char	*input;
 
@@ -46,24 +56,25 @@ int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 		add_history(input);
 		parser(input, t);
 	}
-	printf("Received input: %s\n", input);
 	free (input);
 	return (EXIT_SUCCESS);
 }
 
 t_tools	*init_t_tools(char **envp)
 {
-	t_tools	*n_tools;
+	t_tools	*t;
 
-	n_tools = malloc(sizeof(t_tools));
-	if (!n_tools)
+	t = malloc(sizeof(t_tools));
+	if (!t)
 		return (NULL);
-	n_tools->envp = ft_matrixdup(envp, ft_str2dlen(envp));
-	if (!n_tools->envp)
+	t->envp = ft_matrixdup(envp, ft_str2dlen(envp));
+	if (!t->envp)
+	{
+		free (t);
 		return (NULL);
-	n_tools->pipefd[0] = -1;
-	n_tools->pipefd[1] = -1;
-
-	n_tools->exit_status = 0;
-	return (n_tools);
+	}
+	t->pipefd[0] = -1;
+	t->pipefd[1] = -1;
+	t->exit_status = 0;
+	return (t);
 }

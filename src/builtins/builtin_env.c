@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:50:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 14:50:04 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/22 16:36:49 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	builtinenv(t_tools *t, t_scmd *scmd)
 	i = 0;
 	if (scmd->args[1])
 	{
-		ft_error(E_NO_SUCH_FILE, "env", scmd->args[1], t);
+		ft_error(E_NO_SUCH_F, "env", scmd->args[1], t);
 		return (t->exit_status);
 	}
 	if (scmd->pipecount == 0)

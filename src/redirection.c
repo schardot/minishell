@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/21 14:55:17 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:51:17 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,19 +109,19 @@ int process_redirections(t_token *t)
 	// printf("append :%i\n", result);
 	// printf("token type: %u\n", t->type);
 
-	if (t->type == R_INPUT)
+	if (t->type == INPUT)
 	{
 		result = handle_input_redirection(t->next->value);
 		if (result != 0)
 			return result;
 	}
-	if (t->type == R_OUTPUT)
+	if (t->type == OUTPUT)
 	{
 		result = handle_output_redirection(t->next->value);
 		if (result != 0)
 			return result;
 	}
-	if (t->type == R_APPEND)
+	if (t->type == APPEND)
 	{
 		// printf("it is here in append\n");
 		result = handle_append_redirection(t->next->value);
@@ -142,23 +142,23 @@ int process_redirections(t_token *t)
 int execute_redirections(t_scmd *node)
 {
 	// Handle input redirection if it exists
-	if (node->R_INPUT_file)
+	if (node->INPUT_file)
 	{
-		if (handle_input_redirection(node->R_INPUT_file) == -1)
+		if (handle_input_redirection(node->INPUT_file) == -1)
 			return -1; // If input redirection fails, stop execution
 	}
 
 	// Handle output redirection if it exists
-	if (node->R_OUTPUT_file)
+	if (node->OUTPUT_file)
 	{
-		if (handle_output_redirection(node->R_OUTPUT_file) == -1)
+		if (handle_output_redirection(node->OUTPUT_file) == -1)
 			return -1; // If output redirection fails, stop execution
 	}
 
 	// Handle append redirection if it exists
-	if (node->R_APPEND_file)
+	if (node->APPEND_file)
 	{
-		if (handle_append_redirection(node->R_APPEND_file) == -1)
+		if (handle_append_redirection(node->APPEND_file) == -1)
 			return -1; // If append redirection fails, stop execution
 	}
 

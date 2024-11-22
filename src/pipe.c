@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 17:03:00 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
+int	create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 {
 	(void)*scmd;
 	if (has_next != 0)
@@ -16,7 +28,7 @@ int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 	return 0;
 }
 
-void setup_pipe_for_child(int prev_fd, t_tools *t, int has_next)
+void	setup_pipe_for_child(int prev_fd, t_tools *t, int has_next)
 {
 	if (prev_fd != -1)
 	{
@@ -31,7 +43,7 @@ void setup_pipe_for_child(int prev_fd, t_tools *t, int has_next)
 	}
 }
 
-void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
+void	close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 {
 	if (*prev_fd != -1)
 		close(*prev_fd);
@@ -44,17 +56,10 @@ void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 		*prev_fd = -1;
 }
 
-void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
+void	execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
-	// int result;
-
-	// result = handle_redirection(scmd);
 	setup_pipe_for_child(prev_fd, t, has_next);
-	// if (result != 0)
-	// {
-	// 	t->exit_status = result;
-	// 	exit(t->exit_status);
-	// }
+
 	if (is_executable(scmd->args[0], t))
 	{
 		scmd->exec_path = is_executable(scmd->args[0], t);
@@ -64,11 +69,7 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 	}
 	else
 	{
-		//printf("before%d\n", t->exit_status);
 		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-		//printf("after%d\n", t->exit_status);
-		//printf("minishell: command not found: %s\n", scmd->args[0]);
 		exit(t->exit_status);
-		// printf("after exit %d\n", t->exit_status);
-  }
+	}
 }

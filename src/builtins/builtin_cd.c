@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 14:41:51 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/22 16:36:49 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	check_cd_errors(char *path, t_scmd *scmd, t_tools *t)
 
 	if (access(path, F_OK) != 0)
 	{
-		ft_error(E_NO_SUCH_FILE, scmd->args[0], path, t);
+		ft_error(E_NO_SUCH_F, scmd->args[0], path, t);
 		return (EXIT_FAILURE);
 	}
 	if (stat(path, &path_stat) != 0 || !S_ISDIR(path_stat.st_mode))

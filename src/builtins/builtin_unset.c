@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 15:13:12 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/22 16:36:36 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	check_argument(t_scmd *s, t_tools *t)
 	{
 		if (s->args[j][0] == '\0')
 		{
-			ft_error(E_NOT_A_VALID_ID, s->args[0], s->args[j], t);
+			ft_error(E_NOT_VALID_ID, s->args[0], s->args[j], t);
 			t->exit_status = 1;
 			j++;
 			continue ;
@@ -65,7 +65,7 @@ static void	check_argument(t_scmd *s, t_tools *t)
 		while (s->args[j][i])
 		{
 			if (!ft_isalnum(s->args[j][i]) && !(s->args[j][i] == '_'))
-				ft_error(E_NOT_A_VALID_ID, s->args[0], s->args[j], t);
+				ft_error(E_NOT_VALID_ID, s->args[0], s->args[j], t);
 			i++;
 		}
 		j++;

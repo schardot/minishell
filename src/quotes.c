@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 16:56:37 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
@@ -9,43 +21,18 @@ int	check_quote(int i, t_parser *p, t_tools *t)
 
 	q = p->input[i];
 	i ++;
-    while (p->input[i] == q)
-        i ++;
-    if (q == p->input[i])
-    {
-        p->arg = ft_strdup("");
-        i ++;
-        if (!p->input[i] || ft_strchr(SYMBOL, p->input[i]))
-            return (i);
-	}
-    while (p->input[i] && p->input[i] != q)
-    {
-        if (p->input[i] == '$' && p->input[i + 1] && q == DQ)
-        {
-            i ++;
-            if (p->input[i] == '?')
-                p->arg = ft_itoa(t->exit_status);
-            else
-			{
-                p->expanded = expand_the_argument(p->input, &i, i, t);
-                if (p->arg)
-                    p->arg = ft_strjoin(p->arg, p->expanded);
-                else
-                    p->arg = ft_strdup(p->expanded);
-            }
-		}
-		else
-		{
-            p->arg = append_char(p->arg, p->input[i]);
-            if (q == SQ)
-				p->sq = true;
-			else if (q == DQ)
-				p->dq = true;
-		}
+	while (p->input[i] == q)
 		i ++;
+	if (q == p->input[i])
+	{
+		p->arg = ft_strdup("");
+		i ++;
+		if (!p->input[i] || ft_strchr(SYMBOL, p->input[i]))
+			return (i);
 	}
-    if (p->input[i] == q)
-        i ++;
+	i = create_quoted_arg(p, i, q, t);
+	if (p->input[i] == q)
+		i ++;
 	return (i);
 }
 
@@ -88,4 +75,23 @@ int	initial_quote_check(char *arg)
 		return (-1);
 	}
 	return (0);
+}
+
+int	create_quoted_arg(t_parser *p, int i, char q, t_tools *t)
+{
+	while (p->input[i] && p->input[i] != q)
+	{
+		if (p->input[i] == '$' && p->input[i + 1] && q == DQ)
+			i = handle_expansions(p, i, t);
+		else
+		{
+			p->arg = append_char(p->arg, p->input[i]);
+			if (q == SQ)
+				p->sq = true;
+			else if (q == DQ)
+				p->dq = true;
+		}
+		i++;
+	}
+	return (i);
 }

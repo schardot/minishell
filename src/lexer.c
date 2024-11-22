@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 17:00:37 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
@@ -56,58 +68,45 @@ t_token	*split_arguments(t_parser *p, t_tools *t)
 		c = p->input[i];
 		if (c == DQ || c == SQ)
 			i = check_quote(i, p, t);
-        else if (c == '$' && p->input[i + 1])
-        {
-            i ++;
-            if (p->input[i] == '?')
-                p->arg = ft_itoa(t->exit_status);
-            else
-            {
-                p->expanded = expand_the_argument(p->input, &i, i, t);
-                if (p->arg)
-                    p->arg = ft_strjoin(p->arg, p->expanded);
-                else
-                    p->arg = ft_strdup(p->expanded);
-            }
-            i ++;
-		}
+		else if (c == '$' && p->input[i + 1])
+			i = handle_expansions(p, i, t);
 		else if (!ft_strchr(SYMBOL, c))
 		{
-            p->arg = append_char(p->arg, p->input[i]);
-            i ++;
+			p->arg = append_char(p->arg, p->input[i]);
+			i ++;
 		}
 		else
 		{
-            if (p->arg)
-                p = append_token(p, t);
-            symbol_check(&i, p, t);
-            if (ft_isspace(c))
+			if (p->arg)
+				p = append_token(p, t);
+			symbol_check(&i, p, t);
+			if (ft_isspace(c))
 				i++;
 		}
 	}
-    if (p->arg)
-        p = append_token(p, t);
-    return (p->tk_lst);
+	if (p->arg)
+		p = append_token(p, t);
+	return (p->tk_lst);
 }
 
-void symbol_check(int *i, t_parser *p, t_tools *t)
+void	symbol_check(int *i, t_parser *p, t_tools *t)
 {
 	char	c;
 	char	*str;
-	int	j;
+	int		j;
 
 	str = p->input;
 	j = *i;
 	c = p->input[j];
 	if (c == '|' || c == '<' || c == '>')
 	{
-        p->arg = append_char(p->arg, str[j]);
-        (*i)++;
+		p->arg = append_char(p->arg, str[j]);
+		(*i)++;
 		if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
 		{
-            p->arg = append_char(p->arg, str[j]);
-            (*i)++;
+			p->arg = append_char(p->arg, str[j]);
+			(*i)++;
 		}
-        p = append_token(p, t);
-    }
+		p = append_token(p, t);
+	}
 }

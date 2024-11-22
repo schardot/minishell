@@ -6,7 +6,7 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 15:37:00 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/22 15:51:17 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ void	assign_token_type(t_token *tk, t_tools *t)
 	if (strcmp(tk->value, "|") == 0 && !tk->dq && !tk->sq)
 		tk->type = PIPE;
 	else if (strcmp(tk->value, ">") == 0 && !tk->dq && !tk->sq)
-		tk->type = R_OUTPUT;
+		tk->type = OUTPUT;
 	else if (strcmp(tk->value, "<") == 0 && !tk->dq && !tk->sq)
-		tk->type = R_INPUT;
+		tk->type = INPUT;
 	else if (strcmp(tk->value, ">>") == 0 && !tk->dq && !tk->sq)
-		tk->type = R_APPEND;
+		tk->type = APPEND;
 	else if (strcmp(tk->value, "<<") == 0 && !tk->dq && !tk->sq)
 		tk->type = R_HEREDOC;
 	else if (tk->prev == NULL && \
@@ -84,11 +84,11 @@ void	assign_token_files(t_token *tk)
 		tk->type = ARGUMENT;
 	else if (tk->prev)
 		prev = tk->prev;
-	if (prev->type == R_OUTPUT)
+	if (prev->type == OUTPUT)
 		tk->type = O_FILE;
-	else if (prev->type == R_INPUT)
+	else if (prev->type == INPUT)
 		tk->type = I_FILE;
-	else if (prev->type == R_APPEND)
+	else if (prev->type == APPEND)
 		tk->type = A_FILE;
 	else if (prev->type == R_HEREDOC)
 		tk->type = H_DEL;

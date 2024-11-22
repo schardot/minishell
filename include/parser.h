@@ -14,7 +14,7 @@ typedef struct s_tools
 	int		stdout_backup; //this also
 	int     exit_status;
 	int     pipefd[2];	 //elmira do you use this
-    char    cwd[PATH_MAX];
+	char    cwd[PATH_MAX];
 } t_tools;
 
 typedef enum
@@ -22,9 +22,9 @@ typedef enum
 	COMMAND,
 	ARGUMENT,
 	PIPE,
-	R_OUTPUT,
-	R_INPUT,
-	R_APPEND,
+	OUTPUT,
+	INPUT,
+	APPEND,
 	R_HEREDOC,
 	O_FILE,
 	I_FILE,
@@ -46,8 +46,8 @@ typedef struct s_parser
 {
 	bool			sq;
 	bool			dq;
-    char            *arg;
-    char            *expanded;
+	char            *arg;
+	char            *expanded;
 	char		    *input;
 	t_token		    *tk_lst;
 } t_parser;
@@ -61,9 +61,9 @@ typedef struct s_scmd
 	int				num_redirections;
 	char			*hd_file_name;
 	char			*redirect_token;
-	char			*R_INPUT_file;
-	char			*R_OUTPUT_file;
-	char			*R_APPEND_file;
+	char			*INPUT_file;
+	char			*OUTPUT_file;
+	char			*APPEND_file;
 	char            *R_HEREDOC_delimiter;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
@@ -120,6 +120,8 @@ int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd, t_tools *t);
+int		handle_expansions(t_parser *p, int i, t_tools *t);
+int		create_quoted_arg(t_parser *p, int i, char q, t_tools *t);
 
 /* ------------------------------------------------------------------------- */
 /*                           Cleanup Functions                               */
@@ -129,7 +131,15 @@ void    free_parser(t_parser *p);
 void	free_token(t_token *lst);
 void	free_scmd(t_scmd *s);
 
-int syntax_errors(t_token *lst, t_tools *t);
+/* ------------------------------------------------------------------------- */
+/*                            Syntax Functions                               */
+/* ------------------------------------------------------------------------- */
+int syntax_check(t_token *lst, t_tools *t);
+
+
+
+
+int syntax_check(t_token *lst, t_tools *t);
 void	process_running_sigint_handler(int signum);
 char	**ft_append_to_arr(char **arr, char *str, int len);
 int process_redirections(t_token *t);
