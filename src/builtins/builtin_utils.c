@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 14:49:13 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 14:49:14 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 #include <sys/stat.h>
@@ -6,9 +18,9 @@ int	builtinhistory(t_tools *t, t_scmd *node)
 {
 	HIST_ENTRY	**list;
 	int			i;
+
 	(void)*t;
 	(void)*node;
-
 	list = history_list();
 	if (list)
 	{
@@ -41,14 +53,14 @@ char	*ft_getenv(char *env, t_tools *t)
 	return (NULL);
 }
 
-int is_directory(const char *path)
+int	is_directory(const char *path)
 {
-	struct stat path_stat;
+	struct stat	path_stat;
 
 	if (stat(path, &path_stat) != 0)
 	{
 		perror("stat");
 		return (-1);
 	}
-	return (S_ISDIR(path_stat.st_mode)); //1 is a directory, 0 isnt
+	return (S_ISDIR(path_stat.st_mode));
 }

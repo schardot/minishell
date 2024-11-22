@@ -5,25 +5,25 @@
 
 t_exec *init_t_exec(void)
 {
-    t_exec *e;
+	t_exec *e;
 
-    e = malloc(sizeof(t_exec)); // Allocate memory for the struct
-    if (!e)
-    {
-        perror("malloc failed"); // Handle allocation failure
-        return (NULL);
-    }
-    e->prev_fd = -1; // Initialize fields
-    e->n = 0;
-    return (e); // Return the allocated and initialized struct
+	e = malloc(sizeof(t_exec));
+	if (!e)
+	{
+		perror("malloc failed");
+		return (NULL);
+	}
+	e->prev_fd = -1;
+	e->n = 0;
+	return (e);
 }
 
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
 	t_exec	*e;
-	int	result;
+	int		result;
 	struct sigaction sa_int, sa_quit;
-	t_scmd *scmd_backup;
+	t_scmd	*scmd_backup;
 
 	init_signal_handlers(&sa_int, &sa_quit);
 	e = init_t_exec();

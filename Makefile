@@ -25,7 +25,9 @@ SRC = src/main.c \
 	src/builtins/builtin_exit.c \
 	src/builtins/builtin_utils.c \
 	src/quotes.c \
-	src/error.c
+	src/error.c \
+	src/cleanup.c \
+	src/syntax.c
 OBJ = $(SRC:.c=.o)
 
 READLINE_DIR = $(shell brew --prefix readline 2>/dev/null)

@@ -6,10 +6,9 @@
 /*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/19 11:22:05 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/22 17:08:10 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -18,9 +17,9 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t);
 static int	print_export_list(t_tools *t);
 static char	**create_var_arr(t_tools *t);
 static char	**sort_arr(char **arr);
-void replace_env_var(char *full, int len, t_tools *t);
+void        replace_env_var(char *full, int len, t_tools *t);
 
-int builtinexport(t_tools *t, t_scmd *scmd)
+int	builtinexport(t_tools *t, t_scmd *scmd)
 {
 	int		i;
 	char	**spl;
@@ -67,18 +66,18 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 {
 	int	j;
 
-	if (!arg[0] || (!ft_isalpha(arg[0]) && arg[0] != '_'))  // Check first character
+	if (!arg[0] || (!ft_isalpha(arg[0]) && arg[0] != '_'))
 	{
-		ft_error(E_NOT_A_VALID_ID, "export", arg, t);
+		ft_error(E_NOT_VALID_ID, "export", arg, t);
 		return (EXIT_FAILURE);
 	}
 	j = 1;
-	while (arg[j] && arg[j] != '=')  // Check remaining characters until `=`
+	while (arg[j] && arg[j] != '=')
 	{
 		if (!ft_isalnum(arg[j]) && arg[j] != '_')
 		{
-            ft_error(E_NOT_A_VALID_ID, "export", arg, t);
-            return (EXIT_FAILURE);
+			ft_error(E_NOT_VALID_ID, "export", arg, t);
+			return (EXIT_FAILURE);
 		}
 		j++;
 	}
@@ -182,7 +181,7 @@ void	replace_env_var(char *full, int len, t_tools *t)
 			if (!t->envp[i])
 			{
 				printf("error allocating");
-				return;
+				return ;
 			}
 			return ;
 		}

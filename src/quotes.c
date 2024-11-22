@@ -1,84 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 16:56:37 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-// int check_quote(char *input, int i, char **arg, t_parser *p)
-// {
-// 	char quote;
-// 	char nxt;
-// 	char nxtnxt;
-
-// 	quote = input[i];
-// 	nxt = input[i + 1];
-// 	nxtnxt = input[i + 2];
-
-// 	if (nxt == quote && nxtnxt != ' ' && !ft_strchr(SYMBOL, nxtnxt))
-// 		return (i + 2);
-// 	if ((quote == DQ && !p->sq) || (quote == SQ && !p->dq))
-// 	{
-// 		i++;
-// 		while (input[i] && input[i] != quote)
-// 		{
-// 			*arg = append_char(*arg, input[i]);
-// 			i++;
-// 		}
-// 		if (input[i] == quote)
-// 		{
-// 			if (quote == DQ)
-// 				p->dq = !p->dq;
-// 			else
-// 				p->sq = !p->sq;
-// 		}
-// 		return (i + 1); // Return index of closing quote
-// 	}
-// 	return (i + 1);
-// }
-
-//int check_quote(char c, char **arg, t_parser *p)
-int	check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t)
+int	check_quote(int i, t_parser *p, t_tools *t)
 {
 	char	q;
 
-	q = input[i];
-	i++;
-    while (input[i] == q) // If the next character is the same quote, skip it
-        i++;
-    if (q == input[i])
-	{
-		*arg = ft_strdup("");
+	q = p->input[i];
+	i ++;
+	while (p->input[i] == q)
 		i ++;
-        if (!input[i] || ft_strchr(SYMBOL, input[i]))
-            return (i);
-	}
-	while (input[i] && input[i] != q)
+	if (q == p->input[i])
 	{
-		if (input[i] == '$' && input[i + 1] && q == DQ)
-		{
-            i ++;
-			if (input[i] == '?')
-				*arg = ft_itoa(t->exit_status);
-			else
-			{
-				char *expanded = expand_the_argument(input, &i, i, t);  // Expand the variable
-				if (*arg)
-					*arg = strcat(*arg, expanded);
-				else
-					*arg = ft_strdup(expanded);
-			}
-		}
-		else
-		{
-			*arg = append_char(*arg, input[i]);
-			if (q == SQ)
-				p->sq = true;
-			else if (q == DQ)
-				p->dq = true;
-		}
+		p->arg = ft_strdup("");
 		i ++;
+		if (!p->input[i] || ft_strchr(SYMBOL, p->input[i]))
+			return (i);
 	}
-	if (input[i] == q)
-
+	i = create_quoted_arg(p, i, q, t);
+	if (p->input[i] == q)
 		i ++;
 	return (i);
 }
@@ -114,7 +67,7 @@ int	initial_quote_check(char *arg)
 			dq = !dq;
 		if (arg[i] == SQ && !dq)
 			sq = !sq;
-		i++;
+		i ++;
 	}
 	if (dq || sq)
 	{
@@ -122,4 +75,23 @@ int	initial_quote_check(char *arg)
 		return (-1);
 	}
 	return (0);
+}
+
+int	create_quoted_arg(t_parser *p, int i, char q, t_tools *t)
+{
+	while (p->input[i] && p->input[i] != q)
+	{
+		if (p->input[i] == '$' && p->input[i + 1] && q == DQ)
+			i = handle_expansions(p, i, t);
+		else
+		{
+			p->arg = append_char(p->arg, p->input[i]);
+			if (q == SQ)
+				p->sq = true;
+			else if (q == DQ)
+				p->dq = true;
+		}
+		i++;
+	}
+	return (i);
 }

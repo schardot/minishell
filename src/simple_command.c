@@ -56,9 +56,9 @@ t_scmd	*scmd_new(void)
 	scmd->num_redirections = 0;
 	scmd->hd_file_name = NULL;
 	scmd->redirect_token = NULL;
-	scmd->R_INPUT_file = NULL;
-	scmd->R_OUTPUT_file = NULL;
-	scmd->R_APPEND_file = NULL;
+	scmd->INPUT_file = NULL; //are those files necessary in scmd
+	scmd->OUTPUT_file = NULL;
+	scmd->APPEND_file = NULL;
     scmd->R_HEREDOC_delimiter = NULL;
     scmd->redirect_file_name = NULL;
 	scmd->old_stdout_fd = 0;

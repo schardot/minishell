@@ -14,7 +14,7 @@ typedef struct s_tools
 	int		stdout_backup; //this also
 	int     exit_status;
 	int     pipefd[2];	 //elmira do you use this
-    char    cwd[PATH_MAX];
+	char    cwd[PATH_MAX];
 } t_tools;
 
 typedef enum
@@ -22,9 +22,9 @@ typedef enum
 	COMMAND,
 	ARGUMENT,
 	PIPE,
-	R_OUTPUT,
-	R_INPUT,
-	R_APPEND,
+	OUTPUT,
+	INPUT,
+	APPEND,
 	R_HEREDOC,
 	O_FILE,
 	I_FILE,
@@ -46,8 +46,10 @@ typedef struct s_parser
 {
 	bool			sq;
 	bool			dq;
-	char		*input;
-	t_token		*tk_lst;
+	char            *arg;
+	char            *expanded;
+	char		    *input;
+	t_token		    *tk_lst;
 } t_parser;
 
 typedef struct s_scmd
@@ -59,9 +61,9 @@ typedef struct s_scmd
 	int				num_redirections;
 	char			*hd_file_name;
 	char			*redirect_token;
-	char			*R_INPUT_file;
-	char			*R_OUTPUT_file;
-	char			*R_APPEND_file;
+	char			*INPUT_file;
+	char			*OUTPUT_file;
+	char			*APPEND_file;
 	char            *R_HEREDOC_delimiter;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
@@ -101,7 +103,7 @@ int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 /* ------------------------------------------------------------------------- */
 int		builtincd(t_tools *t, t_scmd *node);
 int		builtinecho(t_tools *t, t_scmd *node);
-int		check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t);
+int		check_quote(int i, t_parser *p, t_tools *t);
 char	*trim_quotes(char *arg);
 int		builtinpwd(t_tools *t, t_scmd *node);
 int		builtinexport(t_tools *t, t_scmd *node);
@@ -118,11 +120,27 @@ int		parser(char *input, t_tools *t);
 int		check_exec_command(t_tools *t, t_scmd *scmd);
 int		is_builtin(char *token);
 char	*is_executable(char *cmd, t_tools *t);
+int		handle_expansions(t_parser *p, int i, t_tools *t);
+int		create_quoted_arg(t_parser *p, int i, char q, t_tools *t);
+
+/* ------------------------------------------------------------------------- */
+/*                           Cleanup Functions                               */
+/* ------------------------------------------------------------------------- */
+void    free_structs(t_scmd *s, t_token *lst, t_parser *p);
+void    free_parser(t_parser *p);
+void	free_token(t_token *lst);
+void	free_scmd(t_scmd *s);
+
+/* ------------------------------------------------------------------------- */
+/*                            Syntax Functions                               */
+/* ------------------------------------------------------------------------- */
+int syntax_check(t_token *lst, t_tools *t);
 
 
-int	syntax_errors(t_token *lst, t_tools *t);
+
+
+int syntax_check(t_token *lst, t_tools *t);
 void	process_running_sigint_handler(int signum);
-//int handle_redirection(t_scmd *node);
 char	**ft_append_to_arr(char **arr, char *str, int len);
 int process_redirections(t_token *t);
 char *append_char(char *arg, char c);
@@ -130,12 +148,11 @@ t_token	*split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
 char *check_env(t_parser *p, char *arg);
 int execute_redirections(t_scmd *node);
-
 int initial_quote_check(char *arg);
-t_parser *append_token(char **arg, t_parser *p, t_tools *t);
+t_parser *append_token(t_parser *p, t_tools *t);
 char *ft_getenv(char *env, t_tools *t);
 char	*expand_the_argument(char *arg, int *i, int start, t_tools *t);
-void symbol_check(char **arg, int *i, t_parser *p, t_tools *t);
+void symbol_check(int *i, t_parser *p, t_tools *t);
 char	*create_full_path(char **paths, char *cmd);
 void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command);
 int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e);
