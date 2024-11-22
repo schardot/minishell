@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
+/*   Updated: 2024/11/22 15:37:00 by nataliascha      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
@@ -27,7 +39,7 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	t_token	*aux;
 
 	if (!new)
-		return;
+		return ;
 	if (!*lst)
 	{
 		*lst = new;
@@ -45,7 +57,7 @@ void	assign_token_type(t_token *tk, t_tools *t)
 	int	len;
 
 	if (!tk || !tk->value)
-		return;
+		return ;
 	len = ft_strlen(tk->value);
 	if (strcmp(tk->value, "|") == 0 && !tk->dq && !tk->sq)
 		tk->type = PIPE;
@@ -57,7 +69,8 @@ void	assign_token_type(t_token *tk, t_tools *t)
 		tk->type = R_APPEND;
 	else if (strcmp(tk->value, "<<") == 0 && !tk->dq && !tk->sq)
 		tk->type = R_HEREDOC;
-	else if (tk->prev == NULL && (is_builtin(tk->value) || is_executable(tk->value, t)))
+	else if (tk->prev == NULL && \
+	(is_builtin(tk->value) || is_executable(tk->value, t)))
 		tk->type = COMMAND;
 	else
 		assign_token_files(tk);
@@ -65,7 +78,7 @@ void	assign_token_type(t_token *tk, t_tools *t)
 
 void	assign_token_files(t_token *tk)
 {
-	t_token *prev;
+	t_token	*prev;
 
 	if (!tk->prev)
 		tk->type = ARGUMENT;
@@ -83,18 +96,17 @@ void	assign_token_files(t_token *tk)
 		tk->type = ARGUMENT;
 }
 
-t_parser *append_token(t_parser *p, t_tools *t)
+t_parser	*append_token(t_parser *p, t_tools *t)
 {
-	(void) t;
 	t_token	*new;
 
-    new = tokenlist_new(p->arg, t, p);
-    if (!p->tk_lst)
+	new = tokenlist_new(p->arg, t, p);
+	if (!p->tk_lst)
 		p->tk_lst = new;
 	else
 		tokenlist_addback(&p->tk_lst, new);
-    p->arg = NULL;
-    p->sq = false;
+	p->arg = NULL;
+	p->sq = false;
 	p->dq = false;
 	return (p);
 }
