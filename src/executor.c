@@ -18,6 +18,29 @@ t_exec *init_t_exec(void)
 	return (e);
 }
 
+void handle_one(t_scmd *scmd)
+{
+	if (scmd->redirect_fd_in >= 0)
+	{
+		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
+		{
+			perror("Failed to redirect stdin for builtin");
+			exit(EXIT_FAILURE);
+		}
+		close(scmd->redirect_fd_in);
+	}
+
+	if (scmd->redirect_fd_out >= 0)
+	{
+		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
+		{
+			perror("Failed to redirect stdout for builtin");
+			exit(EXIT_FAILURE);
+		}
+		close(scmd->redirect_fd_out);
+	}
+}
+
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
 	t_exec	*e;
@@ -44,8 +67,10 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		e->has_next = scmd->next != NULL;
 		if (create_pipe_if_needed(t, e->has_next, scmd) == -1)
 			return (EXIT_FAILURE);
-		if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
+		printf("pipe: %i\n", scmd->pipecount);
+		if (scmd->builtin && !scmd->pipecount && scmd->pipetotal > 0) // change pipecount to total pipecount
 		{
+			handle_one(scmd);
 			t->exit_status = scmd->builtin(t, scmd);
 			return (t->exit_status);
 		}

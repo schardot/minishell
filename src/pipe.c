@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 17:03:00 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/22 18:46:36 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,33 @@ void	execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
 	setup_pipe_for_child(prev_fd, t, has_next);
 
-	if (is_executable(scmd->args[0], t))
+	if (scmd->redirect_fd_in >= 0)
+	{
+		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
+		{
+			perror("Failed to redirect stdin");
+			exit(EXIT_FAILURE);
+		}
+		//close(scmd->redirect_fd_in);
+	}
+
+	// Handle output redirection
+	if (scmd->redirect_fd_out >= 0)
+	{
+		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
+		{
+			perror("Failed to redirect stdout");
+			exit(EXIT_FAILURE);
+		}
+		//close(scmd->redirect_fd_out);
+	}
+
+	if (scmd->builtin)
+	{
+		t->exit_status = scmd->builtin(t, scmd);
+		exit (t->exit_status);
+	}
+	else if (is_executable(scmd->args[0], t))
 	{
 		scmd->exec_path = is_executable(scmd->args[0], t);
 		execve(scmd->exec_path, scmd->args, t->envp);

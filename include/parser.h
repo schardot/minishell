@@ -70,6 +70,9 @@ typedef struct s_scmd
 	int				old_stdout_fd;
 	int				new_fd;
 	int				pipecount;
+	int				redirect_fd_in;
+	int				redirect_fd_out;
+	int				pipetotal;
 	struct s_scmd	*next;
 	struct s_scmd	*prev;
 } t_scmd;
@@ -142,7 +145,7 @@ int syntax_check(t_token *lst, t_tools *t);
 int syntax_check(t_token *lst, t_tools *t);
 void	process_running_sigint_handler(int signum);
 char	**ft_append_to_arr(char **arr, char *str, int len);
-int process_redirections(t_token *t);
+int process_redirections(t_token *t, t_scmd *scmd);
 char *append_char(char *arg, char c);
 t_token	*split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
