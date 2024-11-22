@@ -1,9 +1,6 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-
-//int		syntax_check(t_token *tk, int i, char **tokens);
-
 t_token	*tokenlist_new(char *token, t_tools *t, t_parser *p)
 {
 	t_token	*tk;
@@ -86,19 +83,18 @@ void	assign_token_files(t_token *tk)
 		tk->type = ARGUMENT;
 }
 
-t_parser *append_token(char **arg, t_parser *p, t_tools *t)
+t_parser *append_token(t_parser *p, t_tools *t)
 {
 	(void) t;
 	t_token	*new;
 
-	new = tokenlist_new(*arg, t, p);
-	if (!p->tk_lst)
+    new = tokenlist_new(p->arg, t, p);
+    if (!p->tk_lst)
 		p->tk_lst = new;
 	else
 		tokenlist_addback(&p->tk_lst, new);
-	//free arg
-	*arg = NULL;
-	p->sq = false;
+    p->arg = NULL;
+    p->sq = false;
 	p->dq = false;
 	return (p);
 }

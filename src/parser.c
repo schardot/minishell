@@ -9,20 +9,21 @@ int parser(char *input, t_tools *t)
 	t_token		*lst;
 	t_parser	*parser;
 
-	if (initial_quote_check(input))
+	if (initial_quote_check(input)) //nothing to free here
 		return (EXIT_FAILURE);
-	parser = init_parser(input);
+	parser = init_parser(input); //2 mallocs here
 	if (!parser)
 		return (EXIT_FAILURE);
-	lst = split_arguments(parser, t);
+	lst = split_arguments(parser, t); //after this function t_parser can be freed
 	if (!lst)
 		return (EXIT_FAILURE);
 	if(syntax_errors(lst, t))
 		return (EXIT_FAILURE);
-    scmd = simple_command(lst);
-	if (!scmd)
+    scmd = simple_command(lst); // after this function t_token can be freed
+    if (!scmd)
 		return (EXIT_FAILURE);
-	check_exec_command(t, scmd);
+	check_exec_command(t, scmd); // after this function t_scmd can be freed
+    free_structs(scmd, lst, parser);
 	return (EXIT_SUCCESS);
 }
 
@@ -35,8 +36,13 @@ t_parser	*init_parser(char *input)
 		return (NULL);
 	new->input = ft_strdup(input);
 	if (!new->input)
-		return (NULL);
-	new->tk_lst = NULL;
+    {
+        free (new);
+        return (NULL);
+    }
+    new->arg = NULL;
+    new->expanded = NULL;
+	new->tk_lst = NULL; //does it need to be here?
 	return (new);
 }
 
@@ -47,7 +53,6 @@ int	syntax_errors(t_token *lst, t_tools *t)
 	tk = lst;
 	while (tk)
 	{
-		//assign_token_type(tk, t);
 		if (tk->type == PIPE)
 		{
 			if (!tk->prev || !tk->next)

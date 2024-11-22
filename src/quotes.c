@@ -3,83 +3,49 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-// int check_quote(char *input, int i, char **arg, t_parser *p)
-// {
-// 	char quote;
-// 	char nxt;
-// 	char nxtnxt;
-
-// 	quote = input[i];
-// 	nxt = input[i + 1];
-// 	nxtnxt = input[i + 2];
-
-// 	if (nxt == quote && nxtnxt != ' ' && !ft_strchr(SYMBOL, nxtnxt))
-// 		return (i + 2);
-// 	if ((quote == DQ && !p->sq) || (quote == SQ && !p->dq))
-// 	{
-// 		i++;
-// 		while (input[i] && input[i] != quote)
-// 		{
-// 			*arg = append_char(*arg, input[i]);
-// 			i++;
-// 		}
-// 		if (input[i] == quote)
-// 		{
-// 			if (quote == DQ)
-// 				p->dq = !p->dq;
-// 			else
-// 				p->sq = !p->sq;
-// 		}
-// 		return (i + 1); // Return index of closing quote
-// 	}
-// 	return (i + 1);
-// }
-
-//int check_quote(char c, char **arg, t_parser *p)
-int	check_quote(char *input, int i, t_parser *p, char **arg, t_tools *t)
+int	check_quote(int i, t_parser *p, t_tools *t)
 {
 	char	q;
 
-	q = input[i];
-	i++;
-    while (input[i] == q) // If the next character is the same quote, skip it
-        i++;
-    if (q == input[i])
-	{
-		*arg = ft_strdup("");
-		i ++;
-        if (!input[i] || ft_strchr(SYMBOL, input[i]))
+	q = p->input[i];
+	i ++;
+    while (p->input[i] == q)
+        i ++;
+    if (q == p->input[i])
+    {
+        p->arg = ft_strdup("");
+        i ++;
+        if (!p->input[i] || ft_strchr(SYMBOL, p->input[i]))
             return (i);
 	}
-	while (input[i] && input[i] != q)
-	{
-		if (input[i] == '$' && input[i + 1] && q == DQ)
-		{
+    while (p->input[i] && p->input[i] != q)
+    {
+        if (p->input[i] == '$' && p->input[i + 1] && q == DQ)
+        {
             i ++;
-			if (input[i] == '?')
-				*arg = ft_itoa(t->exit_status);
-			else
+            if (p->input[i] == '?')
+                p->arg = ft_itoa(t->exit_status);
+            else
 			{
-				char *expanded = expand_the_argument(input, &i, i, t);  // Expand the variable
-				if (*arg)
-					*arg = strcat(*arg, expanded);
-				else
-					*arg = ft_strdup(expanded);
-			}
+                p->expanded = expand_the_argument(p->input, &i, i, t);
+                if (p->arg)
+                    p->arg = ft_strjoin(p->arg, p->expanded);
+                else
+                    p->arg = ft_strdup(p->expanded);
+            }
 		}
 		else
 		{
-			*arg = append_char(*arg, input[i]);
-			if (q == SQ)
+            p->arg = append_char(p->arg, p->input[i]);
+            if (q == SQ)
 				p->sq = true;
 			else if (q == DQ)
 				p->dq = true;
 		}
 		i ++;
 	}
-	if (input[i] == q)
-
-		i ++;
+    if (p->input[i] == q)
+        i ++;
 	return (i);
 }
 
@@ -114,7 +80,7 @@ int	initial_quote_check(char *arg)
 			dq = !dq;
 		if (arg[i] == SQ && !dq)
 			sq = !sq;
-		i++;
+		i ++;
 	}
 	if (dq || sq)
 	{
