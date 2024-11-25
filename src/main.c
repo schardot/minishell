@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 11:21:39 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/25 19:08:49 by ekechedz         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **envp)
 	setup_signal_handling(&sa_int, &sa_quit);
 	while (t->exit == 0)
 	{
+		t->totalp = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
 	}
