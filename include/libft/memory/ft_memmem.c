@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmem.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 08:33:26 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/11/25 08:33:27 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/25 18:51:27 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	*ft_memmem(void *big, size_t blen, void *lil, size_t lillen)
 		return ((void *)big);
 	if (lillen > blen)
 		return (NULL);
-	h = (const char *)big;
-	n = (const char *)lil;
+	h = (char *)big;
+	n = (char *)lil;
 	i = 0;
 	while (i <= blen - lillen)
 	{

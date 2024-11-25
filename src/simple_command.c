@@ -15,9 +15,9 @@ t_scmd	*simple_command(t_token *t)
 		handle_type(t, s, next_command);
 		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
 		{
-			if(process_redirections(t, s) != 0)
+			if (process_redirections(t, s) != 0)
 				return NULL;
-			//t = t->next;
+			// t = t->next;
 		}
 		t = t->next;
 	}
@@ -59,13 +59,12 @@ t_scmd	*scmd_new(void)
 	scmd->num_redirections = 0;
 	scmd->hd_file_name = NULL;
 	scmd->redirect_token = NULL;
-	scmd->INPUT_file = NULL; //are those files necessary in scmd
-	scmd->OUTPUT_file = NULL;
-	scmd->APPEND_file = NULL;
     scmd->R_HEREDOC_delimiter = NULL;
     scmd->redirect_file_name = NULL;
 	scmd->old_stdout_fd = 0;
 	scmd->old_stdin_fd = 0;
+	scmd->fd_in = STDIN_FILENO;
+	scmd->fd_out = STDOUT_FILENO;
 	scmd->redirect_fd_out = -1;
 	scmd->redirect_fd_in = -1;
 	scmd->new_fd = 0;
