@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:29:14 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 15:29:22 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/25 09:43:59 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -35,7 +35,6 @@ int	builtinecho(t_tools *t, t_scmd *scmd)
 	}
 	if (newline)
 		ft_putstr_fd("\n", 1);
-	restore_stdout(scmd);
 	return (EXIT_SUCCESS);
 }
 

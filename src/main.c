@@ -1,23 +1,26 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:58:51 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/25 09:46:19 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
+
+int	free_tools(t_tools *t);
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_tools				*t;
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
+	int					exit;
 
 	if (argc != 1 || argv[1])
 	{
@@ -36,9 +39,9 @@ int	main(int argc, char **argv, char **envp)
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
 	}
-	free(t);
+	exit = free_tools(t);
 	clear_history();
-	return (t->exit_status);
+	return (exit);
 }
 
 int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
@@ -77,4 +80,14 @@ t_tools	*init_t_tools(char **envp)
 	t->pipefd[1] = -1;
 	t->exit_status = 0;
 	return (t);
+}
+
+int	free_tools(t_tools *t)
+{
+	int	exit;
+
+	exit = t->exit_status;
+	ft_free_matrix(t->envp);
+	free(t);
+	return (exit);
 }
