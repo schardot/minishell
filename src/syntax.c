@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 10:45:28 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/25 15:58:10 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -26,6 +26,8 @@ int	syntax_check(t_token *lst, t_tools *t)
 	while (tk)
 	{
 		assign_token_type(tk, t);
+		if (tk->type == PIPE)
+			t->totalp ++;
 		if (is_invalid_pipe(tk) || is_invalid_redirection(tk))
 			return (EXIT_FAILURE);
 		tk = tk->next;

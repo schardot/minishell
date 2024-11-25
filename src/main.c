@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 11:21:39 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/25 15:59:20 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -36,11 +36,13 @@ int	main(int argc, char **argv, char **envp)
 	setup_signal_handling(&sa_int, &sa_quit);
 	while (t->exit == 0)
 	{
+		t->totalp = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
+		free_structs(t);
 	}
 	exit = free_tools(t);
-	clear_history();
+	rl_clear_history();
 	return (exit);
 }
 
@@ -80,6 +82,11 @@ t_tools	*init_t_tools(char **envp)
 	t->pipefd[1] = -1;
 	t->exit_status = 0;
 	t->exit = 0;
+	t->parser = NULL;
+	t->tk = NULL;
+	t->scmd = NULL;
+	t->e = NULL;
+	t->totalp = 0;
 	return (t);
 }
 
@@ -88,6 +95,7 @@ int	free_tools(t_tools *t)
 	int	exit;
 
 	exit = t->exit_status;
+	free_structs(t);
 	ft_free_matrix(t->envp);
 	free(t);
 	return (exit);
