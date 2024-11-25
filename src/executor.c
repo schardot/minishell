@@ -68,7 +68,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		if (create_pipe_if_needed(t, e->has_next, scmd) == -1)
 			return (EXIT_FAILURE);
 		printf("pipe: %i\n", scmd->pipecount);
-		if (scmd->builtin && scmd->pipetotal > 0) // change pipecount to total pipecount
+		if (scmd->builtin && scmd->pipetotal == 0) // change pipecount to total pipecount
 		{
 			handle_one(scmd);
 			t->exit_status = scmd->builtin(t, scmd);

@@ -10,16 +10,14 @@ t_scmd	*simple_command(t_token *t)
 	s = scmd_new();
 	while (t)
 	{
-		if (t->type == R_HEREDOC)
-		{
-			t = t->next;
+		if (t->type == H_DEL)
 			s->R_HEREDOC_delimiter = t->value;
-		}
 		handle_type(t, s, next_command);
 		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
 		{
-			process_redirections(t, s);
-			t = t->next;
+			if(process_redirections(t, s) != 0)
+				return NULL;
+			//t = t->next;
 		}
 		t = t->next;
 	}
