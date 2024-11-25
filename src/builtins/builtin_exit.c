@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 14:10:11 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/11/22 14:46:50 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/25 11:21:49 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -21,7 +21,10 @@ int	builtinexit(t_tools *t, t_scmd *scmd)
 
 	status = 0;
 	if (scmd->pipecount == 0)
+	{
 		printf("exit\n");
+		t->exit = 1;
+	}
 	if (scmd->args[1])
 	{
 		status = check_exit_args(t, scmd);
