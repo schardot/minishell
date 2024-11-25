@@ -163,12 +163,12 @@ int	handle_HEREDOC_redirection(t_scmd *node)
         free(filename);
         return result;
     }
-	if (redirect_heredoc_input(filename) < 0)
-	{
-		unlink(filename);
-		free(filename);
-		return -1;
-	}
+	// if (redirect_heredoc_input(filename) < 0)
+	// {
+	// 	unlink(filename);
+	// 	free(filename);
+	// 	return -1;
+	// }
 	unlink(filename);
 	free(filename);
 	return result;
