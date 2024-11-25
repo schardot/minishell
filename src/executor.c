@@ -56,6 +56,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	}
 	result = wait_for_pids(e->pids, e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
+	free(e);
 	return (result);
 }
 
@@ -126,6 +127,7 @@ char	*is_executable(char *cmd, t_tools *t)
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
+	free (path_env);
 	if (paths == NULL)
 		return (NULL);
 	full_path = create_full_path(paths, cmd);

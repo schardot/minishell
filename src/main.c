@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 09:46:19 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/25 11:21:39 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FAILURE);
 	}
 	setup_signal_handling(&sa_int, &sa_quit);
-	while (1)
+	while (t->exit == 0)
 	{
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
@@ -79,6 +79,7 @@ t_tools	*init_t_tools(char **envp)
 	t->pipefd[0] = -1;
 	t->pipefd[1] = -1;
 	t->exit_status = 0;
+	t->exit = 0;
 	return (t);
 }
 
