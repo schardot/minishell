@@ -19,6 +19,7 @@ typedef struct s_tools
 
 typedef enum
 {
+	NO_TYPE,
 	COMMAND,
 	ARGUMENT,
 	PIPE,
