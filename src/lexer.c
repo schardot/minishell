@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 17:00:37 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/25 09:55:39 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -33,6 +33,7 @@ char	*append_char(char *arg, char c)
 		ft_strlcpy(new_arg, arg, size);
 	new_arg[size - 2] = c;
 	new_arg[size - 1] = '\0';
+	free (arg);
 	return (new_arg);
 }
 
