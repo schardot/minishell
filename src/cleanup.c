@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:39:49 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 14:01:21 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:19:55 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -37,8 +37,8 @@ void	free_parser(t_parser *p)
 		free (p->input);
 	if (p && p->arg)
 		free (p->arg);
-	if (p && p->expanded)
-		free (p->expanded);
+	// if (p && p->expanded)
+	// 	free (p->expanded);
 	free (p);
 }
 

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 14:54:51 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:41:47 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -45,7 +45,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	exit = free_tools(t);
 	rl_clear_history();
-	printf("Exit status %d\n",t->exit_status);
+	// printf("Exit status %d\n",t->exit_status);
 	return (exit);
 }
 

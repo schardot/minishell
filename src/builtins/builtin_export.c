@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/26 12:11:07 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:34:52 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -25,7 +25,7 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 	char	**spl;
 	char	*full;
 
-	if (!scmd->args[1])
+	if (!scmd->args[1] || (ft_strlen(scmd->args[1]) == 0 && (!t->parser->sq && !t->parser->dq)))
 		print_export_list(t);
 	else
 	{
@@ -66,7 +66,7 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 {
 	int	j;
 
-	if (!arg[0] || (!ft_isalpha(arg[0]) && arg[0] != '_'))
+	if ((!arg[0] && (t->parser->dq || t->parser->sq)) || (arg[0] && (!ft_isalpha(arg[0]) && arg[0] != '_')))
 	{
 		ft_error(E_NOT_VALID_ID, "export", arg, t);
 		t->exit_status = 1;

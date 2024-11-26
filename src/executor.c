@@ -88,7 +88,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
 			return (EXIT_FAILURE);
 
-		printf("pipe: %i\n", t->scmd->pipecount);
+		// printf("pipe: %i\n", t->scmd->pipecount);
 		if (t->scmd->builtin && t->totalp == 0)
 		{
 			handle_one(t->scmd);
@@ -104,7 +104,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
 	//free(t->e);
-	printf("Exit status %d\n",t->exit_status);
+	// printf("Exit status %d\n",t->exit_status);
 	return (t->exit_status);
 }
 
