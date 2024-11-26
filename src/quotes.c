@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:56:37 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 16:25:49 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -81,7 +81,7 @@ int	create_quoted_arg(t_parser *p, int i, char q, t_tools *t)
 {
 	while (p->input[i] && p->input[i] != q)
 	{
-		if (p->input[i] == '$' && p->input[i + 1] && q == DQ)
+		if (p->input[i] == '$' && p->input[i + 1] && p->input[i + 1] != DQ && q != SQ)
 			i = handle_expansions(p, i, t);
 		else
 		{
