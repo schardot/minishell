@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 10:28:38 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:15:23 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int	syntax_check(t_token *lst, t_tools *t)
 		if (tk->type == PIPE)
 			t->totalp += 1;
 		if (is_invalid_pipe(tk) || is_invalid_redirection(tk))
-			return (EXIT_FAILURE);
+		{
+			t->exit_status = 2;
+			return (t->exit_status);
+		}
 		tk = tk->next;
 	}
 	return (EXIT_SUCCESS);
@@ -56,7 +59,7 @@ static int	is_invalid_redirection(t_token *tk)
 		if (!tk->next)
 		{
 			syntax_error("newline");
-			return (1);
+			return (2);
 		}
 	}
 	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT))
@@ -64,7 +67,7 @@ static int	is_invalid_redirection(t_token *tk)
 		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE)
 		{
 			syntax_error(&tk->value[0]);
-			return (1);
+			return (2);
 		}
 	}
 	return (0);

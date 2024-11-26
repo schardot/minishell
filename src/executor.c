@@ -61,10 +61,10 @@ void handle_one(t_scmd *scmd)
 int check_exec_command(t_tools *t, t_scmd *scmd)
 {
 	t_exec *e;
-	int result;
 	struct sigaction sa_int, sa_quit;
 	t_scmd *scmd_backup;
 
+	t->exit_status = 0;
 	init_signal_handlers(&sa_int, &sa_quit);
 	e = init_t_exec();
 	scmd_backup = scmd;
@@ -90,17 +90,18 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			handle_one(scmd);
 			t->exit_status = scmd->builtin(t, scmd);
 			restore_stdout(scmd);
-			return (t->exit_status);
+			return t->exit_status;
 		}
 		switch_signal_handlers(&sa_int, &sa_quit, true, true);
 		e->pid = fork();
 		after_fork(t, scmd, e);
 		scmd = scmd->next;
 	}
-	result = wait_for_pids(e->pids, e->n, t);
+	t->exit_status = wait_for_pids(e->pids, e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
 	free(e);
-	return (result);
+	printf("Exit status %d\n",t->exit_status);
+	return (t->exit_status);
 }
 
 int is_builtin(char *token)
