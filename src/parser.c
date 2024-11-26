@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 15:00:49 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:57:19 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -17,10 +17,6 @@
 
 int	parser(char *input, t_tools *t)
 {
-	// t_scmd		*scmd;
-	// t_token		*lst;
-	// t_parser	*parser;
-
 	if (initial_quote_check(input))
 		return (t->exit_status);
 	t->parser = init_parser(input);
@@ -35,7 +31,6 @@ int	parser(char *input, t_tools *t)
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);
-	//free_structs(scmd, lst, parser);
 	return (t->exit_status);
 }
 
@@ -57,6 +52,7 @@ t_parser	*init_parser(char *input)
 	new->tk_lst = NULL;
 	new->dq = false;
 	new->sq = false;
+	new->q = '\0';
 	return (new);
 }
 
@@ -64,15 +60,13 @@ int	handle_expansions(t_parser *p, int i, t_tools *t)
 {
 	i++;
 	if (p->input[i] == '?')
-		p->arg = ft_itoa(t->exit_status);
+		p->expanded = ft_itoa(t->exit_status);
 	else
-	{
 		p->expanded = expand_the_argument(p->input, &i, i, t);
-		if (p->arg)
-			p->arg = ft_strjoin(p->arg, p->expanded);
-		else
-			p->arg = ft_strdup(p->expanded);
-	}
+	if (p->arg)
+		p->arg = ft_strjoin(p->arg, p->expanded);
+	else
+		p->arg = ft_strdup(p->expanded);
 	i++;
 	return (i);
 }
