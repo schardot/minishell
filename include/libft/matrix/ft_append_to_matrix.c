@@ -16,6 +16,8 @@ char	**ft_arrcat(char **arr, char *str, int len)
 {
 	char	**new;
 
+	// if (!str || len < 0)
+	// 	return (NULL);
 	new = ft_realloc(arr, (len + 1) * sizeof(char *), \
 	(len + 2) * sizeof(char *));
 	if (!new)

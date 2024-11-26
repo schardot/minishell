@@ -66,7 +66,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	struct sigaction sa_int, sa_quit;
 	t_scmd *scmd_backup;
 
-	t->exit_status = 0;
+
 	init_signal_handlers(&sa_int, &sa_quit);
 	t->e = init_t_exec();
 	scmd_backup = t->scmd;
@@ -197,5 +197,5 @@ int after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 	else
 		t->e->pids[e->n++] = t->e->pid;
 	close_unused_pipes(&t->e->prev_fd, t, t->e->has_next);
-	return (0);
+	return (t->exit_status);
 }
