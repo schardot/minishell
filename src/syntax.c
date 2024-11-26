@@ -27,7 +27,7 @@ int	syntax_check(t_token *lst, t_tools *t)
 	{
 		assign_token_type(tk, t);
 		if (tk->type == PIPE)
-			t->totalp ++;
+			t->totalp += 1;
 		if (is_invalid_pipe(tk) || is_invalid_redirection(tk))
 			return (EXIT_FAILURE);
 		tk = tk->next;

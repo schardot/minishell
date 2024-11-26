@@ -54,15 +54,14 @@ typedef struct s_scmd
 	int				num_redirections;
 	char			*hd_file_name;
 	char			*redirect_token;
-	char			*INPUT_file;
-	char			*OUTPUT_file;
-	char			*APPEND_file;
 	char            *R_HEREDOC_delimiter;
 	char			*redirect_file_name;
 	int				old_stdin_fd;
 	int				old_stdout_fd;
 	int				new_fd;
 	int				pipecount;
+	int				fd_in;
+	int				fd_out;
 	int				redirect_fd_in;
 	int				redirect_fd_out;
 	int				pipetotal;

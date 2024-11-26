@@ -15,6 +15,7 @@ t_exec *init_t_exec(void)
 	}
 	e->prev_fd = -1;
 	e->n = 0;
+	e->has_next = 0;
 	return (e);
 }
 
@@ -28,6 +29,7 @@ void handle_one(t_scmd *scmd)
 			exit(EXIT_FAILURE);
 		}
 		close(scmd->redirect_fd_in);
+		scmd->redirect_fd_in = -1;
 	}
 
 	if (scmd->redirect_fd_out >= 0)
@@ -38,6 +40,7 @@ void handle_one(t_scmd *scmd)
 			exit(EXIT_FAILURE);
 		}
 		close(scmd->redirect_fd_out);
+		scmd->redirect_fd_out = -1;
 	}
 }
 
@@ -66,6 +69,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 		t->e->has_next = t->scmd->next != NULL;
 		if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
 			return (EXIT_FAILURE);
+
 		printf("pipe: %i\n", t->scmd->pipecount);
 		if (t->scmd->builtin && t->totalp == 0)
 		{

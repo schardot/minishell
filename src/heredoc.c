@@ -94,7 +94,6 @@ int wait_for_heredoc_process(pid_t pid, char *filename)
 		return WEXITSTATUS(status);
 
 	}
-	printf("ouside%d", status);
 	return 0;
 }
 
