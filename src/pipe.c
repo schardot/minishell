@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 21:15:40 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:28:43 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,7 @@ void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 
 void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 {
-	//printf("Before setup: redirect_fd_out=%d\n", scmd->redirect_fd_out);
 	setup_pipe_for_child(prev_fd, t, has_next);
-
-	// Handle input redirection
 	if (scmd->redirect_fd_in >= 0)
 	{
 		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
@@ -81,14 +78,15 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 			perror("Failed to redirect stdin");
 			exit(EXIT_FAILURE);
 		}
-		//printf("redirect_fd_in %d redirected to stdin\n", scmd->redirect_fd_in);
 		close(scmd->redirect_fd_in);
 		scmd->redirect_fd_in = -1;
+		if (scmd->hd_file_name)
+		{
+			unlink(scmd->hd_file_name);
+			free(scmd->hd_file_name);
+			scmd->hd_file_name = NULL;
+		}
 	}
-
-	//printf("After setup: redirect_fd_out=%d\n", scmd->redirect_fd_out);
-
-	// Handle output redirection
 	if (scmd->redirect_fd_out >= 0)
 	{
 		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
@@ -96,31 +94,18 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 			perror("Failed to redirect stdout");
 			exit(EXIT_FAILURE);
 		}
-		//printf("redirect_fd_out %d redirected to stdout\n", scmd->redirect_fd_out);
 		close(scmd->redirect_fd_out);
 		scmd->redirect_fd_out = -1;
 	}
-
-	// Execute builtin or external command
-	//printf("Before builtin or exec: redirect_fd_out=%d\n", scmd->redirect_fd_out);
 	if (scmd->builtin)
-	{
 		t->exit_status = scmd->builtin(t, scmd);
-		//printf("Builtin executed with exit status %d\n", t->exit_status);
-
-		// exit (t->exit_status);
-	}
 	else if (is_executable(scmd->args[0], t))
 	{
 		scmd->exec_path = is_executable(scmd->args[0], t);
 		execve(scmd->exec_path, scmd->args, t->envp);
 		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-		// exit(t->exit_status);
 	}
 	else
-	{
 		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-		// exit(t->exit_status);
-	}
-	//printf("in the end %i \n", scmd->redirect_fd_out);
+
 }

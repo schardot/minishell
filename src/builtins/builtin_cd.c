@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:36:49 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 11:44:34 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ int	builtincd(t_tools *t, t_scmd *scmd)
 	if (chdir(path) != 0)
 	{
 		perror("minishell: cd");
-		return (EXIT_FAILURE);
+		t->exit_status = 1;
+		return t->exit_status;
 	}
 	if (!getcwd(t->cwd, sizeof(t->cwd)))
 	{
 		perror("minishell: cd");
+		t->exit_status = 1;
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
