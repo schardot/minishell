@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 13:05:58 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:00:40 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -17,25 +17,25 @@
 
 int	parser(char *input, t_tools *t)
 {
-	t_scmd		*scmd;
-	t_token		*lst;
-	t_parser	*parser;
+	// t_scmd		*scmd;
+	// t_token		*lst;
+	// t_parser	*parser;
 
 	if (initial_quote_check(input))
 		return (t->exit_status);
-	parser = init_parser(input);
-	if (!parser)
+	t->parser = init_parser(input);
+	if (!t->parser)
 		return (t->exit_status);
-	lst = split_arguments(parser, t);
-	if (!lst)
+	t->tk = split_arguments(t->parser, t);
+	if (!t->tk)
 		return (t->exit_status);
-	if (syntax_check(lst, t))
+	if (syntax_check(t->tk, t))
 		return (t->exit_status);
-	scmd = simple_command(lst);
-	if (!scmd)
+	t->scmd = simple_command(t->tk);
+	if (!t->scmd)
 		return (t->exit_status);
-	check_exec_command(t, scmd);
-	free_structs(scmd, lst, parser);
+	check_exec_command(t, t->scmd);
+	//free_structs(scmd, lst, parser);
 	return (t->exit_status);
 }
 

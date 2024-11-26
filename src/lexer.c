@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 09:55:39 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/25 13:24:46 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -28,12 +28,17 @@ char	*append_char(char *arg, char c)
 		size = ft_strlen(arg) + 2;
 	new_arg = malloc(size);
 	if (!new_arg)
+	{
+		free (arg);
 		return (NULL);
+	}
 	if (arg)
+	{
 		ft_strlcpy(new_arg, arg, size);
+		free (arg);
+	}
 	new_arg[size - 2] = c;
 	new_arg[size - 1] = '\0';
-	free (arg);
 	return (new_arg);
 }
 

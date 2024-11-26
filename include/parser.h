@@ -7,18 +7,6 @@
 # include <limits.h>
 # include <unistd.h>
 
-typedef struct s_tools
-{
-	char	**envp;
-	int		stdin_backup; //elmira are you using this
-	int		stdout_backup; //this also
-	int		exit_status;
-	int		pipefd[2];
-	char	cwd[PATH_MAX];
-	int		exit;
-	int		totalp;
-} t_tools;
-
 typedef enum
 {
 	NO_TYPE,
@@ -38,7 +26,7 @@ typedef enum
 typedef struct s_token
 {
 	e_token_type	type;
-	char			*value;
+	char			*value; //malloc for this
 	bool			sq;
 	bool			dq;
 	struct s_token	*prev;
@@ -54,6 +42,8 @@ typedef struct s_parser
 	char		    *input;
 	t_token		    *tk_lst;
 } t_parser;
+
+typedef struct s_tools t_tools;
 
 typedef struct s_scmd
 {
@@ -85,6 +75,22 @@ typedef struct s_exec {
 	int	status;
 	int 	pids[250];
 } t_exec;
+
+typedef struct s_tools
+{
+	char		**envp; //malloc for this
+	int			stdin_backup;
+	int			stdout_backup;
+	int			exit_status; //malloc for this?
+	int			pipefd[2];
+	char		cwd[PATH_MAX];
+	int			exit;
+	int			totalp;
+	t_scmd		*scmd;
+	t_parser	*parser;
+	t_token		*tk;
+	t_exec		*e;
+} t_tools;
 
 /* ------------------------------------------------------------------------- */
 /*                           Token List Functions         		             */
@@ -129,7 +135,7 @@ int		create_quoted_arg(t_parser *p, int i, char q, t_tools *t);
 /* ------------------------------------------------------------------------- */
 /*                           Cleanup Functions                               */
 /* ------------------------------------------------------------------------- */
-void    free_structs(t_scmd *s, t_token *lst, t_parser *p);
+void    free_structs(t_tools *t);
 void    free_parser(t_parser *p);
 void	free_token(t_token *lst);
 void	free_scmd(t_scmd *s);
