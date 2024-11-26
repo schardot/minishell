@@ -1,18 +1,20 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 11:28:43 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:28:27 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
+
+void check_command(t_scmd *scmd, t_tools *t);
 
 int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 {
@@ -76,6 +78,7 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
 		{
 			perror("Failed to redirect stdin");
+			t->exit_status = 1;
 			exit(EXIT_FAILURE);
 		}
 		close(scmd->redirect_fd_in);
@@ -92,20 +95,53 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
 		{
 			perror("Failed to redirect stdout");
+			t->exit_status = 1;
 			exit(EXIT_FAILURE);
 		}
 		close(scmd->redirect_fd_out);
 		scmd->redirect_fd_out = -1;
 	}
-	if (scmd->builtin)
-		t->exit_status = scmd->builtin(t, scmd);
-	else if (is_executable(scmd->args[0], t))
-	{
-		scmd->exec_path = is_executable(scmd->args[0], t);
-		execve(scmd->exec_path, scmd->args, t->envp);
-		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-	}
 	else
-		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
+		check_command(scmd, t);
+	exit(t->exit_status);
+}
 
+void check_command(t_scmd *scmd, t_tools *t)
+{
+	int	i;
+
+	i = 0;
+
+	if (scmd->builtin)
+	{
+		t->exit_status = scmd->builtin(t, scmd);
+		return ;
+	}
+	if (is_directory(scmd->args[i]))
+	{
+		ft_error(E_IS_DIRECTORY, NULL, scmd->args[i], t);
+		exit(126);
+	}
+	scmd->exec_path = is_executable(scmd->args[i], t);
+	if (scmd->exec_path) {
+		execve(scmd->exec_path, scmd->args, t->envp);
+		// Only reached if execve fails
+		ft_error(E_COMMAND_NOT_FOUND, scmd->args[i], NULL, t);
+		exit(127);
+	}
+	if (is_regular_file(scmd->args[i])) {
+		if (access(scmd->args[i], X_OK) == -1) {
+			if (errno == EACCES) {
+				fprintf(stderr, "%s: Permission denied\n", scmd->args[i]);
+				exit(126);
+			} else {
+				fprintf(stderr, "%s: Command not found\n", scmd->args[i]);
+				exit(127);
+			}
+		}
+	}
+
+	// Default error for invalid commands
+	ft_error(E_COMMAND_NOT_FOUND, scmd->args[i], NULL, t);
+	exit(127);
 }

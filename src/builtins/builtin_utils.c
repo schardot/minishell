@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:49:13 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 14:49:14 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 20:25:44 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -57,10 +57,22 @@ int	is_directory(const char *path)
 {
 	struct stat	path_stat;
 
-	if (stat(path, &path_stat) != 0)
+	if (stat(path, &path_stat) != -1)
 	{
-		perror("stat");
-		return (-1);
+		//perror("stat");
+		return (0);
 	}
 	return (S_ISDIR(path_stat.st_mode));
+}
+
+int is_regular_file(const char *path)
+{
+	struct stat	file_stat;
+
+	if (stat(path, &file_stat) == -1)
+	{
+		//perror("stat");
+		return (0);
+	}
+	return (S_ISREG(file_stat.st_mode));
 }

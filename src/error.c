@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/22 16:37:58 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 19:20:16 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -41,6 +41,8 @@ static void	update_exit(t_error ty, t_tools *t)
 {
 	if (ty == E_COMMAND_NOT_FOUND)
 		t->exit_status = 127;
+	else if (ty == E_IS_DIRECTORY)
+		t->exit_status = 126;
 	else if (ty == E_SYNTAX_ERROR || ty == E_NUM_ARG_REQUIRED)
 		t->exit_status = 2;
 	else if (ty == E_NOT_VALID_ID || ty == E_NOT_A_DIR || ty == E_NO_SUCH_F)
@@ -53,7 +55,7 @@ static void	update_exit(t_error ty, t_tools *t)
 
 static char	**make_error_str(void)
 {
-	static char	*err[12];
+	static char	*err[13];
 
 	err[0] = "No such file or directory";
 	err[1] = "Not a directory";
@@ -65,7 +67,8 @@ static char	**make_error_str(void)
 	err[7] = "HOME not set";
 	err[8] = "syntax error near unexpected token";
 	err[9] = "invalid option";
-	err[10] = "Unknown error";
-	err[11] = NULL;
+	err[10] = "Is a directory";
+	err[11] = "Unknown error";
+	err[12] = NULL;
 	return (err);
 }

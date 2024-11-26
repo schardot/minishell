@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 15:41:47 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:01:11 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 	while (t->exit == 0)
 	{
 		reset_structs(t);
-		t->exit_status = 0;
+		//t->exit_status = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
 		free_structs(t);

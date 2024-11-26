@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 18:57:19 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:01:38 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -27,7 +27,7 @@ int	parser(char *input, t_tools *t)
 		return (t->exit_status);
 	if (syntax_check(t->tk, t))
 		return (t->exit_status);
-	t->scmd = simple_command(t->tk);
+	t->scmd = simple_command(t, t->tk);
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);

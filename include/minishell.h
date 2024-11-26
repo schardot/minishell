@@ -31,6 +31,7 @@ typedef enum
 	E_HOME_NOT_SET,
 	E_SYNTAX_ERROR,
     E_INVALID_OPTION,
+	E_IS_DIRECTORY,
 	E_UNKNOWN_ERROR // Optional: for catching unhandled errors
 } t_error;
 
@@ -44,6 +45,6 @@ void	switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit,
 void	init_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit);
 void	ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t);
 void	restore_stdin(int saved_stdin);
-int     is_directory(const char *path);
+int		is_directory(const char *path);
 
 #endif

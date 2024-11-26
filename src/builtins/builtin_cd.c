@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 11:44:34 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:59:02 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -22,8 +22,8 @@ int	builtincd(t_tools *t, t_scmd *scmd)
 {
 	char	*path;
 
-	if (check_cd_args(&path, scmd, t) != EXIT_SUCCESS)
-		return (EXIT_FAILURE);
+	if (check_cd_args(&path, scmd, t) != 0)
+		return (t->exit_status);
 	if (check_cd_errors(path, scmd, t) != EXIT_SUCCESS)
 		return (EXIT_FAILURE);
 	if (chdir(path) != 0)
@@ -73,6 +73,12 @@ static int	check_cd_args(char **path, t_scmd *scmd, t_tools *t)
 			ft_error(E_HOME_NOT_SET, "cd", NULL, t);
 			return (EXIT_FAILURE);
 		}
+	}
+	else if (scmd->args[2])
+	{
+		ft_fprintf(2, "minishell: %s: too many arguments\n", scmd->args[0]);
+		t->exit_status = 1;
+		return (t->exit_status);
 	}
 	else
 		*path = trim_quotes(scmd->args[1]);

@@ -66,7 +66,6 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	struct sigaction sa_int, sa_quit;
 	t_scmd *scmd_backup;
 
-	t->exit_status = 0;
 	init_signal_handlers(&sa_int, &sa_quit);
 	t->e = init_t_exec();
 	scmd_backup = t->scmd;
@@ -87,8 +86,6 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		t->e->has_next = t->scmd->next != NULL;
 		if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
 			return (EXIT_FAILURE);
-
-		// printf("pipe: %i\n", t->scmd->pipecount);
 		if (t->scmd->builtin && t->totalp == 0)
 		{
 			handle_one(t->scmd);
@@ -103,8 +100,6 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	}
 	t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
-	//free(t->e);
-	// printf("Exit status %d\n",t->exit_status);
 	return (t->exit_status);
 }
 
@@ -197,5 +192,5 @@ int after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 	else
 		t->e->pids[e->n++] = t->e->pid;
 	close_unused_pipes(&t->e->prev_fd, t, t->e->has_next);
-	return (0);
+	return (t->exit_status);
 }
