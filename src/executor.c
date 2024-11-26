@@ -62,27 +62,27 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 {
 
 	t_exec *e;
-  
+
 	struct sigaction sa_int, sa_quit;
 	t_scmd *scmd_backup;
 
 	t->exit_status = 0;
 	init_signal_handlers(&sa_int, &sa_quit);
 	t->e = init_t_exec();
-	scmd_backup = scmd;
-	while (scmd)
+	scmd_backup = t->scmd;
+	while (t->scmd)
 	{
-		if (scmd->R_HEREDOC_delimiter)
+		if (t->scmd->R_HEREDOC_delimiter)
 		{
 			switch_signal_handlers(&sa_int, &sa_quit, true, false);
 			if (handle_HEREDOC_redirection(t->scmd) < 0)
 				return (t->exit_status);
 		}
-		scmd = scmd->next;
+		t->scmd = t->scmd->next;
 	}
 
-	scmd = scmd_backup;
-	while (scmd)
+	t->scmd = scmd_backup;
+	while (t->scmd)
 	{
 		t->e->has_next = t->scmd->next != NULL;
 		if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
@@ -103,7 +103,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	}
 	t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
-	free(t->e);
+	//free(t->e);
 	printf("Exit status %d\n",t->exit_status);
 	return (t->exit_status);
 }
