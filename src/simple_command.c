@@ -2,46 +2,47 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_scmd	*simple_command(t_token *t)
+t_scmd	*simple_command(t_tools *t, t_token *tk)
 {
 	t_scmd	*s;
 	t_scmd	*next_command;
+	int		redirection_failed;
 
+	redirection_failed = 0;
 	s = scmd_new();
-	while (t)
+	while (tk)
 	{
-		if (t->type == H_DEL)
-			s->R_HEREDOC_delimiter = t->value;
-		handle_type(t, s, next_command);
-		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
+		if (tk->type == H_DEL)
+			s->R_HEREDOC_delimiter = tk->value;
+		handle_type(t, tk, s, next_command);
+		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC)
 		{
-			if (process_redirections(t, s) != 0)
+			if (process_redirections(t, tk, s) != 0)
 				return NULL;
-			// t = t->next;
 		}
-		t = t->next;
+		tk = tk->next;
 	}
 	return (s);
 }
 
-void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command)
+void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 {
-	if (t->type == ARGUMENT || t->type == COMMAND)
+	if (tk->type == ARGUMENT || tk->type == COMMAND)
 	{
-		s->args = ft_arrcat(s->args, t->value, ft_str2dlen(s->args));
+		s->args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
 		s->argsc ++;
-		if (t->type == COMMAND && is_builtin(s->args[0]))
+		if (tk->type == COMMAND && is_builtin(s->args[0]))
 			s->builtin = get_builtin_function(s->args[0]);
 	}
-	else if (t->type == PIPE)
+	else if (tk->type == PIPE)
 	{
 		s->pipetotal++;
-		next_command = simple_command(t->next);
+		next_command = simple_command(t, tk->next);
 		s->next = next_command;
 		s->pipecount = s->pipetotal;
 
 		if (next_command)
-			t->next = NULL;
+			tk->next = NULL;
 	}
 }
 

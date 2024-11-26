@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_checkstr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 08:28:05 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/11/25 08:28:06 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:28:16 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@ int	ft_checkstr(char *s, int (*f)(int))
 {
 	int	i;
 
+	if (!s || !*s)
+		return (1);
+
 	i = 0;
+	if (s[i] == '+' || s[i] == '-')
+		i++;
 	while (s[i])
 	{
 		if (!f(s[i]))

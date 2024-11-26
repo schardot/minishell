@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 15:00:49 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:48:47 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	parser(char *input, t_tools *t)
 		return (t->exit_status);
 	if (syntax_check(t->tk, t))
 		return (t->exit_status);
-	t->scmd = simple_command(t->tk);
+	t->scmd = simple_command(t, t->tk);
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:50:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:36:49 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 19:28:36 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	builtinenv(t_tools *t, t_scmd *scmd)
 	while (t->envp[i])
 	{
 		if (ft_strchr(t->envp[i], '=') && t->envp[i][0] != '=')
-			ft_putendl_fd(t->envp[i], t->pipefd[0]);
+			ft_putendl_fd(t->envp[i], STDOUT_FILENO);
 		i ++;
 	}
 	return (t->exit_status);

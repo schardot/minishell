@@ -104,7 +104,7 @@ void		assign_token_files(t_token *tk);
 /*                           Simple Command Functions                        */
 /* ------------------------------------------------------------------------- */
 t_scmd	*scmd_new(void);
-t_scmd	*simple_command(t_token *lst);
+t_scmd	*simple_command(t_tools *t, t_token *lst);
 int		(*get_builtin_function(char *command))(t_tools *, t_scmd *);
 
 /* ------------------------------------------------------------------------- */
@@ -151,7 +151,7 @@ int syntax_check(t_token *lst, t_tools *t);
 int syntax_check(t_token *lst, t_tools *t);
 void	process_running_sigint_handler(int signum);
 char	**ft_append_to_arr(char **arr, char *str, int len);
-int process_redirections(t_token *t, t_scmd *scmd);
+int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd);
 char *append_char(char *arg, char c);
 t_token	*split_arguments(t_parser *p, t_tools *t);
 t_parser *init_parser(char *input);
@@ -163,7 +163,7 @@ char *ft_getenv(char *env, t_tools *t);
 char	*expand_the_argument(char *arg, int *i, int start, t_tools *t);
 void symbol_check(int *i, t_parser *p, t_tools *t);
 char	*create_full_path(char **paths, char *cmd);
-void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command);
+void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command);
 int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e);
 
 #endif
