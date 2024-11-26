@@ -29,7 +29,10 @@ int	syntax_check(t_token *lst, t_tools *t)
 		if (tk->type == PIPE)
 			t->totalp += 1;
 		if (is_invalid_pipe(tk) || is_invalid_redirection(tk))
-			return (EXIT_FAILURE);
+		{
+			t->exit_status = 2;
+			return (t->exit_status);
+		}
 		tk = tk->next;
 	}
 	return (EXIT_SUCCESS);
@@ -37,7 +40,7 @@ int	syntax_check(t_token *lst, t_tools *t)
 
 static int	is_invalid_pipe(t_token *tk)
 {
-	if (tk->type == PIPE && (!tk->prev || !tk->next))
+	if (tk->type == PIPE && !tk->next)
 	{
 		syntax_error("|");
 		return (1);
@@ -51,7 +54,7 @@ static int	is_invalid_redirection(t_token *tk)
 
 	if (tk->prev)
 		prev = tk->prev;
-	if (tk->type == APPEND || tk->type == INPUT || tk->type == OUTPUT)
+	if (tk->type == APPEND || tk->type == INPUT || tk->type == OUTPUT || tk->type == R_HEREDOC)
 	{
 		if (!tk->next)
 		{

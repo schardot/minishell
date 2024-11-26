@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/22 17:08:10 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 12:11:07 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 		}
 	}
 	if (t->exit_status == 1)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	return (EXIT_SUCCESS);
 }
 
@@ -69,7 +69,8 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 	if (!arg[0] || (!ft_isalpha(arg[0]) && arg[0] != '_'))
 	{
 		ft_error(E_NOT_VALID_ID, "export", arg, t);
-		return (EXIT_FAILURE);
+		t->exit_status = 1;
+		return (t->exit_status);
 	}
 	j = 1;
 	while (arg[j] && arg[j] != '=')
@@ -77,7 +78,8 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 		if (!ft_isalnum(arg[j]) && arg[j] != '_')
 		{
 			ft_error(E_NOT_VALID_ID, "export", arg, t);
-			return (EXIT_FAILURE);
+			t->exit_status = 1;
+			return (t->exit_status);
 		}
 		j++;
 	}

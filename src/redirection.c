@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/25 21:14:34 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:40:54 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,27 @@
 
 void restore_stdout(t_scmd *node)
 {
-	if (dup2(node->old_stdout_fd, STDOUT_FILENO) < 0)
+	if (node->old_stdin_fd >= 0)
 	{
-		perror("Failed to restore STDOUT");
+		if (dup2(node->old_stdin_fd, STDIN_FILENO) < 0)
+		{
+			perror("Failed to restore stdin");
+			exit(EXIT_FAILURE);
+		}
+		// close(node->old_stdin_fd);
+		// node->old_stdin_fd = -1; // Reset to avoid accidental reuse
 	}
-	if (dup2(node->old_stdin_fd, STDIN_FILENO) < 0)
+
+	if (node->old_stdout_fd >= 0)
 	{
-		perror("Failed to restore STDIN");
+		if (dup2(node->old_stdout_fd, STDOUT_FILENO) < 0)
+		{
+			perror("Failed to restore stdout");
+			exit(EXIT_FAILURE);
+		}
+		// close(node->old_stdout_fd);
+		// node->old_stdout_fd = -1; // Reset to avoid accidental reuse
 	}
-	// if (node->old_stdout_fd >= 0)
-	// 	close(node->old_stdout_fd);
-	// if (node->old_stdin_fd >= 0)
-	// 	close(node->old_stdin_fd);
 }
 
 int process_redirections(t_token *t, t_scmd *scmd)

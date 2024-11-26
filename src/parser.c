@@ -22,21 +22,21 @@ int	parser(char *input, t_tools *t)
 	// t_parser	*parser;
 
 	if (initial_quote_check(input))
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	t->parser = init_parser(input);
 	if (!t->parser)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	t->tk = split_arguments(t->parser, t);
 	if (!t->tk)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	if (syntax_check(t->tk, t))
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	t->scmd = simple_command(t->tk);
 	if (!t->scmd)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	check_exec_command(t, t->scmd);
-	//free_structs(t);
-	return (EXIT_SUCCESS);
+	//free_structs(scmd, lst, parser);
+	return (t->exit_status);
 }
 
 t_parser	*init_parser(char *input)

@@ -60,8 +60,6 @@ typedef struct s_scmd
 	int				old_stdout_fd;
 	int				new_fd;
 	int				pipecount;
-	int				fd_in;
-	int				fd_out;
 	int				redirect_fd_in;
 	int				redirect_fd_out;
 	int				pipetotal;
