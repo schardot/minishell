@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:56:18 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/26 13:05:58 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,21 @@ int	parser(char *input, t_tools *t)
 	t_parser	*parser;
 
 	if (initial_quote_check(input))
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	parser = init_parser(input);
 	if (!parser)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	lst = split_arguments(parser, t);
 	if (!lst)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	if (syntax_check(lst, t))
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	scmd = simple_command(lst);
 	if (!scmd)
-		return (EXIT_FAILURE);
+		return (t->exit_status);
 	check_exec_command(t, scmd);
 	free_structs(scmd, lst, parser);
-	return (EXIT_SUCCESS);
+	return (t->exit_status);
 }
 
 t_parser	*init_parser(char *input)

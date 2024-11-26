@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 19:08:49 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 14:21:12 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ int	main(int argc, char **argv, char **envp)
 	while (t->exit == 0)
 	{
 		t->totalp = 0;
+		//reset what needs to be reset
+		t->exit_status = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
 	}
 	exit = free_tools(t);
 	clear_history();
+	printf("Exit status %d\n",t->exit_status);
 	return (exit);
 }
 

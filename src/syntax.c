@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 12:15:23 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:58:11 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	syntax_check(t_token *lst, t_tools *t)
 
 static int	is_invalid_pipe(t_token *tk)
 {
-	if (tk->type == PIPE && (!tk->prev || !tk->next))
+	if (tk->type == PIPE && !tk->next)
 	{
 		syntax_error("|");
 		return (1);
@@ -59,7 +59,7 @@ static int	is_invalid_redirection(t_token *tk)
 		if (!tk->next)
 		{
 			syntax_error("newline");
-			return (2);
+			return (1);
 		}
 	}
 	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT))
@@ -67,7 +67,7 @@ static int	is_invalid_redirection(t_token *tk)
 		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE)
 		{
 			syntax_error(&tk->value[0]);
-			return (2);
+			return (1);
 		}
 	}
 	return (0);
