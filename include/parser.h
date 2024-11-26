@@ -37,6 +37,7 @@ typedef struct s_parser
 {
 	bool			sq;
 	bool			dq;
+	char			q;
 	char            *arg;
 	char            *expanded;
 	char		    *input;
