@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 19:11:06 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:15:42 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	is_invalid_redirection(t_token *tk)
 
 	if (tk->prev)
 		prev = tk->prev;
-	if (tk->type == APPEND || tk->type == INPUT || tk->type == OUTPUT)
+	if (tk->type == APPEND || tk->type == INPUT || tk->type == OUTPUT || tk->type == R_HEREDOC)
 	{
 		if (!tk->next)
 		{
@@ -59,9 +59,9 @@ static int	is_invalid_redirection(t_token *tk)
 			return (1);
 		}
 	}
-	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT))
+	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT || tk->type == R_HEREDOC))
 	{
-		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE)
+		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE && tk->type != H_DEL)
 		{
 			syntax_error(&tk->value[0]);
 			return (1);

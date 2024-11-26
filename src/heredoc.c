@@ -162,15 +162,7 @@ int	handle_HEREDOC_redirection(t_scmd *node)
         free(filename);
         return result;
     }
-	if (node->redirect_fd_in >= 0)
-	{
-		if (dup2(node->redirect_fd_in, STDIN_FILENO) < 0)
-		{
-			perror("Failed to redirect stdin for builtin");
-			exit(EXIT_FAILURE);
-		}
-		close(node->redirect_fd_in);
-	}
+	unlink(filename);
 	free(filename);
 	return result;
 }

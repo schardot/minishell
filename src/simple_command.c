@@ -63,8 +63,6 @@ t_scmd	*scmd_new(void)
     scmd->redirect_file_name = NULL;
 	scmd->old_stdout_fd = 0;
 	scmd->old_stdin_fd = 0;
-	scmd->fd_in = STDIN_FILENO;
-	scmd->fd_out = STDOUT_FILENO;
 	scmd->redirect_fd_out = -1;
 	scmd->redirect_fd_in = -1;
 	scmd->new_fd = 0;
