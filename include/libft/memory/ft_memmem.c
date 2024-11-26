@@ -3,32 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmem.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/31 12:47:48 by codespace         #+#    #+#             */
-/*   Updated: 2024/10/31 12:47:49 by codespace        ###   ########.fr       */
+/*   Created: 2024/11/25 08:33:26 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/11/25 08:33:27 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-void	*ft_memmem(const void* big, size_t big_len, const void* little, size_t little_len)
+void	*ft_memmem(void *big, size_t blen, void *lil, size_t lillen)
 {
-	const char	*h;
-	const char	*n;
-	size_t		i;
+	char	*h;
+	char	*n;
+	size_t	i;
 
-	if (little_len == 0)
+	if (lillen == 0)
 		return ((void *)big);
-	if (little_len > big_len)
+	if (lillen > blen)
 		return (NULL);
 	h = (const char *)big;
-	n = (const char *)little;
+	n = (const char *)lil;
 	i = 0;
-	while (i <= big_len - little_len)
+	while (i <= blen - lillen)
 	{
-		if (h[i] == n[0] && !ft_memcmp(h + i, n, little_len))
-			return (void *)(h + i);
+		if (h[i] == n[0] && !ft_memcmp(h + i, n, lillen))
+			return ((void *)(h + i));
 		i ++;
 	}
 	return (NULL);

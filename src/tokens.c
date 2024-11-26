@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 15:51:17 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/25 14:46:14 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -23,6 +23,7 @@ t_token	*tokenlist_new(char *token, t_tools *t, t_parser *p)
 	tk->sq = p->sq;
 	tk->dq = p->dq;
 	tk->value = ft_strdup(token);
+	tk->type = NO_TYPE;
 	if (tk->value == NULL)
 	{
 		free(tk);
@@ -30,7 +31,6 @@ t_token	*tokenlist_new(char *token, t_tools *t, t_parser *p)
 	}
 	tk->prev = NULL;
 	tk->next = NULL;
-	assign_token_type(tk, t);
 	return (tk);
 }
 
@@ -69,7 +69,7 @@ void	assign_token_type(t_token *tk, t_tools *t)
 		tk->type = APPEND;
 	else if (strcmp(tk->value, "<<") == 0 && !tk->dq && !tk->sq)
 		tk->type = R_HEREDOC;
-	else if (tk->prev == NULL && \
+	else if ((tk->prev == NULL || tk->prev->type == PIPE) && \
 	(is_builtin(tk->value) || is_executable(tk->value, t)))
 		tk->type = COMMAND;
 	else
@@ -80,9 +80,9 @@ void	assign_token_files(t_token *tk)
 {
 	t_token	*prev;
 
-	if (!tk->prev)
-		tk->type = ARGUMENT;
-	else if (tk->prev)
+	// if (!tk->prev)
+	// 	tk->type = ARGUMENT;
+	if (tk->prev)
 		prev = tk->prev;
 	if (prev->type == OUTPUT)
 		tk->type = O_FILE;
@@ -105,6 +105,7 @@ t_parser	*append_token(t_parser *p, t_tools *t)
 		p->tk_lst = new;
 	else
 		tokenlist_addback(&p->tk_lst, new);
+	free (p->arg);
 	p->arg = NULL;
 	p->sq = false;
 	p->dq = false;

@@ -1,34 +1,43 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:39:49 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:39:50 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/25 14:01:21 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-void	free_structs(t_scmd *s, t_token *lst, t_parser *p)
+void	free_structs(t_tools *t)
 {
-	free_parser(p);
-	free_token(lst);
-	free_scmd(s);
+	if (t->parser)
+		free_parser(t->parser);
+	if (t->tk)
+		free_token(t->tk);
+	if (t->scmd)
+		free_scmd(t->scmd);
+	if (t->e)
+		free (t->e);
+	t->parser = NULL;
+	t->tk = NULL;
+	t->scmd = NULL;
+	t->e = NULL;
 }
 
 void	free_parser(t_parser *p)
 {
-	if (p->input)
+	if (p && p->input)
 		free (p->input);
-	if (p->arg)
+	if (p && p->arg)
 		free (p->arg);
-	if (p->expanded)
+	if (p && p->expanded)
 		free (p->expanded);
 	free (p);
 }

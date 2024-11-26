@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/12 19:23:45 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/19 09:57:33 by nataliascha      ###   ########.fr       */
+/*   Created: 2024/11/25 08:33:53 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/11/25 08:33:54 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char		*ft_strtrim(char const *s1, char const *set);
 char		**ft_split(char const *s, char c);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char *));
-int		ft_checkstr(char *s, int (*f)(int));
+int			ft_checkstr(char *s, int (*f)(int));
 
 /* ------------------------------------------------------------------------- */
 /*                           Memory Manipulation                             */
@@ -72,7 +72,7 @@ int			ft_memcmp(const void *s1, const void *s2, size_t n);
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t count, size_t size);
 void		*ft_realloc(void *ptr, int old_size, int new_size);
-void		*ft_memmem(const void* big, size_t big_len, const void* little, size_t little_len);
+void		*ft_memmem(void *b, size_t blen, void *l, size_t lillen);
 
 /* ------------------------------------------------------------------------- */
 /*                             Number Conversion                             */
@@ -88,7 +88,7 @@ void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *s, int fd);
 void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
-void        ft_fprintf(int fd, const char *format, ...);
+void		ft_fprintf(int fd, const char *format, ...);
 
 /* ------------------------------------------------------------------------- */
 /*                           Linked List Manipulation                        */

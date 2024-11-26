@@ -18,22 +18,44 @@ t_exec *init_t_exec(void)
 	return (e);
 }
 
+void handle_one(t_scmd *scmd)
+{
+	if (scmd->redirect_fd_in >= 0)
+	{
+		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
+		{
+			perror("Failed to redirect stdin for builtin");
+			exit(EXIT_FAILURE);
+		}
+		close(scmd->redirect_fd_in);
+	}
+
+	if (scmd->redirect_fd_out >= 0)
+	{
+		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
+		{
+			perror("Failed to redirect stdout for builtin");
+			exit(EXIT_FAILURE);
+		}
+		close(scmd->redirect_fd_out);
+	}
+}
+
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	t_exec	*e;
 	int		result;
 	struct sigaction sa_int, sa_quit;
 	t_scmd	*scmd_backup;
 
 	init_signal_handlers(&sa_int, &sa_quit);
-	e = init_t_exec();
+	t->e = init_t_exec();
 	scmd_backup = scmd;
 	while (scmd)
 	{
 		if (scmd->R_HEREDOC_delimiter)
 		{
 			switch_signal_handlers(&sa_int, &sa_quit, true, false);
-			if (handle_HEREDOC_redirection(scmd) < 0)
+			if (handle_HEREDOC_redirection(t->scmd) < 0)
 				return (t->exit_status);
 		}
 		scmd = scmd->next;
@@ -41,21 +63,25 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	scmd = scmd_backup;
 	while (scmd)
 	{
-		e->has_next = scmd->next != NULL;
-		if (create_pipe_if_needed(t, e->has_next, scmd) == -1)
+		t->e->has_next = t->scmd->next != NULL;
+		if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
 			return (EXIT_FAILURE);
-		if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
+		printf("pipe: %i\n", t->scmd->pipecount);
+		if (t->scmd->builtin && t->totalp == 0)
 		{
-			t->exit_status = scmd->builtin(t, scmd);
+			handle_one(t->scmd);
+			t->exit_status = t->scmd->builtin(t, t->scmd);
+			restore_stdout(t->scmd);
 			return (t->exit_status);
 		}
 		switch_signal_handlers(&sa_int, &sa_quit, true, true);
-		e->pid = fork();
-		after_fork(t, scmd, e);
-		scmd = scmd->next;
+		t->e->pid = fork();
+		after_fork(t, t->scmd, t->e);
+		t->scmd = t->scmd->next;
 	}
-	result = wait_for_pids(e->pids, e->n, t);
+	result = wait_for_pids(t->e->pids, t->e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
+	free(t->e);
 	return (result);
 }
 
@@ -126,6 +152,7 @@ char	*is_executable(char *cmd, t_tools *t)
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
+	free (path_env);
 	if (paths == NULL)
 		return (NULL);
 	full_path = create_full_path(paths, cmd);
@@ -134,18 +161,18 @@ char	*is_executable(char *cmd, t_tools *t)
 
 int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 {
-	if (e->pid == 0)
+	if (t->e->pid == 0)
 	{
 		execute_child_process(t, scmd, e->prev_fd, e->has_next);
 		exit(t->exit_status);
 	}
-	else if (e->pid < 0)
+	else if (t->e->pid < 0)
 	{
 		perror("fork");
 		return (EXIT_FAILURE);
 	}
 	else
-		e->pids[e->n++] = e->pid;
-	close_unused_pipes(&e->prev_fd, t, e->has_next);
+		t->e->pids[e->n++] = t->e->pid;
+	close_unused_pipes(&t->e->prev_fd, t, t->e->has_next);
 	return (0);
 }

@@ -10,13 +10,14 @@ t_scmd	*simple_command(t_token *t)
 	s = scmd_new();
 	while (t)
 	{
+		if (t->type == H_DEL)
+			s->R_HEREDOC_delimiter = t->value;
 		handle_type(t, s, next_command);
 		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
 		{
-			printf("it is here in scmd\n");
-			printf("append :%u\n", t->type);
-			process_redirections(t);
-			t = t->next;
+			if(process_redirections(t, s) != 0)
+				return NULL;
+			//t = t->next;
 		}
 		t = t->next;
 	}
@@ -34,9 +35,11 @@ void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command)
 	}
 	else if (t->type == PIPE)
 	{
+		s->pipetotal++;
 		next_command = simple_command(t->next);
 		s->next = next_command;
-		s->pipecount ++;
+		s->pipecount = s->pipetotal;
+
 		if (next_command)
 			t->next = NULL;
 	}
@@ -63,10 +66,13 @@ t_scmd	*scmd_new(void)
     scmd->redirect_file_name = NULL;
 	scmd->old_stdout_fd = 0;
 	scmd->old_stdin_fd = 0;
+	scmd->redirect_fd_out = -1;
+	scmd->redirect_fd_in = -1;
 	scmd->new_fd = 0;
 	scmd->next = NULL;
 	scmd->prev = NULL;
 	scmd->pipecount = 0;
+	scmd->pipetotal = 0;
 	return (scmd);
 }
 
