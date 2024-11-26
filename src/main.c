@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 15:59:20 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/11/26 14:54:51 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../include/parser.h"
 
 int	free_tools(t_tools *t);
+void	reset_structs(t_tools *t);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -36,8 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	setup_signal_handling(&sa_int, &sa_quit);
 	while (t->exit == 0)
 	{
-		t->totalp = 0;
-		//reset what needs to be reset
+		reset_structs(t);
 		t->exit_status = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
@@ -48,6 +48,17 @@ int	main(int argc, char **argv, char **envp)
 	printf("Exit status %d\n",t->exit_status);
 	return (exit);
 }
+
+void	reset_structs(t_tools *t)
+{
+	t->totalp = 0;
+	if (t->parser)
+	{
+		t->parser->sq = false;
+		t->parser->dq = false;
+	}
+}
+
 
 int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
