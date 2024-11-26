@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 10:15:42 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:28:38 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ static int	is_invalid_redirection(t_token *tk)
 			return (1);
 		}
 	}
-	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT || tk->type == R_HEREDOC))
+	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT))
 	{
-		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE && tk->type != H_DEL)
+		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE)
 		{
 			syntax_error(&tk->value[0]);
 			return (1);

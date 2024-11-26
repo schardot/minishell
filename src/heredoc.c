@@ -1,9 +1,9 @@
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
-//#include <asm-generic/signal-defs.h>
+// #include <asm-generic/signal-defs.h>
 
-//static volatile sig_atomic_t g_signal_received = 0;
+// static volatile sig_atomic_t g_signal_received = 0;
 
 int create_heredoc_temp_file(char **filename)
 {
@@ -30,12 +30,13 @@ void heredoc_sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+	fprintf(stderr, "Heredoc process interrupted\n");
 	exit(130);
 }
 
-int	write_heredoc_input(int fd, char *delimiter)
+int write_heredoc_input(int fd, char *delimiter)
 {
-	char	*buf;
+	char *buf;
 
 	while (1)
 	{
@@ -70,7 +71,7 @@ int handle_heredoc_child(char *delimiter, char *filename)
 		return -1;
 	}
 	signal(SIGINT, heredoc_sigint_handler);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	int result = write_heredoc_input(fd, delimiter);
 	close(fd);
 	return result;
@@ -80,7 +81,7 @@ int wait_for_heredoc_process(pid_t pid, char *filename)
 {
 	int status;
 
-	while (waitpid(pid, &status, 0) == -1 && errno == EINTR)
+		while (waitpid(pid, &status, 0) == -1 && errno == EINTR)
 		continue;
 	if (WIFSIGNALED(status))
 	{
@@ -97,32 +98,32 @@ int wait_for_heredoc_process(pid_t pid, char *filename)
 	return 0;
 }
 
-int	redirect_heredoc_input(char *filename)
+// int	redirect_heredoc_input(char *filename)
+// {
+// 	int	fd;
+
+// 	fd = open(filename, O_RDONLY);
+// 	if (fd < 0)
+// 	{
+// 		perror("opaaopen");
+// 		return -1;
+// 	}
+// 	if (dup2(fd, STDIN_FILENO) < 0)
+// 	{
+// 		perror("dup2");
+// 		close(fd);
+// 		return -1;
+// 	}
+// 	close(fd);
+// 	return 0;
+// }
+
+
+int handle_HEREDOC_redirection(t_scmd *node)
 {
-	int	fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror("opaaopen");
-		return -1;
-	}
-	if (dup2(fd, STDIN_FILENO) < 0)
-	{
-		perror("dup2");
-		close(fd);
-		return -1;
-	}
-	close(fd);
-	return 0;
-}
-
-
-int	handle_HEREDOC_redirection(t_scmd *node)
-{
-	char	*delimiter;
-	char	*filename;
-	pid_t	pid;
+	char *delimiter;
+	char *filename;
+	pid_t pid;
 
 	delimiter = node->R_HEREDOC_delimiter;
 	filename = NULL;
@@ -148,21 +149,26 @@ int	handle_HEREDOC_redirection(t_scmd *node)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &sa, NULL);
 	//  sa.sa_handler = SIG_DFL;
-    // sigaction(SIGQUIT, &sa, NULL);
+	// sigaction(SIGQUIT, &sa, NULL);
 	int result = wait_for_heredoc_process(pid, filename);
-
 	sigaction(SIGINT, &sa, NULL);
 	if (result < 0)
 	{
 		free(filename);
 		return -1;
 	}
-	 if (result == 130 || result < 0)
-    {
-        free(filename);
-        return result;
-    }
-	unlink(filename);
-	free(filename);
+	if (result == 130 || result < 0)
+	{
+		free(filename);
+		return result;
+	}
+	node->hd_file_name = filename; // Save for cleanup later
+	node->redirect_fd_in = open(filename, O_RDONLY);
+	if (node->redirect_fd_in < 0)
+	{
+		perror("open");
+		free(filename);
+		return -1;
+	}
 	return result;
 }
