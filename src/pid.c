@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pid.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:48 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 17:02:06 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/28 19:52:48 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ int wait_for_pids(pid_t *pids, int count, t_tools *t)
 			last_exit = 128 + WTERMSIG(status);
 		i ++;
 	}
-	t->exit_status = last_exit;
+	//printf("what is here%d\n",t->exit_status);
+	if(last_exit)
+		t->exit_status = last_exit;
+	//printf("whatt is here%d\n",t->exit_status);
 	return (t->exit_status);
 }

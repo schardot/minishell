@@ -6,22 +6,22 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 16:29:11 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/28 19:09:08 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-int	free_tools(t_tools *t);
-void	reset_structs(t_tools *t);
+int free_tools(t_tools *t);
+void reset_structs(t_tools *t);
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	t_tools				*t;
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-	int					exit;
+	t_tools *t;
+	struct sigaction sa_int;
+	struct sigaction sa_quit;
+	int exit;
 
 	if (argc != 1 || argv[1])
 	{
@@ -38,9 +38,9 @@ int	main(int argc, char **argv, char **envp)
 	while (t->exit == 0)
 	{
 		reset_structs(t);
-		//t->exit_status = 0;
+		// t->exit_status = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
-			break ;
+			break;
 		free_structs(t);
 	}
 	exit = free_tools(t);
@@ -49,7 +49,7 @@ int	main(int argc, char **argv, char **envp)
 	return (exit);
 }
 
-void	reset_structs(t_tools *t)
+void reset_structs(t_tools *t)
 {
 	t->totalp = 0;
 	if (t->parser)
@@ -59,10 +59,9 @@ void	reset_structs(t_tools *t)
 	}
 }
 
-
-int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
+int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
-	char	*input;
+	char *input;
 
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
 	if (!input)
@@ -75,13 +74,13 @@ int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 		add_history(input);
 		parser(input, t);
 	}
-	free (input);
+	free(input);
 	return (EXIT_SUCCESS);
 }
 
-t_tools	*init_t_tools(char **envp)
+t_tools *init_t_tools(char **envp)
 {
-	t_tools	*t;
+	t_tools *t;
 
 	t = malloc(sizeof(t_tools));
 	if (!t)
@@ -89,7 +88,7 @@ t_tools	*init_t_tools(char **envp)
 	t->envp = ft_matrixdup(envp, ft_str2dlen(envp));
 	if (!t->envp)
 	{
-		free (t);
+		free(t);
 		return (NULL);
 	}
 	t->pipefd[0] = -1;
@@ -104,9 +103,9 @@ t_tools	*init_t_tools(char **envp)
 	return (t);
 }
 
-int	free_tools(t_tools *t)
+int free_tools(t_tools *t)
 {
-	int	exit;
+	int exit;
 
 	exit = t->exit_status;
 	free_structs(t);

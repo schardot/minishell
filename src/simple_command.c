@@ -17,8 +17,8 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 		handle_type(t, tk, s, next_command);
 		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC)
 		{
-			if (process_redirections(t, tk, s) != 0)
-				return NULL;
+			if (!s->skip_exec && process_redirections(t, tk, s) != 0)
+				s->skip_exec = 1;
 		}
 		tk = tk->next;
 	}
@@ -71,6 +71,7 @@ t_scmd	*scmd_new(void)
 	scmd->prev = NULL;
 	scmd->pipecount = 0;
 	scmd->pipetotal = 0;
+	scmd->skip_exec = 0;
 	return (scmd);
 }
 

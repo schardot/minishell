@@ -62,6 +62,7 @@ typedef struct s_scmd
 	int				pipecount;
 	int				redirect_fd_in;
 	int				redirect_fd_out;
+	int				skip_exec;
 	int				pipetotal;
 	struct s_scmd	*next;
 	struct s_scmd	*prev;
