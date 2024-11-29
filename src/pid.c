@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:48 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/28 19:52:48 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/29 10:45:15 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 
 int wait_for_pids(pid_t *pids, int count, t_tools *t)
 {
-	int	status;
-	int	last_exit;
-	int	i;
+	int status;
+	int last_exit;
+	int i;
 
 	i = 0;
 	last_exit = 0;
+
 	while (i < count)
 	{
 		if (waitpid(pids[i], &status, 0) == -1)
@@ -29,15 +30,15 @@ int wait_for_pids(pid_t *pids, int count, t_tools *t)
 			perror("waitpid");
 			return EXIT_FAILURE;
 		}
-		if (WIFEXITED(status))
-			last_exit = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			last_exit = 128 + WTERMSIG(status);
-		i ++;
+		else if (WIFEXITED(status))
+				last_exit = WEXITSTATUS(status);
+		else if (WTERMSIG(status) == SIGINT)
+				last_exit = 130;
+		else if (WTERMSIG(status) == SIGQUIT)
+				last_exit = 131;
+		else
+				last_exit = 1;
+		i++;
 	}
-	//printf("what is here%d\n",t->exit_status);
-	if(last_exit)
-		t->exit_status = last_exit;
-	//printf("whatt is here%d\n",t->exit_status);
-	return (t->exit_status);
+	return (last_exit);
 }

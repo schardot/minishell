@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/22 16:37:58 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/29 12:40:20 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,12 @@ static void	update_exit(t_error ty, t_tools *t)
 		t->exit_status = 127;
 	else if (ty == E_SYNTAX_ERROR || ty == E_NUM_ARG_REQUIRED)
 		t->exit_status = 2;
-	else if (ty == E_NOT_VALID_ID || ty == E_NOT_A_DIR || ty == E_NO_SUCH_F)
+	else if (ty == E_NOT_VALID_ID || ty == E_NO_SUCH_F)
 		t->exit_status = 127;
 	else if (ty == E_TOO_MANY_ARGS || ty == E_PERMISSION_DENIED)
 		t->exit_status = 1;
+	else if (ty == E_NOT_A_DIR )
+		t->exit_status = 126;
 	else
 		t->exit_status = 0;
 }
@@ -56,7 +58,7 @@ static char	**make_error_str(void)
 	static char	*err[12];
 
 	err[0] = "No such file or directory";
-	err[1] = "Not a directory";
+	err[1] = "Is a directory";
 	err[2] = "Permission denied";
 	err[3] = "not a valid identifier";
 	err[4] = "numeric argument required";

@@ -60,13 +60,10 @@ void handle_one(t_scmd *scmd)
 
 int check_exec_command(t_tools *t, t_scmd *scmd)
 {
-
 	t_exec *e;
-
 	struct sigaction sa_int, sa_quit;
 	t_scmd *scmd_backup;
-
-
+	int status_set = 0;
 	init_signal_handlers(&sa_int, &sa_quit);
 	t->e = init_t_exec();
 	scmd_backup = t->scmd;
@@ -80,7 +77,6 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		}
 		t->scmd = t->scmd->next;
 	}
-
 	t->scmd = scmd_backup;
 	while (t->scmd)
 	{
@@ -94,6 +90,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			{
 				handle_one(t->scmd);
 				t->exit_status = t->scmd->builtin(t, t->scmd);
+				status_set = 1;
 				restore_stdout(t->scmd);
 				return (t->exit_status);
 			}
@@ -103,11 +100,10 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		}
 		t->scmd = t->scmd->next;
 	}
-	//printf("Maybe here %d\n",t->exit_status);
-	t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
+	if (!status_set && t->e->n > 0)
+		t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
 	switch_signal_handlers(&sa_int, &sa_quit, false, false);
 	//free(t->e);
-	//printf("Exit status %d\n",t->exit_status);
 	return (t->exit_status);
 }
 
@@ -171,6 +167,7 @@ char *is_executable(char *cmd, t_tools *t)
 	char *path_env;
 	char **paths;
 	char *full_path;
+	int	i;
 
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
@@ -190,7 +187,6 @@ int after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 	if (t->e->pid == 0)
 	{
 		execute_child_process(t, scmd, e->prev_fd, e->has_next);
-		//printf("Exit status %d\n",t->exit_status);
 		exit(t->exit_status);
 	}
 	else if (t->e->pid < 0)
@@ -200,7 +196,6 @@ int after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 	}
 	else
 		t->e->pids[e->n++] = t->e->pid;
-	printf("whatt is hereeeee %d\n",t->exit_status);
 	close_unused_pipes(&t->e->prev_fd, t, t->e->has_next);
 	return (t->exit_status);
 }

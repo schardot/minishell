@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/28 17:40:07 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:18:38 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ t_parser	*init_parser(char *input)
 	new->tk_lst = NULL;
 	new->dq = false;
 	new->sq = false;
+	new->q = '\0';
 	return (new);
 }
 
@@ -64,15 +65,13 @@ int	handle_expansions(t_parser *p, int i, t_tools *t)
 {
 	i++;
 	if (p->input[i] == '?')
-		p->arg = ft_itoa(t->exit_status);
+		p->expanded = ft_itoa(t->exit_status);
 	else
-	{
 		p->expanded = expand_the_argument(p->input, &i, i, t);
-		if (p->arg)
+	if (p->arg)
 			p->arg = ft_strjoin(p->arg, p->expanded);
-		else
+	else
 			p->arg = ft_strdup(p->expanded);
-	}
 	i++;
 	return (i);
 }

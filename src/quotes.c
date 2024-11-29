@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 16:56:37 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/11/29 11:05:23 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,19 @@
 
 int	check_quote(int i, t_parser *p, t_tools *t)
 {
-	char	q;
-
-	q = p->input[i];
+	p->q = p->input[i];
 	i ++;
-	while (p->input[i] == q)
+	while (p->input[i] == p->q)
 		i ++;
-	if (q == p->input[i])
+	if (p->q == p->input[i])
 	{
 		p->arg = ft_strdup("");
 		i ++;
 		if (!p->input[i] || ft_strchr(SYMBOL, p->input[i]))
 			return (i);
 	}
-	i = create_quoted_arg(p, i, q, t);
-	if (p->input[i] == q)
+	i = create_quoted_arg(p, i, p->q, t);
+	if (p->input[i] == p->q)
 		i ++;
 	return (i);
 }
@@ -81,7 +79,7 @@ int	create_quoted_arg(t_parser *p, int i, char q, t_tools *t)
 {
 	while (p->input[i] && p->input[i] != q)
 	{
-		if (p->input[i] == '$' && p->input[i + 1] && q == DQ)
+		if (p->input[i] == '$' && p->input[i + 1] && q != SQ && !ft_isspace(p->input[i + 1]) && p->input[i + 1] != p->q)
 			i = handle_expansions(p, i, t);
 		else
 		{
@@ -90,8 +88,8 @@ int	create_quoted_arg(t_parser *p, int i, char q, t_tools *t)
 				p->sq = true;
 			else if (q == DQ)
 				p->dq = true;
+			i++;
 		}
-		i++;
 	}
 	return (i);
 }

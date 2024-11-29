@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/28 19:23:34 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:25:56 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd)
 		if (access(tk->next->value, F_OK) != 0)
 		{
 			ft_fprintf(2, "minishell: %s: No such file or directory\n", tk->next->value);
-			//perror("");
 			t->exit_status = 1;
 			return (t->exit_status);
 		}
@@ -82,8 +81,6 @@ int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd)
 			t->exit_status = 1;
 			return (t->exit_status);
 		}
-		//printf("i oppend the file %i\n", scmd->redirect_fd_out);
 	}
-
 	return t->exit_status;
 }

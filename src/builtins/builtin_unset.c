@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 12:05:27 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:43:46 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ int	builtinunset(t_tools *t, t_scmd *scmd)
 
 	i = 1;
 	if (check_unset_args(scmd, t))
-	{
-		printf("Exit status %d\n",t->exit_status);
 		return (t->exit_status);
-	}
 	while (scmd->args[i])
 	{
 		create_new_envp(scmd->args[i], t);

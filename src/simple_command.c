@@ -18,7 +18,10 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC)
 		{
 			if (!s->skip_exec && process_redirections(t, tk, s) != 0)
+			{
 				s->skip_exec = 1;
+				t->exit_status = 1;
+			}
 		}
 		tk = tk->next;
 	}
