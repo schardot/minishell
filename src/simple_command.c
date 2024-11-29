@@ -15,7 +15,7 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 		if (tk->type == H_DEL)
 			s->R_HEREDOC_delimiter = tk->value;
 		handle_type(t, tk, s, next_command);
-		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC)
+		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC && tk->type != H_DEL)
 		{
 			if (!s->skip_exec && process_redirections(t, tk, s) != 0)
 			{

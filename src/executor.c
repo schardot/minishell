@@ -85,7 +85,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	t->scmd = scmd_backup;
 	while (t->scmd)
 	{
-		if (!t->scmd->skip_exec || !t->scmd->heredoc_failed)
+		if (!t->scmd->skip_exec && !t->scmd->heredoc_failed)
 		{
 			t->e->has_next = t->scmd->next != NULL;
 			if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
