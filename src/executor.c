@@ -69,6 +69,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	scmd_backup = t->scmd;
 	while (t->scmd)
 	{
+		t->scmd->skip_exec = 0;
 		if (t->scmd->R_HEREDOC_delimiter)
 		{
 			switch_signal_handlers(&sa_int, &sa_quit, true, false);
@@ -76,6 +77,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			{
 				unlink(scmd->hd_file_name);
 				t->scmd->skip_exec = 1;
+				return(EXIT_FAILURE);
 			}
 		}
 		t->scmd = t->scmd->next;
