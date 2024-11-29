@@ -65,6 +65,7 @@ typedef struct s_scmd
 	int				redirect_fd_out;
 	int				skip_exec;
 	int				pipetotal;
+	int				heredoc_failed;
 	struct s_scmd	*next;
 	struct s_scmd	*prev;
 } t_scmd;
