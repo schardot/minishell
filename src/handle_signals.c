@@ -5,7 +5,6 @@
 
 void	default_sigint_handler(int signum)
 {
-	//printf("default_sigint_handler\n");
 	if (signum == SIGINT)
 	{
 		ft_putendl_fd("", STDOUT_FILENO);
@@ -14,17 +13,15 @@ void	default_sigint_handler(int signum)
 		rl_redisplay();
 	}
 }
-// Signal handler when a process is running (e.g., for background jobs)
+
 void	process_running_sigint_handler(int signum)
 {
-	//printf("process_running_sigint_handler\n");
 	(void)signum;
 	ft_putendl_fd("", STDOUT_FILENO);
 }
-// Signal handler for SIGQUIT
+
 void	sigquit_handler(int signum)
 {
-	//printf("sigquit_handler\n");
 	ft_putendl_fd("Quit", STDOUT_FILENO);
 	(void)signum;
 }
@@ -45,7 +42,6 @@ void	init_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit)
 }
 void	switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr_int, bool pr_quit)
 {
-	//printf("pr_int: %i, pr_quit: %i\n", pr_int, pr_quit);
 	if (pr_int)
 	{
 		sa_int->sa_handler = process_running_sigint_handler;
@@ -67,7 +63,7 @@ void	switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit,
 		sigaction(SIGQUIT, sa_quit, NULL);
 	}
 }
-// Function to setup signal handling
+
 void	setup_signal_handling(struct sigaction *sa_int, struct sigaction *sa_quit)
 {
 	init_signal_handlers(sa_int, sa_quit);

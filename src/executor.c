@@ -73,7 +73,10 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		{
 			switch_signal_handlers(&sa_int, &sa_quit, true, false);
 			if (handle_HEREDOC_redirection(t->scmd) < 0)
-				return (t->exit_status);
+			{
+				unlink(scmd->hd_file_name);
+				t->scmd->skip_exec = 1;
+			}
 		}
 		t->scmd = t->scmd->next;
 	}

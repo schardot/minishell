@@ -30,7 +30,7 @@ void heredoc_sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	fprintf(stderr, "Heredoc process interrupted\n");
+	fprintf(stderr, "\n");
 	exit(130);
 }
 
@@ -86,6 +86,7 @@ int wait_for_heredoc_process(pid_t pid, char *filename)
 	if (WIFSIGNALED(status))
 	{
 		int signal_code = WTERMSIG(status);
+		
 		unlink(filename);
 		return 128 + signal_code;
 	}
@@ -148,8 +149,6 @@ int handle_HEREDOC_redirection(t_scmd *node)
 	struct sigaction sa;
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &sa, NULL);
-	//  sa.sa_handler = SIG_DFL;
-	// sigaction(SIGQUIT, &sa, NULL);
 	int result = wait_for_heredoc_process(pid, filename);
 	sigaction(SIGINT, &sa, NULL);
 	if (result < 0)
