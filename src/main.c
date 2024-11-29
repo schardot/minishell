@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/29 13:22:46 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:35:58 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int main(int argc, char **argv, char **envp)
 void reset_structs(t_tools *t)
 {
 	t->totalp = 0;
-	if(t->scmd)
-		t->scmd->skip_exec = 0;
+	// if(t->scmd)
+	// 	t->scmd->skip_exec = 0;
 	if (t->parser)
 	{
 		t->parser->sq = false;

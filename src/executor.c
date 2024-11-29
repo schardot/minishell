@@ -69,15 +69,15 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	scmd_backup = t->scmd;
 	while (t->scmd)
 	{
-		t->scmd->skip_exec = 0;
 		if (t->scmd->R_HEREDOC_delimiter)
 		{
+			t->scmd->heredoc_failed = 0;
 			switch_signal_handlers(&sa_int, &sa_quit, true, false);
 			if (handle_HEREDOC_redirection(t->scmd) < 0)
 			{
 				unlink(scmd->hd_file_name);
-				t->scmd->skip_exec = 1;
-				return(EXIT_FAILURE);
+				t->scmd->heredoc_failed = 1;
+				return(t->exit_status);
 			}
 		}
 		t->scmd = t->scmd->next;
@@ -85,7 +85,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	t->scmd = scmd_backup;
 	while (t->scmd)
 	{
-		if (!t->scmd->skip_exec)
+		if (!t->scmd->skip_exec || !t->scmd->heredoc_failed)
 		{
 			t->e->has_next = t->scmd->next != NULL;
 			if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)

@@ -65,6 +65,7 @@ t_scmd	*scmd_new(void)
 	scmd->redirect_token = NULL;
     scmd->R_HEREDOC_delimiter = NULL;
     scmd->redirect_file_name = NULL;
+	scmd->heredoc_failed = 0;
 	scmd->old_stdout_fd = 0;
 	scmd->old_stdin_fd = 0;
 	scmd->redirect_fd_out = -1;
