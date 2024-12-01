@@ -143,7 +143,7 @@ char *create_full_path(char **paths, char *cmd)
 	char *full_path;
 	int i;
 
-	i = 0;
+    i = 0;
 	while (paths[i])
 	{
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
@@ -175,6 +175,8 @@ char *is_executable(char *cmd, t_tools *t)
 	int	i;
     struct stat path_stat;
 
+    // if (ft_strchr(cmd, '/') != NULL)
+    //     return (ft_strdup(cmd));
     if (stat(cmd, &path_stat) == 0)
     {
         if (S_ISDIR(path_stat.st_mode))
