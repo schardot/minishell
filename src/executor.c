@@ -3,9 +3,9 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_exec *init_t_exec(void)
+t_exec	*init_t_exec(void)
 {
-	t_exec *e;
+	t_exec	*e;
 
 	e = malloc(sizeof(t_exec));
 	if (!e)
@@ -19,7 +19,7 @@ t_exec *init_t_exec(void)
 	return (e);
 }
 
-void handle_one(t_scmd *scmd)
+void	handle_one(t_scmd *scmd)
 {
 	scmd->old_stdin_fd = dup(STDIN_FILENO);
 	scmd->old_stdout_fd = dup(STDOUT_FILENO);
@@ -28,7 +28,6 @@ void handle_one(t_scmd *scmd)
 		perror("Failed to save original file descriptors");
 		exit(EXIT_FAILURE);
 	}
-
 	if (scmd->redirect_fd_in >= 0)
 	{
 		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
@@ -45,7 +44,6 @@ void handle_one(t_scmd *scmd)
 			scmd->hd_file_name = NULL;
 		}
 	}
-
 	if (scmd->redirect_fd_out >= 0)
 	{
 		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
@@ -58,13 +56,16 @@ void handle_one(t_scmd *scmd)
 	}
 }
 
-int check_exec_command(t_tools *t, t_scmd *scmd)
+int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	t_exec *e;
-	struct sigaction sa_int, sa_quit;
-	t_scmd *scmd_backup;
-	int status_set = 0;
-	init_signal_handlers(&sa_int, &sa_quit);
+	t_exec				*e;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+	t_scmd				*scmd_backup;
+	int					status_set;
+
+	status_set = 0;
+	init_sig_hand(&sa_int, &sa_quit);
 	t->e = init_t_exec();
 	scmd_backup = t->scmd;
 	while (t->scmd)
@@ -72,12 +73,12 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 		if (t->scmd->R_HEREDOC_delimiter)
 		{
 			t->scmd->heredoc_failed = 0;
-			switch_signal_handlers(&sa_int, &sa_quit, true, false);
-			if (handle_HEREDOC_redirection(t->scmd) < 0)
+			switch_sig_hand(&sa_int, &sa_quit, true, false);
+			if (handle_heredoc_redirection(t->scmd) < 0)
 			{
 				unlink(scmd->hd_file_name);
 				t->scmd->heredoc_failed = 1;
-				return(t->exit_status);
+				return (t->exit_status);
 			}
 		}
 		t->scmd = t->scmd->next;
@@ -90,7 +91,6 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 			t->e->has_next = t->scmd->next != NULL;
 			if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
 				return (EXIT_FAILURE);
-
 			if (t->scmd->builtin && t->totalp == 0)
 			{
 				handle_one(t->scmd);
@@ -99,7 +99,7 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 				restore_stdout(t->scmd);
 				return (t->exit_status);
 			}
-			switch_signal_handlers(&sa_int, &sa_quit, true, true);
+			switch_sig_hand(&sa_int, &sa_quit, true, true);
 			t->e->pid = fork();
 			after_fork(t, t->scmd, t->e);
 		}
@@ -107,16 +107,15 @@ int check_exec_command(t_tools *t, t_scmd *scmd)
 	}
 	if (!status_set && t->e->n > 0)
 		t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
-	switch_signal_handlers(&sa_int, &sa_quit, false, false);
-	//free(t->e);
+	switch_sig_hand(&sa_int, &sa_quit, false, false);
 	return (t->exit_status);
 }
 
-int is_builtin(char *token)
+int	is_builtin(char *token)
 {
-	const char *func[9];
-	int i;
-	size_t len;
+	const char	*func[9];
+	int			i;
+	size_t		len;
 
 	func[0] = "cd";
 	func[1] = "pwd";
@@ -138,12 +137,12 @@ int is_builtin(char *token)
 	return (0);
 }
 
-char *create_full_path(char **paths, char *cmd)
+char	*create_full_path(char **paths, char *cmd)
 {
-	char *full_path;
-	int i;
+	char	*full_path;
+	int		i;
 
-    i = 0;
+	i = 0;
 	while (paths[i])
 	{
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
@@ -167,24 +166,22 @@ char *create_full_path(char **paths, char *cmd)
 	return (NULL);
 }
 
-char *is_executable(char *cmd, t_tools *t)
+char	*is_executable(char *cmd, t_tools *t)
 {
-	char *path_env;
-	char **paths;
-	char *full_path;
-	int	i;
-    struct stat path_stat;
+	char		*path_env;
+	char		**paths;
+	char		*full_path;
+	int			i;
+	struct stat	path_stat;
 
-    // if (ft_strchr(cmd, '/') != NULL)
-    //     return (ft_strdup(cmd));
-    if (stat(cmd, &path_stat) == 0)
-    {
-        if (S_ISDIR(path_stat.st_mode))
-            return (NULL); // It is a directory, not executable
-        if (access(cmd, X_OK) == 0)
-            return (ft_strdup(cmd)); // Return a duplicate of the executable path
-    }
-    path_env = ft_getenv("PATH", t);
+	if (stat(cmd, &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode))
+			return (NULL);
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+	}
+	path_env = ft_getenv("PATH", t);
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
@@ -195,7 +192,7 @@ char *is_executable(char *cmd, t_tools *t)
 	return (full_path);
 }
 
-int after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
+int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 {
 	if (t->e->pid == 0)
 	{

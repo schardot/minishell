@@ -27,9 +27,9 @@ void finalize_parent_process(int *prev_fd, t_tools *t, int has_next);
 void set_redirection(t_scmd *node, t_token *lst);
 void	restore_stdout(t_scmd *node);
 
-int     handle_HEREDOC_redirection(t_scmd *node);
+int     handle_heredoc_redirection(t_scmd *node);
 
 int wait_for_pids(pid_t *pids, int count, t_tools *t);
 void	sigquit_handler(int signum);
-void	switch_signal_handlers(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr_int, bool pr_quit);
+void	switch_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr_int, bool pr_quit);
 #endif

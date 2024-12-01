@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/29 11:18:38 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:08:39 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@
 
 int	parser(char *input, t_tools *t)
 {
-	// t_scmd		*scmd;
-	// t_token		*lst;
-	// t_parser	*parser;
-
 	if (initial_quote_check(input))
 		return (t->exit_status);
 	t->parser = init_parser(input);
@@ -35,7 +31,6 @@ int	parser(char *input, t_tools *t)
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);
-	//free_structs(scmd, lst, parser);
 	return (t->exit_status);
 }
 
@@ -69,9 +64,9 @@ int	handle_expansions(t_parser *p, int i, t_tools *t)
 	else
 		p->expanded = expand_the_argument(p->input, &i, i, t);
 	if (p->arg)
-			p->arg = ft_strjoin(p->arg, p->expanded);
+		p->arg = ft_strjoin(p->arg, p->expanded);
 	else
-			p->arg = ft_strdup(p->expanded);
+		p->arg = ft_strdup(p->expanded);
 	i++;
 	return (i);
 }

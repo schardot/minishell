@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/11/29 12:25:56 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:13:18 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/redirection.h"
 #include "../include/parser.h"
 
-void restore_stdout(t_scmd *node)
+void	restore_stdout(t_scmd *node)
 {
 	if (node->old_stdin_fd >= 0)
 	{
@@ -22,10 +22,7 @@ void restore_stdout(t_scmd *node)
 			perror("Failed to restore stdin");
 			exit(EXIT_FAILURE);
 		}
-		// close(node->old_stdin_fd);
-		// node->old_stdin_fd = -1; // Reset to avoid accidental reuse
 	}
-
 	if (node->old_stdout_fd >= 0)
 	{
 		if (dup2(node->old_stdout_fd, STDOUT_FILENO) < 0)
@@ -33,8 +30,6 @@ void restore_stdout(t_scmd *node)
 			perror("Failed to restore stdout");
 			exit(EXIT_FAILURE);
 		}
-		// close(node->old_stdout_fd);
-		// node->old_stdout_fd = -1; // Reset to avoid accidental reuse
 	}
 }
 
@@ -50,7 +45,7 @@ int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd)
 		}
 		else if (access(tk->next->value, R_OK) != 0)
 		{
-			ft_fprintf(2,"minishell: %s: Permission denied\n", tk->next->value);
+			ft_fprintf(2, "minishell: %s: Permission denied\n", tk->next->value);
 			t->exit_status = 1;
 			return (t->exit_status);
 		}
@@ -82,5 +77,5 @@ int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd)
 			return (t->exit_status);
 		}
 	}
-	return t->exit_status;
+	return (t->exit_status);
 }

@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/29 14:35:58 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:08:01 by nataliascha      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-int free_tools(t_tools *t);
-void reset_structs(t_tools *t);
+int		free_tools(t_tools *t);
+void	reset_structs(t_tools *t);
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_tools *t;
-	struct sigaction sa_int;
-	struct sigaction sa_quit;
-	int exit;
+	t_tools				*t;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+	int					exit;
 
 	if (argc != 1 || argv[1])
 	{
@@ -30,30 +30,23 @@ int main(int argc, char **argv, char **envp)
 	}
 	t = init_t_tools(envp);
 	if (!t)
-	{
-		ft_putstr_fd("Failed to initialize tools\n", 2);
 		return (EXIT_FAILURE);
-	}
-	setup_signal_handling(&sa_int, &sa_quit);
+	setup_sig_hand(&sa_int, &sa_quit);
 	while (t->exit == 0)
 	{
 		reset_structs(t);
-		// t->exit_status = 0;
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
-			break;
+			break ;
 		free_structs(t);
 	}
 	exit = free_tools(t);
 	rl_clear_history();
-	// printf("Exit status %d\n",t->exit_status);
 	return (exit);
 }
 
-void reset_structs(t_tools *t)
+void	reset_structs(t_tools *t)
 {
 	t->totalp = 0;
-	// if(t->scmd)
-	// 	t->scmd->skip_exec = 0;
 	if (t->parser)
 	{
 		t->parser->sq = false;
@@ -61,9 +54,9 @@ void reset_structs(t_tools *t)
 	}
 }
 
-int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
+int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
-	char *input;
+	char	*input;
 
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
 	if (!input)
@@ -80,9 +73,9 @@ int get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 	return (EXIT_SUCCESS);
 }
 
-t_tools *init_t_tools(char **envp)
+t_tools	*init_t_tools(char **envp)
 {
-	t_tools *t;
+	t_tools	*t;
 
 	t = malloc(sizeof(t_tools));
 	if (!t)
@@ -105,9 +98,9 @@ t_tools *init_t_tools(char **envp)
 	return (t);
 }
 
-int free_tools(t_tools *t)
+int	free_tools(t_tools *t)
 {
-	int exit;
+	int	exit;
 
 	exit = t->exit_status;
 	free_structs(t);

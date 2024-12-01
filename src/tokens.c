@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 14:46:14 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:14:31 by nataliascha      ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -80,8 +80,6 @@ void	assign_token_files(t_token *tk)
 {
 	t_token	*prev;
 
-	// if (!tk->prev)
-	// 	tk->type = ARGUMENT;
 	if (tk->prev)
 		prev = tk->prev;
 	if (prev->type == OUTPUT)
