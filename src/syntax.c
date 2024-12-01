@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 15:58:10 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/01 14:28:40 by codespace        ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -25,6 +25,12 @@ int	syntax_check(t_token *lst, t_tools *t)
 	tk = lst;
 	while (tk)
 	{
+        // if (tk && !tk->prev)
+        // {
+        //     if (!tk->value)
+        //         delete node (its the case that the first one is empty, like $EMPTY)
+        //     check type
+        // }
 		assign_token_type(tk, t);
 		if (tk->type == PIPE)
 			t->totalp += 1;

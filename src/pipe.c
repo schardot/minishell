@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/29 12:42:42 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:42:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,35 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 		close(scmd->redirect_fd_out);
 		scmd->redirect_fd_out = -1;
 	}
-	if (scmd->builtin)
+    scmd->exec_path = is_executable(scmd->args[0], t);
+    if (scmd->builtin)
 		t->exit_status = scmd->builtin(t, scmd);
-	else if (is_executable(scmd->args[0], t))
-	{
-		scmd->exec_path = is_executable(scmd->args[0], t);
+    else if (scmd->exec_path)
+    {
 		t->exit_status = execve(scmd->exec_path, scmd->args, t->envp);
-		ft_error(E_NOT_A_DIR, scmd->args[0], NULL, t);
+		//ft_error(E_IS_A_DIR, scmd->args[0], NULL, t);
+        exit (126);
 	}
-	else
-		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-	exit(t->exit_status);
-
+    else
+    {
+        struct stat path_stat;
+        if (stat(scmd->args[0], &path_stat) == 0)
+        {
+            if (S_ISDIR(path_stat.st_mode))
+            {
+                ft_error(E_IS_A_DIR, scmd->args[0], NULL, t);
+                exit(126);
+            }
+            else if (access(scmd->args[0], X_OK) == -1)
+            {
+                ft_error(E_PERMISSION_DENIED, scmd->args[0], NULL, t);
+                exit(126);
+            }
+        }
+        else
+        {
+            ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
+            exit(127);
+        }
+    }
 }

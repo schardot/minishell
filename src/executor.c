@@ -173,10 +173,16 @@ char *is_executable(char *cmd, t_tools *t)
 	char **paths;
 	char *full_path;
 	int	i;
+    struct stat path_stat;
 
-	if (access(cmd, X_OK) == 0)
-		return (ft_strdup(cmd));
-	path_env = ft_getenv("PATH", t);
+    if (stat(cmd, &path_stat) == 0)
+    {
+        if (S_ISDIR(path_stat.st_mode))
+            return (NULL); // It is a directory, not executable
+        if (access(cmd, X_OK) == 0)
+            return (ft_strdup(cmd)); // Return a duplicate of the executable path
+    }
+    path_env = ft_getenv("PATH", t);
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');

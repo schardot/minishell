@@ -12,11 +12,17 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 	s = scmd_new();
 	while (tk)
 	{
-		if (tk->type == H_DEL)
-			s->R_HEREDOC_delimiter = tk->value;
-		handle_type(t, tk, s, next_command);
-		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC && tk->type != H_DEL)
-		{
+        if (tk->type == COMMAND && ft_strlen(tk->value) == 0)
+        {
+            tk->type = NO_TYPE;
+            if (!tk->prev && !tk->next)
+                return (NULL);
+        }
+        if (tk->type == H_DEL)
+            s->R_HEREDOC_delimiter = tk->value;
+        handle_type(t, tk, s, next_command);
+        if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC && tk->type != H_DEL && tk->type != NO_TYPE)
+        {
 			if (!s->skip_exec && process_redirections(t, tk, s) != 0)
 			{
 				s->skip_exec = 1;

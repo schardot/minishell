@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/26 19:42:46 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:12:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	check_cd_errors(char *path, t_scmd *scmd, t_tools *t)
 	}
 	if (stat(path, &path_stat) != 0 || !S_ISDIR(path_stat.st_mode))
 	{
-		ft_error(E_NOT_A_DIR, scmd->args[0], path, t);
+		ft_error(E_IS_A_DIR, scmd->args[0], path, t);
 		return (EXIT_FAILURE);
 	}
 	if (access(path, X_OK) != 0)

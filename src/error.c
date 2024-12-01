@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:24:44 by codespace         #+#    #+#             */
-/*   Updated: 2024/11/29 12:40:20 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:12:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	update_exit(t_error ty, t_tools *t)
 		t->exit_status = 127;
 	else if (ty == E_TOO_MANY_ARGS || ty == E_PERMISSION_DENIED)
 		t->exit_status = 1;
-	else if (ty == E_NOT_A_DIR )
+	else if (ty == E_IS_A_DIR)
 		t->exit_status = 126;
 	else
 		t->exit_status = 0;
