@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/29 11:05:23 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:15:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,21 @@ int	check_quote(int i, t_parser *p, t_tools *t)
 {
 	p->q = p->input[i];
 	i ++;
-	while (p->input[i] == p->q)
-		i ++;
-	if (p->q == p->input[i])
-	{
-		p->arg = ft_strdup("");
-		i ++;
-		if (!p->input[i] || ft_strchr(SYMBOL, p->input[i]))
-			return (i);
-	}
-	i = create_quoted_arg(p, i, p->q, t);
-	if (p->input[i] == p->q)
+    while (p->input[i] && p->input[i] != p->q)
+    {
+        if (p->input[i] == '$' && p->input[i + 1] && p->q != SQ && !ft_isspace(p->input[i + 1]) && p->input[i + 1] != p->q)
+            i = handle_expansions(p, i, t);
+        else
+        {
+            p->arg = append_char(p->arg, p->input[i]);
+            if (p->q == SQ)
+                p->sq = true;
+            else if (p->q == DQ)
+                p->dq = true;
+            i++;
+        }
+    }
+    if (p->input[i] == p->q)
 		i ++;
 	return (i);
 }
@@ -75,21 +79,3 @@ int	initial_quote_check(char *arg)
 	return (0);
 }
 
-int	create_quoted_arg(t_parser *p, int i, char q, t_tools *t)
-{
-	while (p->input[i] && p->input[i] != q)
-	{
-		if (p->input[i] == '$' && p->input[i + 1] && q != SQ && !ft_isspace(p->input[i + 1]) && p->input[i + 1] != p->q)
-			i = handle_expansions(p, i, t);
-		else
-		{
-			p->arg = append_char(p->arg, p->input[i]);
-			if (q == SQ)
-				p->sq = true;
-			else if (q == DQ)
-				p->dq = true;
-			i++;
-		}
-	}
-	return (i);
-}

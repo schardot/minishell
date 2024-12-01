@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 16:44:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/12/01 17:39:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,9 @@ void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
     else if (scmd->exec_path)
     {
 		t->exit_status = execve(scmd->exec_path, scmd->args, t->envp);
-		//ft_error(E_IS_A_DIR, scmd->args[0], NULL, t);
         exit (126);
 	}
-    // else if (!scmd->exec_path)
-    // {
-    //     ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-    // }
+
     else if (!ft_strchr(scmd->args[0], '/'))
     {
         if (!ft_strncmp("README.md", scmd->args[0], 10))
