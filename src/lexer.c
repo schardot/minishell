@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/25 13:24:46 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:30:28 by ekechedz         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -63,6 +63,29 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	return (value);
 }
 
+static int	process_quote_or_expansion(int i, t_parser *p, t_tools *t)
+{
+	char	c;
+
+	c = p->input[i];
+	if (c == DQ || c == SQ)
+		return (check_quote(i, p, t));
+	if (c == '$' && p->input[i + 1])
+		return (handle_expansions(p, i, t));
+	p->arg = append_char(p->arg, c);
+	return (i + 1);
+}
+
+static int	process_symbol(int i, t_parser *p, t_tools *t, char c)
+{
+	if (p->arg)
+		p = append_token(p, t);
+	symbol_check(&i, p, t);
+	if (ft_isspace(c))
+		i++;
+	return (i);
+}
+
 t_token	*split_arguments(t_parser *p, t_tools *t)
 {
 	int		i;
@@ -72,47 +95,12 @@ t_token	*split_arguments(t_parser *p, t_tools *t)
 	while (p->input[i])
 	{
 		c = p->input[i];
-		if (c == DQ || c == SQ)
-			i = check_quote(i, p, t);
-		else if (c == '$' && p->input[i + 1])
-			i = handle_expansions(p, i, t);
-		else if (!ft_strchr(SYMBOL, c))
-		{
-			p->arg = append_char(p->arg, p->input[i]);
-			i ++;
-		}
+		if (c == DQ || c == SQ || c == '$' || !ft_strchr(SYMBOL, c))
+			i = process_quote_or_expansion(i, p, t);
 		else
-		{
-			if (p->arg)
-				p = append_token(p, t);
-			symbol_check(&i, p, t);
-			if (ft_isspace(c))
-				i++;
-		}
+			i = process_symbol(i, p, t, c);
 	}
 	if (p->arg)
 		p = append_token(p, t);
 	return (p->tk_lst);
-}
-
-void	symbol_check(int *i, t_parser *p, t_tools *t)
-{
-	char	c;
-	char	*str;
-	int		j;
-
-	str = p->input;
-	j = *i;
-	c = p->input[j];
-	if (c == '|' || c == '<' || c == '>')
-	{
-		p->arg = append_char(p->arg, str[j]);
-		(*i)++;
-		if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
-		{
-			p->arg = append_char(p->arg, str[j]);
-			(*i)++;
-		}
-		p = append_token(p, t);
-	}
 }

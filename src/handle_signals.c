@@ -1,30 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_signals.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/02 20:16:55 by ekechedz          #+#    #+#             */
+/*   Updated: 2024/12/02 21:29:21 by ekechedz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 #include <asm-generic/signal-defs.h>
-
-void	default_sigint_handler(int signum)
-{
-	if (signum == SIGINT)
-	{
-		ft_putendl_fd("", STDOUT_FILENO);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-void	process_running_sigint_handler(int signum)
-{
-	(void)signum;
-	ft_putendl_fd("", STDOUT_FILENO);
-}
-
-void	sigquit_handler(int signum)
-{
-	ft_putendl_fd("Quit", STDOUT_FILENO);
-	(void)signum;
-}
 
 void	init_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit)
 {
@@ -40,7 +29,8 @@ void	init_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit)
 	sigaction(SIGQUIT, sa_quit, NULL);
 }
 
-void	switch_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit, bool pr_int, bool pr_quit)
+void	switch_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit,
+						bool pr_int, bool pr_quit)
 {
 	if (pr_int)
 	{

@@ -27,7 +27,13 @@ SRC = src/main.c \
 	src/quotes.c \
 	src/error.c \
 	src/cleanup.c \
-	src/syntax.c
+	src/syntax.c \
+	src/utils_execution.c \
+	src/utils_signals.c \
+	src/child_execution.c \
+	src/utils_heredoc.c \
+	src/init.c \
+	src/builtin.c
 OBJ = $(SRC:.c=.o)
 
 READLINE_DIR = $(shell brew --prefix readline 2>/dev/null)

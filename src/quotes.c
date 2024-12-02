@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 19:11:30 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 20:50:53 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	check_quote(int i, t_parser *p, t_tools *t)
 	i ++;
 	while (p->input[i] && p->input[i] != p->q)
 	{
-		if (p->input[i] == '$' && p->input[i + 1] && p->q != SQ && !ft_isspace(p->input[i + 1]) && p->input[i + 1] != p->q)
+		if (p->input[i] == '$' && p->input[i + 1] && p->q != SQ
+			&& !ft_isspace(p->input[i + 1]) && p->input[i + 1] != p->q)
 			i = handle_expansions(p, i, t);
 		else
 		{

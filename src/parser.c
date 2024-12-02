@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 17:56:31 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 20:57:08 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,28 @@
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
+
+void	symbol_check(int *i, t_parser *p, t_tools *t)
+{
+	char	c;
+	char	*str;
+	int		j;
+
+	str = p->input;
+	j = *i;
+	c = p->input[j];
+	if (c == '|' || c == '<' || c == '>')
+	{
+		p->arg = append_char(p->arg, str[j]);
+		(*i)++;
+		if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
+		{
+			p->arg = append_char(p->arg, str[j]);
+			(*i)++;
+		}
+		p = append_token(p, t);
+	}
+}
 
 int	parser(char *input, t_tools *t)
 {

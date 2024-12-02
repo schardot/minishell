@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:01:03 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 17:35:36 by codespace        ###   ########.fr       */
+/*   Updated: 2024/12/02 21:30:56 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,12 @@ static int	is_invalid_pipe(t_token *tk)
 
 static int	is_invalid_redirection(t_token *tk)
 {
-	t_token *prev;
+	t_token	*prev;
 
 	if (tk->prev)
 		prev = tk->prev;
-	if (tk->type == APPEND || tk->type == INPUT || tk->type == OUTPUT || tk->type == R_HEREDOC)
+	if (tk->type == APPEND || tk->type == INPUT
+		|| tk->type == OUTPUT || tk->type == R_HEREDOC)
 	{
 		if (!tk->next)
 		{
@@ -62,7 +63,8 @@ static int	is_invalid_redirection(t_token *tk)
 			return (1);
 		}
 	}
-	if (tk->prev && (prev->type == APPEND || prev->type == INPUT || prev->type == OUTPUT))
+	if (tk->prev && (prev->type == APPEND
+			|| prev->type == INPUT || prev->type == OUTPUT))
 	{
 		if (tk->type != I_FILE && tk->type != O_FILE && tk->type != A_FILE)
 		{
