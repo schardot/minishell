@@ -28,7 +28,7 @@ void	heredoc_sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	ft_fprintf(stderr, "\n");
+	ft_fprintf(2, "\n");
 	exit(130);
 }
 
@@ -108,7 +108,7 @@ int	handle_heredoc_redirection(t_scmd *node)
 	struct sigaction	sa;
 	int					result;
 
-	delimiter = node->R_HEREDOC_delimiter;
+	delimiter = node->r_heredoc_delimiter;
 	filename = NULL;
 	if (create_heredoc_temp_file(&filename) < 0)
 		return (-1);
