@@ -143,5 +143,6 @@ void		symbol_check(int *i, t_parser *p, t_tools *t);
 char		*create_full_path(char **paths, char *cmd);
 void		handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command);
 int			after_fork(t_tools *t, t_scmd *scmd, t_exec *e);
+int			free_tools(t_tools *t);
 
 #endif

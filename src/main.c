@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 19:08:01 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 20:24:08 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -37,7 +37,6 @@ int	main(int argc, char **argv, char **envp)
 		reset_structs(t);
 		if (get_input(t, &sa_int, &sa_quit) == EXIT_FAILURE)
 			break ;
-		free_structs(t);
 	}
 	exit = free_tools(t);
 	rl_clear_history();
@@ -70,6 +69,7 @@ int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 		parser(input, t);
 	}
 	free(input);
+	free_structs(t);
 	return (EXIT_SUCCESS);
 }
 

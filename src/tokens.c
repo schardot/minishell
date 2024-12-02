@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 19:14:31 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 20:04:29 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -81,15 +81,17 @@ void	assign_token_files(t_token *tk)
 	t_token	*prev;
 
 	if (tk->prev)
+	{
 		prev = tk->prev;
-	if (prev->type == OUTPUT)
-		tk->type = O_FILE;
-	else if (prev->type == INPUT)
-		tk->type = I_FILE;
-	else if (prev->type == APPEND)
-		tk->type = A_FILE;
-	else if (prev->type == R_HEREDOC)
-		tk->type = H_DEL;
+		if (prev->type == OUTPUT)
+			tk->type = O_FILE;
+		else if (prev->type == INPUT)
+			tk->type = I_FILE;
+		else if (prev->type == APPEND)
+			tk->type = A_FILE;
+		else if (prev->type == R_HEREDOC)
+			tk->type = H_DEL;
+	}
 	if (!tk->type)
 		tk->type = ARGUMENT;
 }
@@ -103,8 +105,8 @@ t_parser	*append_token(t_parser *p, t_tools *t)
 		p->tk_lst = new;
 	else
 		tokenlist_addback(&p->tk_lst, new);
-	free (p->arg);
-	p->arg = NULL;
+	//free (p->arg);
+	//p->arg = NULL;
 	p->sq = false;
 	p->dq = false;
 	return (p);

@@ -70,7 +70,7 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	scmd_backup = t->scmd;
 	while (t->scmd)
 	{
-		if (t->scmd->R_HEREDOC_delimiter)
+		if (t->scmd->r_heredoc_delimiter)
 		{
 			t->scmd->heredoc_failed = 0;
 			switch_sig_hand(&sa_int, &sa_quit, true, false);
@@ -148,7 +148,7 @@ char	*create_full_path(char **paths, char *cmd)
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 		{
-			ft_free_matrix(paths);
+			//ft_free_matrix(paths);
 			return (NULL);
 		}
 		ft_strlcpy(full_path, paths[i], ft_strlen(paths[i]) + 1);
@@ -156,13 +156,13 @@ char	*create_full_path(char **paths, char *cmd)
 		ft_strlcat(full_path, cmd, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (access(full_path, X_OK) == 0)
 		{
-			ft_free_matrix(paths);
+			//ft_free_matrix(paths);
 			return (full_path);
 		}
-		free(full_path);
+		//free(full_path);
 		i++;
 	}
-	ft_free_matrix(paths);
+	//ft_free_matrix(paths);
 	return (NULL);
 }
 
@@ -185,7 +185,7 @@ char	*is_executable(char *cmd, t_tools *t)
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
-	free(path_env);
+	//free(path_env);
 	if (paths == NULL)
 		return (NULL);
 	full_path = create_full_path(paths, cmd);

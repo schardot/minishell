@@ -22,6 +22,7 @@ char	**ft_arrcat(char **arr, char *str, int len)
 	(len + 2) * sizeof(char *));
 	if (!new)
 	{
+		ft_free_matrix(arr);
 		return (NULL);
 	}
 	new[len] = ft_strdup(str);
