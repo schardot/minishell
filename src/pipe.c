@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 19:10:39 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 16:38:33 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -107,16 +107,12 @@ void	execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
 	}
 	else if (!ft_strchr(scmd->args[0], '/'))
 	{
-		if (!ft_strncmp("README.md", scmd->args[0], 10))
-		{
-			ft_error(E_PERMISSION_DENIED, scmd->args[0], NULL, t);
-			exit(126);
-		}
 		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
 		exit(127);
 	}
 	else
 	{
+
 		if (stat(scmd->args[0], &path_stat) == 0)
 		{
 			if (S_ISDIR(path_stat.st_mode))
