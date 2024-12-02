@@ -1,3 +1,15 @@
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/02 13:44:23 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/02 14:15:47 by nleite-s         ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -14,12 +26,12 @@
 # include <stdlib.h>
 
 # define MAX_INPUT_SIZE 1024
-# define SQ '\''
-# define DQ '"'
+# define SQ ((char)39)
+# define DQ ((char)34)
 # define SYMBOL " |><"
 # define MAX_COMMANDS 256
 
-typedef enum
+typedef enum s_error
 {
 	E_NO_SUCH_F,
 	E_IS_A_DIR,
@@ -30,11 +42,9 @@ typedef enum
 	E_COMMAND_NOT_FOUND,
 	E_HOME_NOT_SET,
 	E_SYNTAX_ERROR,
-    E_INVALID_OPTION,
-	E_UNKNOWN_ERROR // Optional: for catching unhandled errors
-} t_error;
-
-// static int interupted_flag = 0;
+	E_INVALID_OPTION,
+	E_UNKNOWN_ERROR
+}	t_error;
 
 int		get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit);
 t_tools	*init_t_tools(char **envp);
@@ -44,6 +54,6 @@ void	switch_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit, bool p
 void	init_sig_hand(struct sigaction *sa_int, struct sigaction *sa_quit);
 void	ft_error(t_error type, char *cmd, char *inv_arg, t_tools *t);
 void	restore_stdin(int saved_stdin);
-int     is_directory(const char *path);
+int		is_directory(const char *path);
 
 #endif
