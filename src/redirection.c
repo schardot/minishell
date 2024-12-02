@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:03:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/01 19:13:18 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 18:53:23 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd)
 {
 	if (tk->type == INPUT)
 	{
-		if (access(tk->next->value, F_OK) != 0)
+		if (access(tk->next->value, F_OK) == -1)
 		{
 			ft_fprintf(2, "minishell: %s: No such file or directory\n", tk->next->value);
 			t->exit_status = 1;
@@ -77,5 +77,5 @@ int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd)
 			return (t->exit_status);
 		}
 	}
-	return (t->exit_status);
+	return (0);
 }

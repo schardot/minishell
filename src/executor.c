@@ -3,9 +3,9 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_exec	*init_t_exec(void)
+t_exec *init_t_exec(void)
 {
-	t_exec	*e;
+	t_exec *e;
 
 	e = malloc(sizeof(t_exec));
 	if (!e)
@@ -19,7 +19,7 @@ t_exec	*init_t_exec(void)
 	return (e);
 }
 
-void	handle_one(t_scmd *scmd)
+void handle_one(t_scmd *scmd)
 {
 	scmd->old_stdin_fd = dup(STDIN_FILENO);
 	scmd->old_stdout_fd = dup(STDOUT_FILENO);
@@ -56,54 +56,42 @@ void	handle_one(t_scmd *scmd)
 	}
 }
 
-int	check_exec_command(t_tools *t, t_scmd *scmd)
+
+
+int check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	t_exec				*e;
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-	t_scmd				*scmd_backup;
-	int					status_set;
+	t_exec *e;
+	struct sigaction sa_int;
+	struct sigaction sa_quit;
+	t_scmd *scmd_backup;
+	int status_set;
 
 	status_set = 0;
 	init_sig_hand(&sa_int, &sa_quit);
 	t->e = init_t_exec();
-	scmd_backup = t->scmd;
-	while (t->scmd)
+	while (scmd)
 	{
-		if (t->scmd->R_HEREDOC_delimiter)
+		t->e->has_next = (scmd->next != NULL);
+		if (create_pipe_if_needed(t, t->e->has_next, scmd) == -1)
+			return (EXIT_FAILURE);
+		if (!scmd->skip_exec && !scmd->heredoc_failed)
 		{
-			t->scmd->heredoc_failed = 0;
-			switch_sig_hand(&sa_int, &sa_quit, true, false);
-			if (handle_heredoc_redirection(t->scmd) < 0)
+			if (scmd->builtin && t->totalp == 0)
 			{
-				unlink(scmd->hd_file_name);
-				t->scmd->heredoc_failed = 1;
-				return (t->exit_status);
-			}
-		}
-		t->scmd = t->scmd->next;
-	}
-	t->scmd = scmd_backup;
-	while (t->scmd)
-	{
-		if (!t->scmd->skip_exec && !t->scmd->heredoc_failed)
-		{
-			t->e->has_next = t->scmd->next != NULL;
-			if (create_pipe_if_needed(t, t->e->has_next, t->scmd) == -1)
-				return (EXIT_FAILURE);
-			if (t->scmd->builtin && t->totalp == 0)
-			{
-				handle_one(t->scmd);
-				t->exit_status = t->scmd->builtin(t, t->scmd);
+				handle_one(scmd);
+				t->exit_status = scmd->builtin(t, scmd);
 				status_set = 1;
-				restore_stdout(t->scmd);
+				restore_stdout(scmd);
 				return (t->exit_status);
 			}
 			switch_sig_hand(&sa_int, &sa_quit, true, true);
 			t->e->pid = fork();
-			after_fork(t, t->scmd, t->e);
+			after_fork(t, scmd, t->e);
 		}
-		t->scmd = t->scmd->next;
+		if(scmd->skip_exec == 1 && scmd->next  == NULL)
+			status_set = 1;
+		scmd = scmd->next;
+
 	}
 	if (!status_set && t->e->n > 0)
 		t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
@@ -111,11 +99,11 @@ int	check_exec_command(t_tools *t, t_scmd *scmd)
 	return (t->exit_status);
 }
 
-int	is_builtin(char *token)
+int is_builtin(char *token)
 {
-	const char	*func[9];
-	int			i;
-	size_t		len;
+	const char *func[9];
+	int i;
+	size_t len;
 
 	func[0] = "cd";
 	func[1] = "pwd";
@@ -137,10 +125,10 @@ int	is_builtin(char *token)
 	return (0);
 }
 
-char	*create_full_path(char **paths, char *cmd)
+char *create_full_path(char **paths, char *cmd)
 {
-	char	*full_path;
-	int		i;
+	char *full_path;
+	int i;
 
 	i = 0;
 	while (paths[i])
@@ -166,13 +154,13 @@ char	*create_full_path(char **paths, char *cmd)
 	return (NULL);
 }
 
-char	*is_executable(char *cmd, t_tools *t)
+char *is_executable(char *cmd, t_tools *t)
 {
-	char		*path_env;
-	char		**paths;
-	char		*full_path;
-	int			i;
-	struct stat	path_stat;
+	char *path_env;
+	char **paths;
+	char *full_path;
+	int i;
+	struct stat path_stat;
 
 	if (stat(cmd, &path_stat) == 0)
 	{
@@ -192,7 +180,7 @@ char	*is_executable(char *cmd, t_tools *t)
 	return (full_path);
 }
 
-int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
+int after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 {
 	if (t->e->pid == 0)
 	{

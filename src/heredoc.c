@@ -28,7 +28,7 @@ void	heredoc_sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	ft_fprintf(stderr, "\n");
+	ft_fprintf(2, "\n");
 	exit(130);
 }
 
@@ -111,7 +111,14 @@ int	handle_heredoc_redirection(t_scmd *node)
 	delimiter = node->R_HEREDOC_delimiter;
 	filename = NULL;
 	if (create_heredoc_temp_file(&filename) < 0)
-		return (-1);
+        return (-1);
+    node->redirect_fd_in = open(filename, O_RDONLY);
+    if (node->redirect_fd_in < 0)
+    {
+        perror("open");
+        free(filename);
+        return (-1);
+    }
 	pid = fork();
 	if (pid < 0)
 	{
@@ -122,7 +129,12 @@ int	handle_heredoc_redirection(t_scmd *node)
 	else if (pid == 0)
 	{
 		if (handle_heredoc_child(delimiter, filename) < 0)
+		{
+			unlink(filename);
 			exit(1);
+
+		}
+		unlink(filename);
 		exit(0);
 	}
 	sa.sa_handler = SIG_IGN;
@@ -140,12 +152,5 @@ int	handle_heredoc_redirection(t_scmd *node)
 		return (result);
 	}
 	node->hd_file_name = filename;
-	node->redirect_fd_in = open(filename, O_RDONLY);
-	if (node->redirect_fd_in < 0)
-	{
-		perror("open");
-		free(filename);
-		return (-1);
-	}
 	return (result);
 }

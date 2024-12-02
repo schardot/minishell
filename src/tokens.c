@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 19:14:31 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 13:50:48 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,7 @@ void	assign_token_type(t_token *tk, t_tools *t)
 		tk->type = APPEND;
 	else if (strcmp(tk->value, "<<") == 0 && !tk->dq && !tk->sq)
 		tk->type = R_HEREDOC;
-	else if ((tk->prev == NULL || tk->prev->type == PIPE) && \
-	(is_builtin(tk->value) || is_executable(tk->value, t)))
+	else if ((tk->prev == NULL || tk->prev->type == PIPE))
 		tk->type = COMMAND;
 	else
 		assign_token_files(tk);

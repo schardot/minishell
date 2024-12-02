@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pid.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:48 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 19:09:40 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 18:37:44 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../include/minishell.h"
 #include "../include/redirection.h"
 
-int	wait_for_pids(pid_t *pids, int count, t_tools *t)
+int wait_for_pids(pid_t *pids, int count, t_tools *t)
 {
 	int	status;
 	int	last_exit;

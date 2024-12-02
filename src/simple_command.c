@@ -2,13 +2,12 @@
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_scmd	*simple_command(t_tools *t, t_token *tk)
+t_scmd *simple_command(t_tools *t, t_token *tk)
 {
-	t_scmd	*s;
-	t_scmd	*next_command;
-	int		redirection_failed;
+	t_scmd *s;
+	t_scmd *next_command;
 
-	redirection_failed = 0;
+	next_command = NULL;
 	s = scmd_new();
 	while (tk)
 	{
@@ -19,8 +18,27 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 				return (NULL);
 		}
 		if (tk->type == H_DEL)
+		{
 			s->R_HEREDOC_delimiter = tk->value;
+			if (handle_heredoc_redirection(s) < 0)
+			{
+				unlink(s->hd_file_name);
+				s->heredoc_failed = 1;
+				t->exit_status  = 1;
+			}
+		}
 		handle_type(t, tk, s, next_command);
+		if (tk->type == PIPE)
+		{
+			s->pipetotal++;
+			next_command = simple_command(t, tk->next);
+			s->next = next_command;
+			s->pipecount = s->pipetotal;
+			if (next_command)
+			{
+            	tk->next = NULL;
+			}
+		}
 		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC && tk->type != H_DEL && tk->type != NO_TYPE)
 		{
 			if (!s->skip_exec && process_redirections(t, tk, s) != 0)
@@ -34,30 +52,20 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 	return (s);
 }
 
-void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
+void handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 {
 	if (tk->type == ARGUMENT || tk->type == COMMAND)
 	{
 		s->args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
-		s->argsc ++;
+		s->argsc++;
 		if (tk->type == COMMAND && is_builtin(s->args[0]))
 			s->builtin = get_builtin_function(s->args[0]);
 	}
-	else if (tk->type == PIPE)
-	{
-		s->pipetotal++;
-		next_command = simple_command(t, tk->next);
-		s->next = next_command;
-		s->pipecount = s->pipetotal;
-
-		if (next_command)
-			tk->next = NULL;
-	}
 }
 
-t_scmd	*scmd_new(void)
+t_scmd *scmd_new(void)
 {
-	t_scmd	*scmd;
+	t_scmd *scmd;
 
 	scmd = malloc(sizeof(t_scmd));
 	if (!scmd)
@@ -85,9 +93,9 @@ t_scmd	*scmd_new(void)
 	return (scmd);
 }
 
-int	(*get_builtin_function(char *command))(t_tools *, t_scmd *)
+int (*get_builtin_function(char *command))(t_tools *, t_scmd *)
 {
-	int	len;
+	int len;
 
 	len = ft_strlen(command);
 	if (!ft_strncmp(command, "cd", len))

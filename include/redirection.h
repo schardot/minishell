@@ -12,8 +12,7 @@ typedef struct s_redirection
 	int output_fd;
 } t_redirection;
 
-// Function prototypes for redirection handling
-int	handle_redirection(t_scmd *node); // Uses t_scmd struct
+
 
 // Function prototypes for pipe handling
 int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd);
