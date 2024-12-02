@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/29 11:00:35 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:50:27 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -38,7 +38,7 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 			spl = ft_split(full, '=');
 			if (!spl)
 			{
-				free(full);
+				//free(full);
 				return (EXIT_FAILURE);
 			}
 			if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
@@ -52,7 +52,7 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 						return (EXIT_FAILURE);
 				}
 			}
-			free(full);
+			//free(full);
 			ft_free_matrix(spl);
 			i++;
 		}
@@ -104,10 +104,10 @@ static int	print_export_list(t_tools *t)
 		if (!full_env)
 			break ;
 		printf("\"%s\"\n", full_env);
-		free(envcpy[i]);
+		//free(envcpy[i]);
 		i++;
 	}
-	free (envcpy);
+	//free (envcpy);
 	if (i == ft_str2dlen(t->envp))
 		return (EXIT_SUCCESS);
 	return (EXIT_FAILURE);
@@ -128,14 +128,14 @@ static char	**create_var_arr(t_tools *t)
 		sp = ft_split(t->envp[i], '=');
 		if (!sp)
 		{
-			ft_free_matrix(sorted_envs);
+			//ft_free_matrix(sorted_envs);
 			return (NULL);
 		}
 		sorted_envs[i] = ft_strdup(sp[0]);
-		ft_free_matrix(sp);
+		//ft_free_matrix(sp);
 		if (!sorted_envs[i])
 		{
-			ft_free_matrix(sorted_envs);
+			//ft_free_matrix(sorted_envs);
 			return (NULL);
 		}
 		i ++;
@@ -178,7 +178,7 @@ void	replace_env_var(char *full, int len, t_tools *t)
 	{
 		if (ft_strncmp(full, t->envp[i], len) == 0 && t->envp[i][len] == '=')
 		{
-			free (t->envp[i]);
+			//free (t->envp[i]);
 			t->envp[i] = ft_strdup(full);
 			if (!t->envp[i])
 			{

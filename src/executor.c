@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 19:55:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 21:29:04 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:53:48 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -97,7 +97,7 @@ char	*create_full_path(char **paths, char *cmd)
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 		{
-			ft_free_matrix(paths);
+			//ft_free_matrix(paths);
 			return (NULL);
 		}
 		ft_strlcpy(full_path, paths[i], ft_strlen(paths[i]) + 1);
@@ -105,13 +105,13 @@ char	*create_full_path(char **paths, char *cmd)
 		ft_strlcat(full_path, cmd, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (access(full_path, X_OK) == 0)
 		{
-			ft_free_matrix(paths);
+			//ft_free_matrix(paths);
 			return (full_path);
 		}
-		free(full_path);
+		//free(full_path);
 		i++;
 	}
-	ft_free_matrix(paths);
+	//ft_free_matrix(paths);
 	return (NULL);
 }
 
@@ -134,7 +134,7 @@ char	*is_executable(char *cmd, t_tools *t)
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
-	free(path_env);
+	//free(path_env);
 	if (paths == NULL)
 		return (NULL);
 	full_path = create_full_path(paths, cmd);

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:58:50 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 19:37:08 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:54:29 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -70,6 +70,7 @@ int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 		parser(input, t);
 	}
 	free(input);
+	free_structs(t);
 	return (EXIT_SUCCESS);
 }
 

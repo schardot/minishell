@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 15:12:18 by codespace        ###   ########.fr       */
+/*   Updated: 2024/12/02 21:44:07 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -25,13 +25,21 @@ int	builtincd(t_tools *t, t_scmd *scmd)
 	if (check_cd_args(&path, scmd, t) != 0)
 		return (t->exit_status);
 	if (check_cd_errors(path, scmd, t) != EXIT_SUCCESS)
+	{
+		free (path);
+		path = NULL;
 		return (EXIT_FAILURE);
+	}
 	if (chdir(path) != 0)
 	{
+		free (path);
+		path = NULL;
 		perror("minishell: cd");
 		t->exit_status = 1;
-		return t->exit_status;
+		return (t->exit_status);
 	}
+	free (path);
+	path = NULL;
 	if (!getcwd(t->cwd, sizeof(t->cwd)))
 	{
 		perror("minishell: cd");
