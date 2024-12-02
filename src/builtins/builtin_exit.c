@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 14:10:11 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/11/26 17:42:30 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:48:59 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -17,6 +17,8 @@ static int	check_exit_args(t_tools *t, t_scmd *scmd);
 
 int	builtinexit(t_tools *t, t_scmd *scmd)
 {
+	int	status;
+
 	if (scmd->args[1])
 	{
 		t->exit_status = check_exit_args(t, scmd);
@@ -28,7 +30,10 @@ int	builtinexit(t_tools *t, t_scmd *scmd)
 		printf("exit\n");
 		t->exit = 1;
 	}
-	exit (t->exit_status);
+	free_structs(t);
+	status = t->exit_status;
+	free_tools(t);
+	exit (status);
 }
 
 static int	check_exit_args(t_tools *t, t_scmd *scmd)

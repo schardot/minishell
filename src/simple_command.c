@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   simple_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:02:57 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 21:27:23 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:47:24 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -88,10 +88,17 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 
 void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 {
+	char	**new_args;
+
 	if (tk->type == ARGUMENT || tk->type == COMMAND)
 	{
-		s->args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
-		s->argsc++;
+		new_args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
+		if (!new_args)
+		{
+			ft_fprintf(2, "Error: Memory allocation failed in ft_arrcat.\n");
+			exit ;
+		}
+		s->args = new_args;		s->argsc++;
 		if (tk->type == COMMAND && is_builtin(s->args[0]))
 			s->builtin = get_builtin_function(s->args[0]);
 	}

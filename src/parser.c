@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 20:57:08 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:54:56 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -33,7 +33,11 @@ void	symbol_check(int *i, t_parser *p, t_tools *t)
 			p->arg = append_char(p->arg, str[j]);
 			(*i)++;
 		}
-		p = append_token(p, t);
+		{
+			p = append_token(p, t);
+			free(p->arg);
+			p->arg = NULL;
+		}
 	}
 }
 
@@ -45,11 +49,13 @@ int	parser(char *input, t_tools *t)
 	if (!t->parser)
 		return (t->exit_status);
 	t->tk = split_arguments(t->parser, t);
+	free_parser(t->parser);
 	if (!t->tk)
 		return (t->exit_status);
 	if (syntax_check(t->tk, t))
 		return (t->exit_status);
 	t->scmd = simple_command(t, t->tk);
+	free_token(t->tk);
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);

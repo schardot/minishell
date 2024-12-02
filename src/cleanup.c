@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:39:49 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/01 18:50:14 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 21:52:36 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -17,10 +17,10 @@
 
 void	free_structs(t_tools *t)
 {
-	if (t->parser)
-		free_parser(t->parser);
-	if (t->tk)
-		free_token(t->tk);
+	// if (t->parser)
+	// 	free_parser(t->parser);
+	// if (t->tk)
+	// 	free_token(t->tk);
 	if (t->scmd)
 		free_scmd(t->scmd);
 	if (t->e)
@@ -33,11 +33,19 @@ void	free_structs(t_tools *t)
 
 void	free_parser(t_parser *p)
 {
-	if (p && p->input)
-		free (p->input);
-	if (p && p->arg)
-		free (p->arg);
-	free (p);
+	if (p)
+	{
+		if (p->input)
+		{
+			free (p->input);
+			p->input = NULL;
+		}
+		if (p && p->arg)
+			free (p->arg);
+		// if (p->expanded != NULL)
+		// 	free (p->expanded);
+		free (p);
+	}
 }
 
 void	free_token(t_token *lst)
@@ -48,7 +56,10 @@ void	free_token(t_token *lst)
 	{
 		aux = lst;
 		if (lst->value)
+		{
 			free(lst->value);
+			lst->value = NULL;
+		}
 		lst = lst->next;
 		free (aux);
 	}
@@ -61,10 +72,16 @@ void	free_scmd(t_scmd *s)
 	while (s)
 	{
 		aux = s;
-		if (s->args)
-			ft_free_matrix(s->args);
-		if (s->exec_path)
-			free (s->exec_path);
+		if (aux->args)
+		{
+			ft_free_matrix(aux->args);
+			aux->args = NULL;
+		}
+		if (aux->exec_path)
+		{
+			free (aux->exec_path);
+			aux->exec_path = NULL;
+		}
 		s = s->next;
 		free (aux);
 	}

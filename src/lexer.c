@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 21:30:28 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:42:14 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -29,7 +29,7 @@ char	*append_char(char *arg, char c)
 	new_arg = malloc(size);
 	if (!new_arg)
 	{
-		free (arg);
+		//free (arg);
 		return (NULL);
 	}
 	if (arg)
@@ -46,7 +46,7 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 {
 	char	*name;
 	char	*value;
-	char	*new;
+	//char	*new;
 	int		len;
 
 	len = 0;
@@ -56,10 +56,12 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	if (!name)
 		return (NULL);
 	value = ft_getenv(name, t);
+	free(name);
 	if (!value)
 		value = "";
-	*i += ft_strlen(name) - 1;
-	free(name);
+	// *i += ft_strlen(name) - 1;
+	// free(name);
+	*i += len - 1;
 	return (value);
 }
 
@@ -79,7 +81,11 @@ static int	process_quote_or_expansion(int i, t_parser *p, t_tools *t)
 static int	process_symbol(int i, t_parser *p, t_tools *t, char c)
 {
 	if (p->arg)
+	{
 		p = append_token(p, t);
+		free(p->arg);
+		p->arg = NULL;
+	}
 	symbol_check(&i, p, t);
 	if (ft_isspace(c))
 		i++;
@@ -101,6 +107,10 @@ t_token	*split_arguments(t_parser *p, t_tools *t)
 			i = process_symbol(i, p, t, c);
 	}
 	if (p->arg)
+	{
 		p = append_token(p, t);
+		free(p->arg);
+		p->arg = NULL;
+	}
 	return (p->tk_lst);
 }
