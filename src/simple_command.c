@@ -19,7 +19,7 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 				return (NULL);
 		}
 		if (tk->type == H_DEL)
-			s->R_HEREDOC_delimiter = tk->value;
+			s->r_heredoc_delimiter = tk->value;
 		handle_type(t, tk, s, next_command);
 		if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND && tk->type != R_HEREDOC && tk->type != H_DEL && tk->type != NO_TYPE)
 		{
@@ -36,9 +36,17 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 
 void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 {
+	char	**new_args;
+
 	if (tk->type == ARGUMENT || tk->type == COMMAND)
 	{
-		s->args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
+		new_args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
+		if (!new_args)
+		{
+			ft_fprintf(2, "Error: Memory allocation failed in ft_arrcat.\n");
+			exit ;
+		}
+		s->args = new_args;
 		s->argsc ++;
 		if (tk->type == COMMAND && is_builtin(s->args[0]))
 			s->builtin = get_builtin_function(s->args[0]);
@@ -49,7 +57,6 @@ void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 		next_command = simple_command(t, tk->next);
 		s->next = next_command;
 		s->pipecount = s->pipetotal;
-
 		if (next_command)
 			tk->next = NULL;
 	}
@@ -69,7 +76,7 @@ t_scmd	*scmd_new(void)
 	scmd->num_redirections = 0;
 	scmd->hd_file_name = NULL;
 	scmd->redirect_token = NULL;
-	scmd->R_HEREDOC_delimiter = NULL;
+	scmd->r_heredoc_delimiter = NULL;
 	scmd->redirect_file_name = NULL;
 	scmd->heredoc_failed = 0;
 	scmd->old_stdout_fd = 0;
