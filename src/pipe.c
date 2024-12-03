@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 21:30:41 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:23:56 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	handle_redirection(t_scmd *scmd)
 			exit(EXIT_FAILURE);
 		}
 		close(scmd->redirect_fd_in);
+		scmd->redirect_fd_in = -1;
 		if (scmd->hd_file_name)
 		{
 			unlink(scmd->hd_file_name);
@@ -89,5 +90,6 @@ void	handle_redirection(t_scmd *scmd)
 			exit(EXIT_FAILURE);
 		}
 		close(scmd->redirect_fd_out);
+		scmd->redirect_fd_out = -1;
 	}
 }

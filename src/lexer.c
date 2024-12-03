@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:07:40 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:07:41 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:59:06 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	value = ft_getenv(name, t);
 	free(name);
 	if (!value)
-		value = "";
+		value = ft_strdup("");
 	*i += len - 1;
 	return (value);
 }

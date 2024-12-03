@@ -6,7 +6,7 @@
 /*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:26 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/29 11:30:10 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:25:46 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	check_pwd_args(t_scmd *scmd, t_tools *t);
 
 int	builtinpwd(t_tools *t, t_scmd *scmd)
 {
-	if (check_pwd_args(scmd, t) == 1)
+	if (check_pwd_args(scmd, t) == 2)
 		return (t->exit_status);
 	if (getcwd(t->cwd, sizeof(t->cwd)))
 	{
