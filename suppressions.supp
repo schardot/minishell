@@ -1,8 +1,16 @@
+# This is a suppression file for Valgrind
+# Suppress leaks from the readline library
 {
-   <readline>
+   READLINE_COND
+   Memcheck:Cond
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.1
+   ...
+}
+{
+   READLINE_LEAK
    Memcheck:Leak
    ...
-   fun:readline
-   ...
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.1
    ...
 }

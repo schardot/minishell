@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 20:30:52 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 21:30:00 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:30:34 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -26,6 +26,7 @@ int	open_heredoc_file(t_scmd *node, char **filename)
 		free(*filename);
 		return (-1);
 	}
+	
 	return (0);
 }
 
@@ -57,6 +58,7 @@ int	finalize_heredoc(pid_t pid, char *filename, int *result)
 {
 	struct sigaction	sa;
 
+	memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &sa, NULL);
 	*result = wait_for_heredoc_process(pid, filename);
