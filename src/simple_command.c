@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:02:57 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 21:47:24 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/02 22:48:22 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -98,7 +98,9 @@ void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 			ft_fprintf(2, "Error: Memory allocation failed in ft_arrcat.\n");
 			exit ;
 		}
-		s->args = new_args;		s->argsc++;
+		s->args = ft_matrixdup(new_args, ft_str2dlen(new_args));
+		ft_free_matrix(new_args);
+		s->argsc++;
 		if (tk->type == COMMAND && is_builtin(s->args[0]))
 			s->builtin = get_builtin_function(s->args[0]);
 	}

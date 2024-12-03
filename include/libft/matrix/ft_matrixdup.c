@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_matrixdup.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:46:22 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/24 12:46:24 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/02 22:51:22 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../libft.h"
 
@@ -28,11 +28,13 @@ char	**ft_matrixdup(char **matrix, int height)
 		newmatrix[i] = ft_strdup(matrix[i]);
 		if (!newmatrix[i])
 		{
-			ft_free_matrix(newmatrix);
+			 while (i > 0)
+				free(newmatrix[--i]);
+			free(newmatrix);
 			return (NULL);
 		}
 		i ++;
 	}
-	newmatrix[i] = NULL;
+	newmatrix[height] = NULL;
 	return (newmatrix);
 }

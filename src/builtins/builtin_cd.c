@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 22:01:38 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/02 22:40:03 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -38,8 +38,8 @@ int	builtincd(t_tools *t, t_scmd *scmd)
 		t->exit_status = 1;
 		return (t->exit_status);
 	}
-	// free (path);
-	// path = NULL;
+	free (path);
+	path = NULL;
 	if (!getcwd(t->cwd, sizeof(t->cwd)))
 	{
 		perror("minishell: cd");
@@ -88,7 +88,9 @@ static int	check_cd_args(char **path, t_scmd *scmd, t_tools *t)
 		t->exit_status = 1;
 		return (t->exit_status);
 	}
+	// else
+	// 	*path = trim_quotes(scmd->args[1]); --apparently we dont need it
 	else
-		*path = trim_quotes(scmd->args[1]);
+		*path = ft_strdup(scmd->args[1]);
 	return (EXIT_SUCCESS);
 }

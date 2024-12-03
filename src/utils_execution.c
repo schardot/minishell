@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   utils_execution.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 20:01:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 20:10:10 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/02 23:14:24 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -84,6 +84,7 @@ int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
 	if (t->e->pid == 0)
 	{
 		execute_child_process(t, scmd, e->prev_fd, e->has_next);
+		free_structs(t);
 		exit(t->exit_status);
 	}
 	else if (t->e->pid < 0)
