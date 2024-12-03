@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 14:49:13 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/22 14:49:14 by nataliascha      ###   ########.fr       */
+/*   Updated: 2024/12/03 20:52:01 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*ft_getenv(char *env, t_tools *t)
 	int	i;
 
 	i = 0;
-	env_len = strlen(env);
+	env_len = ft_strlen(env);
 	while (t->envp[i])
 	{
 		if (ft_strncmp(env, t->envp[i], env_len) == 0)

@@ -57,7 +57,7 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	value = ft_getenv(name, t);
 	free(name);
 	if (!value)
-		value = "";
+		value = ft_strdup("");
 	*i += len - 1;
 	return (value);
 }

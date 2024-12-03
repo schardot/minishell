@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:09:02 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:21:23 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 21:05:35 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,9 +19,14 @@ static int	handle_heredoc_redirect(t_tools *t, t_scmd *s, t_token *tk)
 	if (tk->type == H_DEL)
 	{
 		s->r_heredoc_delimiter = tk->value;
-		if (handle_heredoc_redirection(s) < 0)
+		if (handle_heredoc_redirection(s) != 0)
 		{
-			unlink(s->hd_file_name);
+			if (s->hd_file_name)
+			{
+				unlink(s->hd_file_name);
+				free(s->hd_file_name);
+				s->hd_file_name = NULL;
+			}
 			s->heredoc_failed = 1;
 			t->exit_status = 1;
 			return (1);
@@ -41,8 +46,6 @@ static t_scmd	*process_pipe_and_command(t_tools *t, t_token *tk, t_scmd *s)
 		next_command = simple_command(t, tk->next);
 		s->next = next_command;
 		s->pipecount = s->pipetotal;
-		if (next_command)
-			tk->next = NULL;
 	}
 	return (next_command);
 }
@@ -69,13 +72,16 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 
 	s = scmd_new();
 	next_command = NULL;
-	while (tk)
+	while (tk && !next_command)
 	{
 		if (tk->type == COMMAND && ft_strlen(tk->value) == 0)
 		{
 			tk->type = NO_TYPE;
 			if (!tk->prev && !tk->next)
+			{
+				free (s);
 				return (NULL);
+			}
 		}
 		handle_heredoc_redirect(t, s, tk);
 		handle_type(t, tk, s, next_command);

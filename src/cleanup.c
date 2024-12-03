@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:04:34 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:04:35 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:59:39 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	free_parser(t_parser *p)
 		}
 		if (p && p->arg)
 			free (p->arg);
+		//free(p->expanded);
 		free (p);
 		p = NULL;
 	}
