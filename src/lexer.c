@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 21:42:14 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:02:35 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -29,7 +29,7 @@ char	*append_char(char *arg, char c)
 	new_arg = malloc(size);
 	if (!new_arg)
 	{
-		//free (arg);
+		free (arg);
 		return (NULL);
 	}
 	if (arg)

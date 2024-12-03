@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 21:50:58 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:03:23 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -98,7 +98,7 @@ static int	create_new_envp(const char *var, t_tools *t)
 	{
 		if (ft_strncmp(t->envp[i], var, vlen) == 0 && t->envp[i][vlen] == '=')
 		{
-			//free(t->envp[i]);
+			free(t->envp[i]);
 			while (t->envp[i] != NULL)
 			{
 				t->envp[i] = t->envp[i + 1];

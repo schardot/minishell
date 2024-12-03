@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:39:49 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 23:01:49 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:29:10 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -42,6 +42,8 @@ void	free_parser(t_parser *p)
 		}
 		if (p && p->arg)
 			free (p->arg);
+		free_token(p->tk_lst);
+		p->tk_lst = NULL;
 		// if (p->expanded != NULL)
 		// 	free (p->expanded);
 		free (p);
@@ -49,7 +51,7 @@ void	free_parser(t_parser *p)
 	}
 }
 
-void	free_token(t_token *lst)
+void	free_token(t_token	*lst)
 {
 	t_token	*aux;
 
