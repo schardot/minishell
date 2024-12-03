@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 19:55:17 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/03 12:05:11 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:24:35 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -97,7 +97,7 @@ char	*create_full_path(char **paths, char *cmd)
 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 		{
-			//ft_free_matrix(paths);
+			ft_free_matrix(paths);
 			return (NULL);
 		}
 		ft_strlcpy(full_path, paths[i], ft_strlen(paths[i]) + 1);

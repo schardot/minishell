@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:39:49 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 12:29:10 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:33:51 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,8 +19,8 @@ void	free_structs(t_tools *t)
 {
 	// if (t->parser)
 	// 	free_parser(t->parser);
-	// if (t->tk)
-	// 	free_token(t->tk);
+	if (t->tk)
+		free_token(t->tk);
 	if (t->scmd)
 		free_scmd(t->scmd);
 	if (t->e)
@@ -42,8 +42,8 @@ void	free_parser(t_parser *p)
 		}
 		if (p && p->arg)
 			free (p->arg);
-		free_token(p->tk_lst);
-		p->tk_lst = NULL;
+		// free_token(p->tk_lst);
+		// p->tk_lst = NULL;
 		// if (p->expanded != NULL)
 		// 	free (p->expanded);
 		free (p);
@@ -58,10 +58,10 @@ void	free_token(t_token	*lst)
 	while (lst)
 	{
 		aux = lst;
-		if (lst->value)
+		if (aux->value)
 		{
-			free(lst->value);
-			lst->value = NULL;
+			free(aux->value);
+			aux->value = NULL;
 		}
 		lst = lst->next;
 		free (aux);
@@ -86,6 +86,8 @@ void	free_scmd(t_scmd *s)
 			free (aux->exec_path);
 			aux->exec_path = NULL;
 		}
+		if (aux->redirect_fd_in != -1)
+			close(aux->redirect_fd_in);
 		s = s->next;
 		free (aux);
 	}

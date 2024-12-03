@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 12:28:10 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:04:20 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -58,6 +58,7 @@ int	parser(char *input, t_tools *t)
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);
+	//free_token(t->tk);
 	return (t->exit_status);
 }
 
@@ -93,7 +94,11 @@ int	handle_expansions(t_parser *p, int i, t_tools *t)
 	if (p->arg)
 		p->arg = ft_strjoin(p->arg, p->expanded);
 	else
+	{
 		p->arg = ft_strdup(p->expanded);
+		free(p->expanded);
+		p->expanded = NULL;
+	}
 	i++;
 	return (i);
 }

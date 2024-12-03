@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/12/03 12:03:20 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:55:56 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -17,7 +17,7 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t);
 static int	print_export_list(t_tools *t);
 static char	**create_var_arr(t_tools *t);
 static char	**sort_arr(char **arr);
-void        replace_env_var(char *full, int len, t_tools *t);
+void		replace_env_var(char *full, int len, t_tools *t);
 
 int	builtinexport(t_tools *t, t_scmd *scmd)
 {
@@ -32,17 +32,12 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 		i = 1;
 		while (scmd->args[i])
 		{
-			full = ft_strdup(scmd->args[i]);
-			if (!full)
-				return (EXIT_FAILURE);
-			spl = ft_split(full, '=');
-			if (!spl)
-			{
-				free(full);
-				return (EXIT_FAILURE);
-			}
+			full = scmd->args[i];
 			if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
 			{
+				spl = ft_split(full, '=');
+				if (!spl)
+					return (EXIT_FAILURE);
 				if (ft_getenv(spl[0], t))
 					replace_env_var(full, strlen(spl[0]), t);
 				else
@@ -51,10 +46,10 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 					if (!t->envp)
 						return (EXIT_FAILURE);
 				}
+				//free = NULL;
+				ft_free_matrix(spl);
+				i++;
 			}
-			free(full);
-			ft_free_matrix(spl);
-			i++;
 		}
 	}
 	if (t->exit_status == 1)
