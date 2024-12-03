@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 16:24:02 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 19:04:20 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/03 20:08:32 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:08:33 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -58,7 +58,6 @@ int	parser(char *input, t_tools *t)
 	if (!t->scmd)
 		return (t->exit_status);
 	check_exec_command(t, t->scmd);
-	//free_token(t->tk);
 	return (t->exit_status);
 }
 

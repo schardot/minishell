@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:00:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 12:02:35 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/03 20:07:40 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:07:41 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -46,7 +46,6 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 {
 	char	*name;
 	char	*value;
-	//char	*new;
 	int		len;
 
 	len = 0;
@@ -59,8 +58,6 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	free(name);
 	if (!value)
 		value = "";
-	// *i += ft_strlen(name) - 1;
-	// free(name);
 	*i += len - 1;
 	return (value);
 }

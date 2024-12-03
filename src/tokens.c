@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 15:36:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 21:55:50 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/03 20:08:46 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:08:47 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -104,8 +104,6 @@ t_parser	*append_token(t_parser *p, t_tools *t)
 		p->tk_lst = new;
 	else
 		tokenlist_addback(&p->tk_lst, new);
-	// free (p->arg);
-	// p->arg = NULL;
 	p->sq = false;
 	p->dq = false;
 	return (p);

@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 16:39:49 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 16:33:51 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/03 20:04:34 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:04:35 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -17,8 +17,6 @@
 
 void	free_structs(t_tools *t)
 {
-	// if (t->parser)
-	// 	free_parser(t->parser);
 	if (t->tk)
 		free_token(t->tk);
 	if (t->scmd)
@@ -42,10 +40,6 @@ void	free_parser(t_parser *p)
 		}
 		if (p && p->arg)
 			free (p->arg);
-		// free_token(p->tk_lst);
-		// p->tk_lst = NULL;
-		// if (p->expanded != NULL)
-		// 	free (p->expanded);
 		free (p);
 		p = NULL;
 	}

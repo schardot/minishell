@@ -6,7 +6,7 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 20:13:11 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 21:48:29 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:39:30 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -142,6 +142,8 @@ int			check_quote(int i, t_parser *p, t_tools *t);
 char		*trim_quotes(char *arg);
 int			builtinpwd(t_tools *t, t_scmd *node);
 int			builtinexport(t_tools *t, t_scmd *node);
+char		**sort_arr(char **arr);
+void		replace_env_var(char *full, int len, t_tools *t);
 int			builtinunset(t_tools *t, t_scmd *node);
 int			builtinenv(t_tools *t, t_scmd *node);
 int			builtinexit(t_tools *t, t_scmd *node);
@@ -157,7 +159,6 @@ char		*is_executable(char *cmd, t_tools *t);
 int			handle_expansions(t_parser *p, int i, t_tools *t);
 void		symbol_check(int *i, t_parser *p, t_tools *t);
 t_scmd		*scmd_new(void);
-//int			create_quoted_arg(t_parser *p, int i, char q, t_tools *t);
 
 /* ------------------------------------------------------------------------- */
 /*                           Cleanup Functions                               */
