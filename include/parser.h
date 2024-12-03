@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 20:13:11 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/03 19:39:30 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/03 20:37:35 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:37:37 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
@@ -21,7 +21,7 @@
 # include <sys/stat.h>
 # include <unistd.h>
 
-typedef enum e_token_type
+typedef enum s_token_type
 {
 	NO_TYPE,
 	COMMAND,
@@ -35,11 +35,11 @@ typedef enum e_token_type
 	I_FILE,
 	A_FILE,
 	H_DEL
-}	e_token_type;
+}	t_token_type;
 
 typedef struct s_token
 {
-	e_token_type	type;
+	t_token_type	type;
 	char			*value;
 	bool			sq;
 	bool			dq;
@@ -116,6 +116,9 @@ t_token		*tokenlist_new(char *token, t_tools *t, t_parser *p);
 void		tokenlist_addback(t_token **lst, t_token *new);
 void		assign_token_type(t_token *node, t_tools *t);
 void		assign_token_files(t_token *tk);
+t_parser	*append_token(t_parser *p, t_tools *t);
+void		handle_type(t_tools *t, t_token *tk, t_scmd *s, \
+t_scmd *next_command);
 
 /* ------------------------------------------------------------------------- */
 /*                                  Init                                     */
@@ -125,6 +128,7 @@ void		init_scmd_redirections(t_scmd *scmd);
 void		init_scmd_fds(t_scmd *scmd);
 void		init_scmd_pipes(t_scmd *scmd);
 void		init_scmd_next_prev(t_scmd *scmd);
+t_parser	*init_parser(char *input);
 
 /* ------------------------------------------------------------------------- */
 /*                           Simple Command Functions                        */
@@ -158,7 +162,13 @@ int			is_builtin(char *token);
 char		*is_executable(char *cmd, t_tools *t);
 int			handle_expansions(t_parser *p, int i, t_tools *t);
 void		symbol_check(int *i, t_parser *p, t_tools *t);
-t_scmd		*scmd_new(void);
+char		*append_char(char *arg, char c);
+t_token		*split_arguments(t_parser *p, t_tools *t);
+int			initial_quote_check(char *arg);
+char		*ft_getenv(char *env, t_tools *t);
+char		*expand_the_argument(char *arg, int *i, int start, t_tools *t);
+void		symbol_check(int *i, t_parser *p, t_tools *t);
+char		*create_full_path(char **paths, char *cmd);
 
 /* ------------------------------------------------------------------------- */
 /*                           Cleanup Functions                               */
@@ -174,7 +184,6 @@ int			free_tools(t_tools *t);
 /* ------------------------------------------------------------------------- */
 int			syntax_check(t_token *lst, t_tools *t);
 
-
 /* ------------------------------------------------------------------------- */
 /*                                Execution                                  */
 /* ------------------------------------------------------------------------- */
@@ -185,7 +194,6 @@ void		unlink_heredoc(t_scmd *scmd);
 void		handle_one(t_scmd *scmd);
 int			after_fork(t_tools *t, t_scmd *scmd, t_exec *e);
 void		handle_redirection(t_scmd *scmd);
-
 
 /* ------------------------------------------------------------------------- */
 /*                                   Signals                                 */
@@ -204,20 +212,5 @@ void		heredoc_sigint_handler(int sig);
 int			write_heredoc_input(int fd, const char *delimiter);
 int			handle_heredoc_child(const char *delimiter, char *filename);
 int			wait_for_heredoc_process(pid_t pid, char *filename);
-
-
-int syntax_check(t_token *lst, t_tools *t);
-int process_redirections(t_tools *t, t_token *tk, t_scmd *scmd);
-char *append_char(char *arg, char c);
-t_token	*split_arguments(t_parser *p, t_tools *t);
-t_parser *init_parser(char *input);
-int initial_quote_check(char *arg);
-t_parser *append_token(t_parser *p, t_tools *t);
-char *ft_getenv(char *env, t_tools *t);
-char	*expand_the_argument(char *arg, int *i, int start, t_tools *t);
-void symbol_check(int *i, t_parser *p, t_tools *t);
-char	*create_full_path(char **paths, char *cmd);
-void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command);
-
 
 #endif
