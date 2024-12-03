@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 20:50:53 by ekechedz         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:24:14 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -21,15 +21,15 @@ int	check_quote(int i, t_parser *p, t_tools *t)
 	i ++;
 	while (p->input[i] && p->input[i] != p->q)
 	{
-		if (p->input[i] == '$' && p->input[i + 1] && p->q != SQ
+		if (p->input[i] == '$' && p->input[i + 1] && p->q != '\''
 			&& !ft_isspace(p->input[i + 1]) && p->input[i + 1] != p->q)
 			i = handle_expansions(p, i, t);
 		else
 		{
 			p->arg = append_char(p->arg, p->input[i]);
-			if (p->q == SQ)
+			if (p->q == '\'')
 				p->sq = true;
-			else if (p->q == DQ)
+			else if (p->q == '"')
 				p->dq = true;
 			i++;
 		}
@@ -47,7 +47,7 @@ char	*trim_quotes(char *s)
 	if (!s)
 		return (NULL);
 	z = ft_strlen(s) - 1;
-	while ((s[0] == SQ && s[z] == SQ) || (s[0] == DQ && s[z] == DQ))
+	while ((s[0] == '\'' && s[z] == '\'') || (s[0] == '"' && s[z] == '"'))
 	{
 		s[z] = '\0';
 		s++;
@@ -66,9 +66,9 @@ int	initial_quote_check(char *arg)
 	sq = false;
 	while (arg[i])
 	{
-		if (arg[i] == DQ && !sq)
+		if (arg[i] == '"' && !sq)
 			dq = !dq;
-		if (arg[i] == SQ && !dq)
+		if (arg[i] == '\'' && !dq)
 			sq = !sq;
 		i ++;
 	}

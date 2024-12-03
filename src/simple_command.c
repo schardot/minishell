@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   simple_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:09:02 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:09:03 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:21:23 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -96,7 +96,7 @@ void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 		if (!new_args)
 		{
 			ft_fprintf(2, "Error: Memory allocation failed in ft_arrcat.\n");
-			exit ;
+			exit (1);
 		}
 		s->args = ft_matrixdup(new_args, ft_str2dlen(new_args));
 		ft_free_matrix(new_args);

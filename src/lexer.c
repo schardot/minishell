@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:07:40 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:07:41 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:25:36 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -67,7 +67,7 @@ static int	process_quote_or_expansion(int i, t_parser *p, t_tools *t)
 	char	c;
 
 	c = p->input[i];
-	if (c == DQ || c == SQ)
+	if (c == '"' || c == '\'')
 		return (check_quote(i, p, t));
 	if (c == '$' && p->input[i + 1])
 		return (handle_expansions(p, i, t));
@@ -98,7 +98,7 @@ t_token	*split_arguments(t_parser *p, t_tools *t)
 	while (p->input[i])
 	{
 		c = p->input[i];
-		if (c == DQ || c == SQ || c == '$' || !ft_strchr(SYMBOL, c))
+		if (c == '"' || c == '\'' || c == '$' || !ft_strchr(SYMBOL, c))
 			i = process_quote_or_expansion(i, p, t);
 		else
 			i = process_symbol(i, p, t, c);
