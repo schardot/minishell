@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 10:50:05 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 18:57:43 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/03 20:02:05 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:02:06 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -17,6 +17,7 @@
 
 static int	check_cd_errors(char *path, t_scmd *scmd, t_tools *t);
 static int	check_cd_args(char **path, t_scmd *scmd, t_tools *t);
+static int	check_cd(t_tools *t);
 
 int	builtincd(t_tools *t, t_scmd *scmd)
 {
@@ -40,6 +41,11 @@ int	builtincd(t_tools *t, t_scmd *scmd)
 	}
 	free (path);
 	path = NULL;
+	return (check_cd(t));
+}
+
+static int	check_cd(t_tools *t)
+{
 	if (!getcwd(t->cwd, sizeof(t->cwd)))
 	{
 		perror("minishell: cd");
@@ -88,8 +94,6 @@ static int	check_cd_args(char **path, t_scmd *scmd, t_tools *t)
 		t->exit_status = 1;
 		return (t->exit_status);
 	}
-	// else
-	// 	*path = trim_quotes(scmd->args[1]); --apparently we dont need it
 	else
 		*path = ft_strdup(scmd->args[1]);
 	return (EXIT_SUCCESS);
