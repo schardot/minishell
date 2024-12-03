@@ -6,18 +6,18 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:46:41 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/02 21:38:38 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:53:32 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../libft.h"
 
-void	ft_free_matrix(char **matrix)
+void	*ft_free_matrix(char **matrix)
 {
 	int	i;
 
 	if (!matrix)
-		return ;
+		return (NULL);
 	i = 0;
 	while (matrix[i])
 	{
@@ -25,4 +25,5 @@ void	ft_free_matrix(char **matrix)
 		i ++;
 	}
 	free (matrix);
+	return (NULL);
 }
