@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   simple_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:02:57 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 22:48:22 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/03 15:35:50 by ekechedz         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -41,8 +41,8 @@ static t_scmd	*process_pipe_and_command(t_tools *t, t_token *tk, t_scmd *s)
 		next_command = simple_command(t, tk->next);
 		s->next = next_command;
 		s->pipecount = s->pipetotal;
-		if (next_command)
-			tk->next = NULL;
+		// if (next_command)
+		// 	tk->next = NULL;
 	}
 	return (next_command);
 }
@@ -69,7 +69,7 @@ t_scmd	*simple_command(t_tools *t, t_token *tk)
 
 	s = scmd_new();
 	next_command = NULL;
-	while (tk)
+	while (tk && !next_command)
 	{
 		if (tk->type == COMMAND && ft_strlen(tk->value) == 0)
 		{
