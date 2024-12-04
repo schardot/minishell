@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:37:35 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:37:37 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:12:49 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef PARSER_H
 # define PARSER_H
@@ -148,6 +148,9 @@ int			builtinpwd(t_tools *t, t_scmd *node);
 int			builtinexport(t_tools *t, t_scmd *node);
 char		**sort_arr(char **arr);
 void		replace_env_var(char *full, int len, t_tools *t);
+int			check_exp_args(char *arg, t_scmd *scmd, t_tools *t);
+int			export_var(t_scmd *scmd, char *full, char **spl, t_tools *t);
+int			process_export_var(char *arg, t_tools *t);
 int			builtinunset(t_tools *t, t_scmd *node);
 int			builtinenv(t_tools *t, t_scmd *node);
 int			builtinexit(t_tools *t, t_scmd *node);
