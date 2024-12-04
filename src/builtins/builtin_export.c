@@ -6,17 +6,15 @@
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 11:54:01 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/04 12:20:49 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:13:18 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
 
-static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t);
 static int	print_export_list(t_tools *t);
 static char	**create_var_arr(t_tools *t);
-static int	export_var(t_scmd *scmd, char *full, char **spl, t_tools *t);
 
 int	builtinexport(t_tools *t, t_scmd *scmd)
 {
@@ -35,35 +33,7 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 	return (EXIT_SUCCESS);
 }
 
-static int	export_var(t_scmd *scmd, char *full, char **spl, t_tools *t)
-{
-	int	i;
-
-	i = 1;
-	while (scmd->args[i])
-	{
-		full = scmd->args[i];
-		spl = ft_split(full, '=');
-		if (!spl)
-			return (EXIT_FAILURE);
-		if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
-		{
-			if (ft_getenv(spl[0], t))
-				replace_env_var(full, ft_strlen(spl[0]), t);
-			else
-			{
-				t->envp = ft_arrcat(t->envp, full, ft_str2dlen(t->envp));
-				if (!t->envp)
-					return (EXIT_FAILURE);
-			}
-		}
-		ft_free_matrix(spl);
-		i++;
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
+int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 {
 	int	j;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:08:13 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:08:14 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:56:41 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,6 @@ int	finalize_heredoc(pid_t pid, char *filename, int *result)
 	sigaction(SIGINT, &sa, NULL);
 	*result = wait_for_heredoc_process(pid, filename);
 	sigaction(SIGINT, &sa, NULL);
-	if (*result < 0 || *result == 130)
-	{
-		free(filename);
-		return (*result);
-	}
 	return (0);
 }
 

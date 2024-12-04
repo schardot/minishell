@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   simple_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 11:37:02 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/04 12:22:28 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:00:53 by ekechedz         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -30,6 +30,12 @@ static int	handle_heredoc_redirect(t_tools *t, t_scmd *s, t_token *tk)
 			s->heredoc_failed = 1;
 			t->exit_status = 1;
 			return (1);
+		}
+		if (s->hd_file_name)
+		{
+			unlink(s->hd_file_name);
+			free(s->hd_file_name);
+			s->hd_file_name = NULL;
 		}
 	}
 	return (0);
