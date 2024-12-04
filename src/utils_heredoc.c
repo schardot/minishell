@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 20:38:34 by ekechedz          #+#    #+#             */
-/*   Updated: 2024/12/02 20:39:19 by ekechedz         ###   ########.fr       */
+/*   Created: 2024/12/04 11:53:32 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 11:53:33 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
+#include "../include/libft/libft.h"
 #include "../include/redirection.h"
 #include <asm-generic/signal-defs.h>
 
@@ -19,10 +20,10 @@ int	create_heredoc_temp_file(char **filename)
 {
 	int	fd;
 
-	*filename = malloc(strlen(".heredoc.tmp") + 1);
+	*filename = malloc(ft_strlen(".heredoc.tmp") + 1);
 	if (!*filename)
 		return (-1);
-	strcpy(*filename, ".heredoc.tmp");
+	ft_strlcpy(*filename, ".heredoc.tmp", sizeof(*filename));
 	fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -57,12 +58,12 @@ int	write_heredoc_input(int fd, const char *delimiter)
 				return (-1);
 			break ;
 		}
-		if (strcmp(buf, delimiter) == 0)
+		if (ft_strncmp(buf, delimiter, ft_strlen(delimiter) + 1) == 0)
 		{
 			free(buf);
 			break ;
 		}
-		if (write(fd, buf, strlen(buf)) < 0 || write(fd, "\n", 1) < 0)
+		if (write(fd, buf, ft_strlen(buf)) < 0 || write(fd, "\n", 1) < 0)
 		{
 			perror("write");
 			free(buf);

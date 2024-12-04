@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 16:56:29 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 20:24:14 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/04 11:37:56 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 12:19:44 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -42,7 +42,6 @@ int	check_quote(int i, t_parser *p, t_tools *t)
 char	*trim_quotes(char *s)
 {
 	int	z;
-	int	i;
 
 	if (!s)
 		return (NULL);

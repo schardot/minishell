@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 20:03:07 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:31:26 by ekechedz         ###   ########.fr       */
+/*   Created: 2024/12/04 11:55:14 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 11:55:15 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static int	check_exit_args(t_tools *t, t_scmd *scmd)
 		printf("exit\n");
 		ft_error(E_TOO_MANY_ARGS, "exit", scmd->args[1], t);
 		t->exit_status = 1;
-
 	}
 	else if (ft_checkstr(scmd->args[1], &ft_isdigit) == 0)
 	{
@@ -60,4 +59,3 @@ static int	check_exit_args(t_tools *t, t_scmd *scmd)
 	}
 	return (t->exit_status);
 }
-

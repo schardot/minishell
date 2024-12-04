@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 19:55:02 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 19:55:04 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/04 11:54:01 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 12:20:49 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -23,6 +23,8 @@ int	builtinexport(t_tools *t, t_scmd *scmd)
 	char	**spl;
 	char	*full;
 
+	spl = NULL;
+	full = NULL;
 	if (!scmd->args[1] || (ft_strlen(scmd->args[1]) == 0 && \
 	(!t->parser->sq && !t->parser->dq)))
 		print_export_list(t);
@@ -47,7 +49,7 @@ static int	export_var(t_scmd *scmd, char *full, char **spl, t_tools *t)
 		if (check_exp_args(scmd->args[i], scmd, t) == EXIT_SUCCESS)
 		{
 			if (ft_getenv(spl[0], t))
-				replace_env_var(full, strlen(spl[0]), t);
+				replace_env_var(full, ft_strlen(spl[0]), t);
 			else
 			{
 				t->envp = ft_arrcat(t->envp, full, ft_str2dlen(t->envp));
@@ -65,6 +67,7 @@ static int	check_exp_args(char *arg, t_scmd *scmd, t_tools *t)
 {
 	int	j;
 
+	(void)scmd;
 	if ((!arg[0] && (t->parser->dq || t->parser->sq)) || (arg[0] && \
 	(!ft_isalpha(arg[0]) && arg[0] != '_')))
 	{

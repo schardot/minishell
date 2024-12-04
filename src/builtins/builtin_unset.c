@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 17:33:53 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 17:33:54 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:21:20 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/parser.h"
 #include "../../include/minishell.h"
@@ -16,7 +16,6 @@
 static int	create_new_envp(const char *var, t_tools *t);
 static int	check_unset_args(t_scmd *s, t_tools *t);
 static int	check_option(t_scmd *s, t_tools *t);
-static void	check_argument(t_scmd *s, t_tools *t);
 
 int	builtinunset(t_tools *t, t_scmd *scmd)
 {
@@ -35,9 +34,6 @@ int	builtinunset(t_tools *t, t_scmd *scmd)
 
 static int	check_unset_args(t_scmd *s, t_tools *t)
 {
-	int	i;
-	int	j;
-
 	if (check_option(s, t) == 2)
 		return (t->exit_status);
 	if (t->exit_status == 1)

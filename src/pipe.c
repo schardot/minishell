@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:02:59 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/12/03 20:23:56 by ekechedz         ###   ########.fr       */
+/*   Created: 2024/12/04 12:00:58 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 12:00:59 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,7 @@ void	handle_redirection(t_scmd *scmd)
 	if (scmd->redirect_fd_in >= 0)
 	{
 		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
-		{
-			perror("Failed to redirect stdin from file");
 			exit(EXIT_FAILURE);
-		}
 		close(scmd->redirect_fd_in);
 		scmd->redirect_fd_in = -1;
 		if (scmd->hd_file_name)

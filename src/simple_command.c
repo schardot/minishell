@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 20:09:02 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 21:05:35 by ekechedz         ###   ########.fr       */
+/*   Created: 2024/12/04 11:37:02 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 12:22:28 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -96,12 +96,14 @@ void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 {
 	char	**new_args;
 
+	(void) next_command;
+	(void) t;
 	if (tk->type == ARGUMENT || tk->type == COMMAND)
 	{
 		new_args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
 		if (!new_args)
 		{
-			ft_fprintf(2, "Error: Memory allocation failed in ft_arrcat.\n");
+			ft_fprintf(2, "Error: Memory allocation failed0 in ft_arrcat.\n");
 			exit (1);
 		}
 		s->args = ft_matrixdup(new_args, ft_str2dlen(new_args));

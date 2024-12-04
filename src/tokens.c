@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   tokens.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 20:08:46 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:08:47 by nleite-s         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
@@ -17,6 +5,7 @@ t_token	*tokenlist_new(char *token, t_tools *t, t_parser *p)
 {
 	t_token	*tk;
 
+	(void)t;
 	tk = (t_token *)malloc(sizeof(t_token));
 	if (tk == NULL)
 		return (NULL);
@@ -56,18 +45,19 @@ void	assign_token_type(t_token *tk, t_tools *t)
 {
 	int	len;
 
+	(void)t;
 	if (!tk || !tk->value)
 		return ;
 	len = ft_strlen(tk->value);
-	if (strcmp(tk->value, "|") == 0 && !tk->dq && !tk->sq)
+	if (ft_strncmp(tk->value, "|", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = PIPE;
-	else if (strcmp(tk->value, ">") == 0 && !tk->dq && !tk->sq)
+	else if (ft_strncmp(tk->value, ">", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = OUTPUT;
-	else if (strcmp(tk->value, "<") == 0 && !tk->dq && !tk->sq)
+	else if (ft_strncmp(tk->value, "<", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = INPUT;
-	else if (strcmp(tk->value, ">>") == 0 && !tk->dq && !tk->sq)
+	else if (ft_strncmp(tk->value, ">>", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = APPEND;
-	else if (strcmp(tk->value, "<<") == 0 && !tk->dq && !tk->sq)
+	else if (ft_strncmp(tk->value, "<<", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = R_HEREDOC;
 	else if ((tk->prev == NULL || tk->prev->type == PIPE))
 		tk->type = COMMAND;

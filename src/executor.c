@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:05:04 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:05:05 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:18:07 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
@@ -120,7 +120,6 @@ char	*is_executable(char *cmd, t_tools *t)
 	char		*path_env;
 	char		**paths;
 	char		*full_path;
-	int			i;
 	struct stat	path_stat;
 
 	if (stat(cmd, &path_stat) == 0)

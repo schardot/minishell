@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_export2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 19:56:47 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 19:56:48 by nleite-s         ###   ########.fr       */
+/*   Created: 2024/12/04 11:54:33 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 12:47:10 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../include/minishell.h"
 #include "../../include/parser.h"
@@ -25,7 +25,7 @@ char	**sort_arr(char **arr)
 		j = i + 1;
 		while (arr[j])
 		{
-			if (ft_strncmp(arr[i], arr[j], strlen(arr[i])) > 0)
+			if (ft_strncmp(arr[i], arr[j], ft_strlen(arr[i])) > 0)
 			{
 				swp = arr[i];
 				arr[i] = arr[j];
@@ -52,6 +52,7 @@ void	replace_env_var(char *full, int len, t_tools *t)
 			if (!t->envp[i])
 			{
 				printf("error allocating");
+				free(full);
 				return ;
 			}
 			return ;

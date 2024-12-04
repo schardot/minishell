@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:06:14 by nleite-s          #+#    #+#             */
-/*   Updated: 2024/12/03 20:06:15 by nleite-s         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:17:34 by nleite-s         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../include/minishell.h"
 #include "../include/parser.h"
@@ -58,6 +58,8 @@ int	get_input(t_tools *t, struct sigaction *sa_int, struct sigaction *sa_quit)
 {
 	char	*input;
 
+	(void)sa_int;
+	(void)sa_quit;
 	input = readline("\033[1;36mminishell\033[95m$ \033[0m");
 	if (!input)
 	{
