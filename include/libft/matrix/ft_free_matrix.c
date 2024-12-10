@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_matrix.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 12:46:41 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/24 12:46:43 by nataliascha      ###   ########.fr       */
+/*   Created: 2024/12/03 20:30:56 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:30:57 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-void	ft_free_matrix(char **matrix)
+void	*ft_free_matrix(char **matrix)
 {
 	int	i;
 
 	if (!matrix)
-		return ;
+		return (NULL);
 	i = 0;
 	while (matrix[i])
 	{
@@ -25,5 +25,5 @@ void	ft_free_matrix(char **matrix)
 		i ++;
 	}
 	free (matrix);
-	matrix = NULL;
+	return (NULL);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 11:39:41 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 11:39:42 by nleite-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
@@ -16,9 +28,15 @@ char	*append_char(char *arg, char c)
 		size = ft_strlen(arg) + 2;
 	new_arg = malloc(size);
 	if (!new_arg)
+	{
+		free (arg);
 		return (NULL);
+	}
 	if (arg)
+	{
 		ft_strlcpy(new_arg, arg, size);
+		free (arg);
+	}
 	new_arg[size - 2] = c;
 	new_arg[size - 1] = '\0';
 	return (new_arg);
@@ -28,7 +46,6 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 {
 	char	*name;
 	char	*value;
-	char	*new;
 	int		len;
 
 	len = 0;
@@ -38,63 +55,59 @@ char	*expand_the_argument(char *arg, int *i, int st, t_tools *t)
 	if (!name)
 		return (NULL);
 	value = ft_getenv(name, t);
+	free(name);
 	if (!value)
-		return (NULL);
-	new = malloc(strlen(arg) + ft_strlen(value) - len);
-	if (!new)
-		return (NULL);
-	strncpy(new, arg, *i);
-	strcpy(new + *i, value);
-	strcpy(new+ *i + ft_strlen(value), arg + st + len);
-	*i += ft_strlen(value) - 1;
-	return (new);
+		value = ft_strdup("");
+	*i += len - 1;
+	return (value);
 }
 
-char	**split_arguments(t_parser *p, t_tools *t)
+static int	process_quote_or_expansion(int i, t_parser *p, t_tools *t)
+{
+	char	c;
+
+	c = p->input[i];
+	if (c == '"' || c == '\'')
+		return (check_quote(i, p, t));
+	if (c == '$' && p->input[i + 1])
+		return (handle_expansions(p, i, t));
+	p->arg = append_char(p->arg, c);
+	return (i + 1);
+}
+
+static int	process_symbol(int i, t_parser *p, t_tools *t, char c)
+{
+	if (p->arg)
+	{
+		p = append_token(p, t);
+		free(p->arg);
+		p->arg = NULL;
+	}
+	symbol_check(&i, p, t);
+	if (ft_isspace(c))
+		i++;
+	return (i);
+}
+
+t_token	*split_arguments(t_parser *p, t_tools *t)
 {
 	int		i;
-	char	*arg;
 	char	c;
 
 	i = 0;
-	arg = NULL;
 	while (p->input[i])
 	{
 		c = p->input[i];
-		check_quote(c, &arg, p);
-		if ((p->sq || p->dq) || !ft_strchr(SYMBOL, c))
-			arg = append_char(arg, p->input[i]);
+		if (c == '"' || c == '\'' || c == '$' || !ft_strchr(SYMBOL, c))
+			i = process_quote_or_expansion(i, p, t);
 		else
-		{
-			if (arg)
-				p = append_token(&arg, p, t);
-			symbol_check(&arg, &i, p, t);
-		}
-		i ++;
+			i = process_symbol(i, p, t, c);
 	}
-	if (arg)
-		p = append_token(&arg, p, t);
-	return (p->tokens);
-}
-
-void symbol_check(char **arg, int *i, t_parser *p, t_tools *t)
-{
-	char	c;
-	char	*str;
-	int	j;
-
-	str = p->input;
-	j = *i;
-	c = p->input[j];
-	if (c == '|' || c == '<' || c == '>')
+	if (p->arg)
 	{
-		*arg = append_char(*arg, str[j]);
-        (*i)++;
-        if ((c == '<' && str[j + 1] == '<') || (c == '>' && str[j + 1] == '>'))
-        {
-            *arg = append_char(*arg, str[j]);
-            (*i)++;
-        }
-		p = append_token(arg, p, t);
+		p = append_token(p, t);
+		free(p->arg);
+		p->arg = NULL;
 	}
+	return (p->tk_lst);
 }

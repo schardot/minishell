@@ -1,43 +1,63 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 14:08:52 by ekechedz          #+#    #+#             */
+/*   Updated: 2024/12/04 14:08:54 by ekechedz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/libft/libft.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_exec *init_t_exec(void)
+int	process_scmd(t_tools *t, t_scmd *scmd,
+				struct sigaction *sa_int, struct sigaction *sa_quit)
 {
-    t_exec *e;
-
-    e = malloc(sizeof(t_exec)); // Allocate memory for the struct
-    if (!e)
-    {
-        perror("malloc failed"); // Handle allocation failure
-        return (NULL);
-    }
-    e->prev_fd = -1; // Initialize fields
-    e->n = 0;
-    return (e); // Return the allocated and initialized struct
+	if (create_pipe_if_needed(t, t->e->has_next, scmd) == -1)
+		return (EXIT_FAILURE);
+	if (!scmd->skip_exec && !scmd->heredoc_failed)
+	{
+		if (scmd->builtin && t->totalp == 0)
+		{
+			handle_one(scmd);
+			t->exit_status = scmd->builtin(t, scmd);
+			restore_stdout(scmd);
+			return (t->exit_status);
+		}
+		switch_sig_hand(sa_int, sa_quit, true, true);
+		t->e->pid = fork();
+		after_fork(t, scmd, t->e);
+	}
+	return (0);
 }
 
 int	check_exec_command(t_tools *t, t_scmd *scmd)
 {
-	t_exec	*e;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+	int					status_set;
 
-	e = init_t_exec();
+	status_set = 0;
+	init_sig_hand(&sa_int, &sa_quit);
+	t->e = init_t_exec();
 	while (scmd)
 	{
-		e->has_next = scmd->next != NULL;
-		if (create_pipe_if_needed(t, e->has_next, scmd) == -1)
+		t->e->has_next = (scmd->next != NULL);
+		if (process_scmd(t, scmd, &sa_int, &sa_quit) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
-		if (scmd->builtin && !scmd->pipecount && !scmd->redirect_token)
-		{
-			t->exit_status = scmd->builtin(t, scmd);
-			return (t->exit_status);
-		}
-		e->pid = fork();
-		after_fork(t, scmd, e);
+		if (scmd->skip_exec == 1 && scmd->next == NULL)
+			status_set = 1;
 		scmd = scmd->next;
 	}
-	return (wait_for_pids(e->pids, e->n, t));
+	if (!status_set && t->e->n > 0)
+		t->exit_status = wait_for_pids(t->e->pids, t->e->n, t);
+	switch_sig_hand(&sa_int, &sa_quit, false, false);
+	return (t->exit_status);
 }
 
 int	is_builtin(char *token)
@@ -97,36 +117,25 @@ char	*create_full_path(char **paths, char *cmd)
 
 char	*is_executable(char *cmd, t_tools *t)
 {
-	char	*path_env;
-	char	**paths;
-	char	*full_path;
+	char		*path_env;
+	char		**paths;
+	char		*full_path;
+	struct stat	path_stat;
 
-	if (access(cmd, X_OK) == 0)
-		return (ft_strdup(cmd));
+	if (stat(cmd, &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode))
+			return (NULL);
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+	}
 	path_env = ft_getenv("PATH", t);
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
+	free(path_env);
 	if (paths == NULL)
 		return (NULL);
 	full_path = create_full_path(paths, cmd);
 	return (full_path);
-}
-
-int	after_fork(t_tools *t, t_scmd *scmd, t_exec *e)
-{
-	if (e->pid == 0)
-	{
-		execute_child_process(t, scmd, e->prev_fd, e->has_next);
-		exit(t->exit_status);
-	}
-	else if (e->pid < 0)
-	{
-		perror("fork");
-		return (EXIT_FAILURE);
-	}
-	else
-		e->pids[e->n++] = e->pid;
-	close_unused_pipes(&e->prev_fd, t, e->has_next);
-	return (0);
 }

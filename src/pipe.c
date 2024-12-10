@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 12:00:58 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/04 12:00:59 by nleite-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
+int	create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 {
 	(void)*scmd;
 	if (has_next != 0)
@@ -10,33 +22,36 @@ int create_pipe_if_needed(t_tools *t, int has_next, t_scmd *scmd)
 		if (pipe(t->pipefd) == -1)
 		{
 			perror("pipe");
-			return -1;
+			return (-1);
 		}
 	}
-	// if (!scmd->args || !scmd->args[0])
-	// {
-	// 	printf("minishell: syntax error near unexpected token '|'\n");
-	// 	return (EXIT_FAILURE);
-	// }
-	return 0;
+	return (0);
 }
 
-void setup_pipe_for_child(int prev_fd, t_tools *t, int has_next)
+void	setup_pipe_for_child(int prev_fd, t_tools *t, int has_next)
 {
 	if (prev_fd != -1)
 	{
-		dup2(prev_fd, STDIN_FILENO);
+		if (dup2(prev_fd, STDIN_FILENO) < 0)
+		{
+			perror("Failed to redirect stdin from prev_fd");
+			exit(EXIT_FAILURE);
+		}
 		close(prev_fd);
 	}
 	if (has_next)
 	{
 		close(t->pipefd[0]);
-		dup2(t->pipefd[1], STDOUT_FILENO);
+		if (dup2(t->pipefd[1], STDOUT_FILENO) < 0)
+		{
+			perror("Failed to redirect stdout to pipe");
+			exit(EXIT_FAILURE);
+		}
 		close(t->pipefd[1]);
 	}
 }
 
-void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
+void	close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 {
 	if (*prev_fd != -1)
 		close(*prev_fd);
@@ -49,31 +64,29 @@ void close_unused_pipes(int *prev_fd, t_tools *t, int has_next)
 		*prev_fd = -1;
 }
 
-void execute_child_process(t_tools *t, t_scmd *scmd, int prev_fd, int has_next)
+void	handle_redirection(t_scmd *scmd)
 {
-	int result;
-
-	result = handle_redirection(scmd);
-	setup_pipe_for_child(prev_fd, t, has_next);
-	if (result != 0)
+	if (scmd->redirect_fd_in >= 0)
 	{
-		t->exit_status = result;
-		exit(t->exit_status);
+		if (dup2(scmd->redirect_fd_in, STDIN_FILENO) < 0)
+			exit(EXIT_FAILURE);
+		close(scmd->redirect_fd_in);
+		scmd->redirect_fd_in = -1;
+		if (scmd->hd_file_name)
+		{
+			unlink(scmd->hd_file_name);
+			free(scmd->hd_file_name);
+			scmd->hd_file_name = NULL;
+		}
 	}
-	if (is_executable(scmd->args[0], t))
+	if (scmd->redirect_fd_out >= 0)
 	{
-		scmd->exec_path = is_executable(scmd->args[0], t);
-		execve(scmd->exec_path, scmd->args, t->envp);
-		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-		exit(t->exit_status);
+		if (dup2(scmd->redirect_fd_out, STDOUT_FILENO) < 0)
+		{
+			perror("Failed to redirect stdout to file");
+			exit(EXIT_FAILURE);
+		}
+		close(scmd->redirect_fd_out);
+		scmd->redirect_fd_out = -1;
 	}
-	else
-	{
-		//printf("before%d\n", t->exit_status);
-		ft_error(E_COMMAND_NOT_FOUND, scmd->args[0], NULL, t);
-		//printf("after%d\n", t->exit_status);
-		//printf("minishell: command not found: %s\n", scmd->args[0]);
-		exit(t->exit_status);
-		// printf("after exit %d\n", t->exit_status);
-  }
 }

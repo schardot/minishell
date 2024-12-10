@@ -1,6 +1,6 @@
 CC = clang
 
-FLAGS = -g #-Wextra -Wall -Werror
+FLAGS = -g -Wextra -Wall -Werror
 LIBFT_DIR = include/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 NAME = minishell
@@ -22,10 +22,19 @@ SRC = src/main.c \
 	src/builtins/builtin_env.c \
 	src/builtins/builtin_pwd.c \
 	src/builtins/builtin_export.c \
+	src/builtins/builtin_export2.c \
 	src/builtins/builtin_exit.c \
 	src/builtins/builtin_utils.c \
 	src/quotes.c \
-	src/error.c
+	src/error.c \
+	src/cleanup.c \
+	src/syntax.c \
+	src/utils_execution.c \
+	src/utils_signals.c \
+	src/child_execution.c \
+	src/utils_heredoc.c \
+	src/init.c \
+	src/builtin.c
 OBJ = $(SRC:.c=.o)
 
 READLINE_DIR = $(shell brew --prefix readline 2>/dev/null)

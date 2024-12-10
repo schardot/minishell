@@ -1,47 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 14:07:37 by ekechedz          #+#    #+#             */
+/*   Updated: 2024/12/04 14:07:39 by ekechedz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 
-int	token_quotes(char *arg, char quote);
-char *token_value(char *token, bool sq, t_tools *t);
-
-t_token	*token_list(char **tokens, t_tools *t)
-{
-	int		i;
-	t_token	*head;
-	t_token	*new;
-
-	i = 0;
-	head = tokenlist_new(tokens[i], t);
-	i ++;
-	while (tokens[i])
-	{
-		new = tokenlist_new(tokens[i], t);
-		if(new && new->redirect_count > 0 &&  !tokens[i + 1])
-		{
-			ft_error(E_SYNTAX_ERROR, NULL, "newline", t);
-			return(NULL);
-		}
-		if(new && new->pipe_count > 0 &&  !tokens[i + 1])
-		{
-			printf("minishell: syntax error near unexpected token '|'\n");
-			return(NULL);
-		}
-		tokenlist_addback(&head, new);
-		i++;
-	}
-	return (head);
-}
-
-t_token	*tokenlist_new(char *token, t_tools *t)
+t_token	*tokenlist_new(char *token, t_tools *t, t_parser *p)
 {
 	t_token	*tk;
 
+	(void)t;
 	tk = (t_token *)malloc(sizeof(t_token));
 	if (tk == NULL)
 		return (NULL);
-	tk->sq = token_quotes(token, '\'');
-	tk->dq = token_quotes(token, '\"');
-	tk->value = token_value(token, tk->sq, t);
+	tk->sq = p->sq;
+	tk->dq = p->dq;
+	tk->value = ft_strdup(token);
+	tk->type = NO_TYPE;
 	if (tk->value == NULL)
 	{
 		free(tk);
@@ -49,58 +32,7 @@ t_token	*tokenlist_new(char *token, t_tools *t)
 	}
 	tk->prev = NULL;
 	tk->next = NULL;
-	tk->redirect_count = 0;
-	tk->pipe_count = 0;
-	assign_token_type(tk, t);
 	return (tk);
-}
-
-char *token_value(char *token, bool sq, t_tools *t)
-{
-	int	i;
-
-	i = 0;
-	token = trim_quotes(token, false);
-	while (token && token[i])
-	{
-		if (token[i] == '$' && !sq)
-		{
-			if (!token[i + 1])
-				return (token);
-			else if (token[i + 1] == '?')
-			{
-				token = ft_itoa(t->exit_status);
-				if (token == NULL)
-					return (NULL);
-				if (!ft_strchr(token, '$'))
-			   		return (token);
-			}
-			else if (token[i + 1] && !sq)
-			{
-				token = expand_the_argument(token, &i, i + 1, t);
-				if (token == NULL)
-					return (NULL);
-				if (!ft_strchr(token, '$'))
-			   		return (token);
-			}
-		}
-		i ++;
-	}
-	return (token);
-}
-
-int	token_quotes(char *arg, char quote)
-{
-	int z;
-
-	if (!arg || ft_strlen(arg) < 2)
-		return (0);
-
-	z = ft_strlen(arg) - 1;
-	 if (arg[0] == quote && arg[z] == quote)
-		return (1);
-
-	return (0);
 }
 
 void	tokenlist_addback(t_token **lst, t_token *new)
@@ -108,7 +40,7 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	t_token	*aux;
 
 	if (!new)
-		return;
+		return ;
 	if (!*lst)
 	{
 		*lst = new;
@@ -118,52 +50,63 @@ void	tokenlist_addback(t_token **lst, t_token *new)
 	while (aux->next)
 		aux = aux->next;
 	aux->next = new;
-	aux->prev = aux;
+	new->prev = aux;
 }
 
 void	assign_token_type(t_token *tk, t_tools *t)
 {
 	int	len;
 
+	(void)t;
 	if (!tk || !tk->value)
-		return;
+		return ;
 	len = ft_strlen(tk->value);
-	if (ft_strncmp(tk->value, "|", len) == 0 && len == 1 && !tk->dq && !tk->sq)
-	{
+	if (ft_strncmp(tk->value, "|", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = PIPE;
-		tk->pipe_count++;
-	}
-	else if (ft_strncmp(tk->value, ">", len) == 0 && len == 1 && !tk->dq && !tk->sq)
-	{
-		tk->type = R_OUTPUT;
-		tk->redirect_count++;
-	}
-	else if (ft_strncmp(tk->value, "<", len) == 0 && len == 1 && !tk->dq && !tk->sq)
-	{
-		tk->type = R_INPUT;
-		tk->redirect_count++;
-	}
-	else if (ft_strncmp(tk->value, ">>", len) == 0 && len == 2 && !tk->dq && !tk->sq)
-	{
-		tk->type = R_APPEND;
-		tk->redirect_count++;
-	}
-	else if (ft_strncmp(tk->value, "<<", len) == 0 && len == 2 && !tk->dq && !tk->sq)
-	{
+	else if (ft_strncmp(tk->value, ">", 2) == 0 && !tk->dq && !tk->sq)
+		tk->type = OUTPUT;
+	else if (ft_strncmp(tk->value, "<", 2) == 0 && !tk->dq && !tk->sq)
+		tk->type = INPUT;
+	else if (ft_strncmp(tk->value, ">>", 2) == 0 && !tk->dq && !tk->sq)
+		tk->type = APPEND;
+	else if (ft_strncmp(tk->value, "<<", 2) == 0 && !tk->dq && !tk->sq)
 		tk->type = R_HEREDOC;
-		tk->redirect_count++;
-	}
-	else if (tk->prev == NULL && (is_builtin(tk->value) || is_executable(tk->value, t)))
+	else if ((tk->prev == NULL || tk->prev->type == PIPE))
 		tk->type = COMMAND;
 	else
+		assign_token_files(tk);
+}
+
+void	assign_token_files(t_token *tk)
+{
+	t_token	*prev;
+
+	if (tk->prev)
+	{
+		prev = tk->prev;
+		if (prev->type == OUTPUT)
+			tk->type = O_FILE;
+		else if (prev->type == INPUT)
+			tk->type = I_FILE;
+		else if (prev->type == APPEND)
+			tk->type = A_FILE;
+		else if (prev->type == R_HEREDOC)
+			tk->type = H_DEL;
+	}
+	if (!tk->type)
 		tk->type = ARGUMENT;
 }
 
-t_parser *append_token(char **arg, t_parser *p, t_tools *t)
+t_parser	*append_token(t_parser *p, t_tools *t)
 {
-	(void) t;
-	if (*arg)
-		p->tokens = ft_arrcat(p->tokens, *arg, ft_str2dlen(p->tokens));
-	*arg = NULL;
+	t_token	*new;
+
+	new = tokenlist_new(p->arg, t, p);
+	if (!p->tk_lst)
+		p->tk_lst = new;
+	else
+		tokenlist_addback(&p->tk_lst, new);
+	p->sq = false;
+	p->dq = false;
 	return (p);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_matrixdup.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nataliaschardosim <nataliaschardosim@st    +#+  +:+       +#+        */
+/*   By: nleite-s <nleite-s@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 12:46:22 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/10/24 12:46:24 by nataliascha      ###   ########.fr       */
+/*   Created: 2024/12/03 20:30:09 by nleite-s          #+#    #+#             */
+/*   Updated: 2024/12/03 20:30:12 by nleite-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ char	**ft_matrixdup(char **matrix, int height)
 		newmatrix[i] = ft_strdup(matrix[i]);
 		if (!newmatrix[i])
 		{
-			ft_free_matrix(newmatrix);
+			while (i > 0)
+				free(newmatrix[--i]);
+			free(newmatrix);
 			return (NULL);
 		}
 		i ++;
 	}
-	newmatrix[i] = NULL;
+	newmatrix[height] = NULL;
 	return (newmatrix);
 }

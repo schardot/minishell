@@ -1,93 +1,121 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simple_command.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 14:07:03 by ekechedz          #+#    #+#             */
+/*   Updated: 2024/12/04 14:07:07 by ekechedz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include "../include/parser.h"
 #include "../include/redirection.h"
 
-t_scmd	*simple_command(t_token *t)
+static int	handle_heredoc_redirect(t_tools *t, t_scmd *s, t_token *tk)
+{
+	if (tk->type == H_DEL)
+	{
+		s->r_heredoc_delimiter = tk->value;
+		if (handle_heredoc_redirection(s) != 0)
+		{
+			if (s->hd_file_name)
+			{
+				unlink(s->hd_file_name);
+				free(s->hd_file_name);
+				s->hd_file_name = NULL;
+			}
+			s->heredoc_failed = 1;
+			t->exit_status = 1;
+			return (1);
+		}
+		if (s->hd_file_name)
+		{
+			unlink(s->hd_file_name);
+			free(s->hd_file_name);
+			s->hd_file_name = NULL;
+		}
+	}
+	return (0);
+}
+
+static t_scmd	*process_pipe_and_command(t_tools *t, t_token *tk, t_scmd *s)
+{
+	t_scmd	*next_command;
+
+	next_command = NULL;
+	if (tk->type == PIPE)
+	{
+		s->pipetotal++;
+		next_command = simple_command(t, tk->next);
+		s->next = next_command;
+		s->pipecount = s->pipetotal;
+	}
+	return (next_command);
+}
+
+static int	process_redirection_if_needed(t_tools *t, t_token *tk, t_scmd *s)
+{
+	if (tk->type != PIPE && tk->type != ARGUMENT && tk->type != COMMAND
+		&& tk->type != R_HEREDOC && tk->type != H_DEL && tk->type != NO_TYPE)
+	{
+		if (!s->skip_exec && process_redirections(t, tk, s) != 0)
+		{
+			s->skip_exec = 1;
+			t->exit_status = 1;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+t_scmd	*simple_command(t_tools *t, t_token *tk)
 {
 	t_scmd	*s;
 	t_scmd	*next_command;
 
 	s = scmd_new();
-	while (t)
+	next_command = NULL;
+	while (tk && !next_command)
 	{
-		handle_type(t, s, next_command);
-		if (t->type != PIPE && t->type != ARGUMENT && t->type != COMMAND)
+		if (tk->type == COMMAND && ft_strlen(tk->value) == 0)
 		{
-			set_redirection(s, t);
-			t = t->next;
+			tk->type = NO_TYPE;
+			if (!tk->prev && !tk->next)
+			{
+				free (s);
+				return (NULL);
+			}
 		}
-		t = t->next;
+		handle_heredoc_redirect(t, s, tk);
+		handle_type(t, tk, s, next_command);
+		next_command = process_pipe_and_command(t, tk, s);
+		process_redirection_if_needed(t, tk, s);
+		tk = tk->next;
 	}
 	return (s);
 }
 
-void	handle_type(t_token *t, t_scmd *s, t_scmd *next_command)
+void	handle_type(t_tools *t, t_token *tk, t_scmd *s, t_scmd *next_command)
 {
-	if (t->type == ARGUMENT || t->type == COMMAND)
+	char	**new_args;
+
+	(void) next_command;
+	(void) t;
+	if (tk->type == ARGUMENT || tk->type == COMMAND)
 	{
-		s->args = ft_arrcat(s->args, t->value, ft_str2dlen(s->args));
-		s->argsc ++;
-		if (t->type == COMMAND && is_builtin(s->args[0]))
+		new_args = ft_arrcat(s->args, tk->value, ft_str2dlen(s->args));
+		if (!new_args)
+		{
+			ft_fprintf(2, "Error: Memory allocation failed0 in ft_arrcat.\n");
+			exit (1);
+		}
+		s->args = ft_matrixdup(new_args, ft_str2dlen(new_args));
+		ft_free_matrix(new_args);
+		s->argsc++;
+		if (tk->type == COMMAND && is_builtin(s->args[0]))
 			s->builtin = get_builtin_function(s->args[0]);
 	}
-	else if (t->type == PIPE)
-	{
-		next_command = simple_command(t->next);
-		s->next = next_command;
-		s->pipecount ++;
-		if (next_command)
-			t->next = NULL;
-	}
-}
-
-t_scmd	*scmd_new(void)
-{
-	t_scmd	*scmd;
-
-	scmd = malloc(sizeof(t_scmd));
-	if (!scmd)
-		return (NULL);
-	scmd->args = NULL;
-	scmd->argsc = 0;
-	scmd->builtin = NULL;
-	scmd->exec_path = NULL;
-	scmd->num_redirections = 0;
-	scmd->hd_file_name = NULL;
-	scmd->redirect_token = NULL;
-	scmd->R_INPUT_file = NULL;
-	scmd->R_OUTPUT_file = NULL;
-	scmd->R_APPEND_file = NULL;
-    scmd->R_HEREDOC_delimiter = NULL;
-    scmd->redirect_file_name = NULL;
-	scmd->old_stdout_fd = 0;
-	scmd->old_stdin_fd = 0;
-	scmd->new_fd = 0;
-	scmd->next = NULL;
-	scmd->prev = NULL;
-	scmd->pipecount = 0;
-	return (scmd);
-}
-
-int	(*get_builtin_function(char *command))(t_tools *, t_scmd *)
-{
-	int	len;
-
-	len = ft_strlen(command);
-	if (!ft_strncmp(command, "cd", len))
-		return (&builtincd);
-	else if (!ft_strncmp(command, "echo", len))
-		return (&builtinecho);
-	else if (!ft_strncmp(command, "pwd", len))
-		return (&builtinpwd);
-	else if (!ft_strncmp(command, "export", len))
-		return (&builtinexport);
-	else if (!ft_strncmp(command, "unset", len))
-		return (&builtinunset);
-	else if (!ft_strncmp(command, "env", len))
-		return (&builtinenv);
-	else if (!ft_strncmp(command, "exit", len))
-		return (&builtinexit);
-	else if (!ft_strncmp(command, "history", len))
-		return (&builtinhistory);
-	return (NULL);
 }

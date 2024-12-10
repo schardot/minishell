@@ -3,54 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ekechedz <ekechedz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 10:50:30 by nataliascha       #+#    #+#             */
-/*   Updated: 2024/11/06 14:00:32 by codespace        ###   ########.fr       */
+/*   Created: 2024/12/04 14:06:31 by ekechedz          #+#    #+#             */
+/*   Updated: 2024/12/04 14:06:35 by ekechedz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/parser.h"
 #include "../../include/minishell.h"
 
+static int	create_new_envp(const char *var, t_tools *t);
+static int	check_unset_args(t_scmd *s, t_tools *t);
+static int	check_option(t_scmd *s, t_tools *t);
+
 int	builtinunset(t_tools *t, t_scmd *scmd)
 {
-	if (check_unset_args(scmd, t))
-		return (EXIT_FAILURE);
-	else if (scmd->args[1])
-		create_new_envp(scmd, t);
-	return (EXIT_SUCCESS);
-}
-
-int	check_unset_args(t_scmd *scmd, t_tools *t)
-{
 	int	i;
-	int	j;
 
-	j = 1;
-	while (scmd->args[j])
+	i = 1;
+	if (check_unset_args(scmd, t))
+		return (t->exit_status);
+	while (scmd->args[i])
 	{
-		i = 0;
-		while (scmd->args[j][i])
-		{
-			if (!ft_isalnum(scmd->args[j][i]) && !(scmd->args[j][i] == '_'))
-				ft_error(E_NOT_A_VALID_ID, scmd->args[0], scmd->args[j], t);
-			i++;
-		}
-		j ++;
+		create_new_envp(scmd->args[i], t);
+		i ++;
 	}
-	if (t->exit_status == 1)
-		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
-int	create_new_envp(t_scmd *scmd, t_tools *t)
+static int	check_unset_args(t_scmd *s, t_tools *t)
 {
-	const char	*var;
+	if (check_option(s, t) == 2)
+		return (t->exit_status);
+	if (t->exit_status == 1)
+		return (t->exit_status);
+	return (EXIT_SUCCESS);
+}
+
+static int	check_option(t_scmd *s, t_tools *t)
+{
+	if (s->args[1] && s->args[1][1] && s->args[1][0] == '-' && \
+	s->args[1][1] != '-')
+	{
+		ft_error(E_INVALID_OPTION, "unset", s->args[1], t);
+		t->exit_status = 2;
+		return (t->exit_status);
+	}
+	return (EXIT_SUCCESS);
+}
+
+static int	create_new_envp(const char *var, t_tools *t)
+{
 	int			vlen;
 	int			i;
 
-	var = scmd->args[1];
 	vlen = ft_strlen(var);
 	i = 0;
 	while (t->envp[i])

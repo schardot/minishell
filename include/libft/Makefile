@@ -27,7 +27,10 @@ LS_DIR = list
 LIST = $(LS_DIR)/ft_lstnew.c $(LS_DIR)/ft_lstadd_front.c $(LS_DIR)/ft_lstsize.c $(LS_DIR)/ft_lstlast.c $(LS_DIR)/ft_lstadd_back.c $(LS_DIR)/ft_lstdelone.c $(LS_DIR)/ft_lstclear.c \
 	$(LS_DIR)/ft_lstiter.c $(LS_DIR)/ft_lstmap.c
 
-SRCS = $(MATRIX) $(CHAR_CH) $(STRING) $(MEM) $(CONV) $(FDIO) $(LIST)
+FPRINTF_DIR = ft_fprintf
+FPRINTF = $(FPRINTF_DIR)/ft_fprintf.c
+
+SRCS = $(MATRIX) $(CHAR_CH) $(STRING) $(MEM) $(CONV) $(FDIO) $(LIST) $(FPRINTF)
 OBJS = $(SRCS:.c=.o)
 
 GNL_DIR = get_next_line
